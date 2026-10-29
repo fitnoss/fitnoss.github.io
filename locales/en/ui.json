@@ -213,8 +213,6 @@
   },
   "share": {
     "title": "Share program",
-    "length_one": "{{count}} character",
-    "length_other": "{{count}} characters",
     "copyLink": "Copy link",
     "copied": "Copied",
     "copyText": "Copy as text",

@@ -83,7 +83,6 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
         {qr && <img src={qr} alt="QR" className="size-full" />}
       </div>
       <div className="bg-surface hairline rounded-control p-3 font-mono text-xs break-all select-all">{url}</div>
-      <p className="text-muted text-center text-xs">{t("share.length", { count: url.length })}</p>
     </Sheet>
   )
 }
