@@ -36,8 +36,11 @@ export const CATEGORIES = ["strength", "stretching", "plyometrics", "powerliftin
 
 export const LEVELS: Level[] = ["beginner", "intermediate", "expert"]
 
-export function imageUrl(ex: Pick<Exercise, "c">, n = 0) {
-  return `${import.meta.env.BASE_URL}img/ex/${ex.c}-${n}.webp`
+/** "s" is a list thumbnail, "l" the full photo for the exercise page (sizes in scripts/build-data.ts). */
+export type ImageSize = "s" | "l"
+
+export function imageUrl(ex: Pick<Exercise, "c">, n = 0, size: ImageSize = "s") {
+  return `${import.meta.env.BASE_URL}img/ex/${size}/${ex.c}-${n}.webp`
 }
 
 /** i18n key for a muscle / category value ("middle back" → "middle_back"). */

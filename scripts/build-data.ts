@@ -30,6 +30,15 @@ const OUT_DATA = path.join(ROOT, "public", "data")
 const OUT_LOCALES = path.join(ROOT, "public", "locales")
 const OUT_IMG = path.join(ROOT, "public", "img", "ex")
 
+/**
+ * Two sizes per photo: s/ for list thumbnails (≤ 80 px on screen), l/ for the exercise page.
+ * Changing these rebuilds every image (see .cache/img-settings.json).
+ */
+const IMG_SIZES = [
+  { dir: "s", width: 360, quality: 78 },
+  { dir: "l", width: 1000, quality: 82 },
+] as const
+
 /** Prefix for our own exercises in id-map.json, so they never collide with source ids. */
 const LOCAL = "local/"
 
@@ -340,15 +349,25 @@ async function main() {
 
   // --- images ---
   console.log(`Images: ${images.length}`)
-  await fs.mkdir(OUT_IMG, { recursive: true })
+  const settingsFile = path.join(ROOT, ".cache", "img-settings.json")
+  const settings = JSON.stringify(IMG_SIZES)
+  if ((await fs.readFile(settingsFile, "utf8").catch(() => "")) !== settings) {
+    await fs.rm(OUT_IMG, { recursive: true, force: true })
+  }
+  for (const { dir } of IMG_SIZES) await fs.mkdir(path.join(OUT_IMG, dir), { recursive: true })
+  await fs.mkdir(path.dirname(settingsFile), { recursive: true })
+  await fs.writeFile(settingsFile, settings)
   let converted = 0
   await pool(images, 16, async ({ from, out, reuse }) => {
-    const dest = path.join(OUT_IMG, out)
-    if (reuse && (await exists(dest))) return
-    await sharp(await from(), { animated: false })
-      .resize({ width: 480, withoutEnlargement: true })
-      .webp({ quality: 68 })
-      .toFile(dest)
+    const dests = IMG_SIZES.map((size) => ({ ...size, dest: path.join(OUT_IMG, size.dir, out) }))
+    if (reuse && (await Promise.all(dests.map((d) => exists(d.dest)))).every(Boolean)) return
+    const input = await from()
+    for (const { dest, width, quality } of dests) {
+      await sharp(input, { animated: false })
+        .resize({ width, withoutEnlargement: true })
+        .webp({ quality, smartSubsample: true })
+        .toFile(dest)
+    }
     if (++converted % 200 === 0) console.log(`  ${converted} converted`)
   })
 

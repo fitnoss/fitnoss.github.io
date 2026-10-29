@@ -62,6 +62,7 @@ export function ExercisePage() {
             alt={tx.name}
             frame={frame === "anim" ? undefined : Number(frame)}
             interval={1300}
+            size="l"
             className="hairline rounded-panel aspect-[4/3] w-full"
           />
           {ex.img > 1 && (

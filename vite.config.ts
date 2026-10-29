@@ -54,7 +54,7 @@ export default defineConfig({
           {
             urlPattern: ({ url }) => url.pathname.startsWith("/img/ex/"),
             handler: "CacheFirst",
-            options: { cacheName: "ex-images", expiration: { maxEntries: 4000 } },
+            options: { cacheName: "ex-images", expiration: { maxEntries: 5000 } },
           },
           {
             urlPattern: ({ url }) => url.hostname === "i.ytimg.com",

@@ -50,7 +50,9 @@ export const IMAGE_CACHE = "ex-images"
 /** Downloads every exercise image into the service-worker cache for offline use. */
 export async function downloadAllImages(onProgress: (done: number, total: number) => void) {
   const { list } = useExerciseStore.getState()
-  const urls = list.flatMap((ex) => Array.from({ length: ex.img }, (_, n) => new URL(imageUrl(ex, n), location.href).href))
+  const urls = list.flatMap((ex) =>
+    Array.from({ length: ex.img }, (_, n) => (["s", "l"] as const).map((size) => new URL(imageUrl(ex, n, size), location.href).href)).flat(),
+  )
   const cache = await caches.open(IMAGE_CACHE)
   let done = 0
   const queue = [...urls]
