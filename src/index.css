@@ -122,19 +122,23 @@ html.dark[data-accent] {
     -webkit-tap-highlight-color: transparent;
     background: var(--chrome);
     color-scheme: light;
-    /* Keep the scrollbar's space reserved so the centered column doesn't shift when the page starts or stops scrolling. */
-    scrollbar-gutter: stable;
   }
   html.dark {
     color-scheme: dark;
   }
-  html:has(dialog[open]) {
+  /* The document never scrolls; pages scroll inside #scroller (see Layout). */
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  html:has(dialog[open]) #scroller {
     overflow: hidden;
   }
   body {
     @apply bg-chrome text-fg font-sans antialiased;
     font-size: 15px;
-    overscroll-behavior-y: none;
   }
   :focus-visible {
     outline: 2px solid var(--accent);

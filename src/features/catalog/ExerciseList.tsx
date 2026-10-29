@@ -1,8 +1,9 @@
 import { useRef, type ReactNode, type RefObject } from "react"
 import { useTranslation } from "react-i18next"
-import { useVirtualizer, useWindowVirtualizer } from "@tanstack/react-virtual"
+import { useVirtualizer } from "@tanstack/react-virtual"
 import { Check } from "lucide-react"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
+import { scroller } from "@/shared/lib/scroller"
 import { cn } from "@/shared/lib/utils"
 import { key, type Exercise, type ExerciseText } from "@/entities/exercise/types"
 
@@ -52,20 +53,22 @@ type ListProps = {
   text: (ex: Exercise) => ExerciseText
   onSelect: (ex: Exercise) => void
   isSelected?: (ex: Exercise) => boolean
-  /** Scroll container; omitted means the window scrolls. */
+  /** Scroll container; omitted means the page scroller. */
   scrollRef?: RefObject<HTMLElement | null>
 }
 
 export function ExerciseList(props: ListProps) {
-  return props.scrollRef ? <ElementList {...props} scrollRef={props.scrollRef} /> : <WindowList {...props} />
+  return props.scrollRef ? <ElementList {...props} scrollRef={props.scrollRef} /> : <PageList {...props} />
 }
 
-function WindowList({ items, text, onSelect, isSelected }: ListProps) {
+/** The list further down the page: rows are offset by everything above it in the page scroller. */
+function PageList({ items, text, onSelect, isSelected }: ListProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const v = useWindowVirtualizer({
+  const v = useVirtualizer({
     count: items.length,
     estimateSize: () => ROW,
     overscan: 6,
+    getScrollElement: scroller,
     scrollMargin: ref.current?.offsetTop ?? 0,
   })
   return (

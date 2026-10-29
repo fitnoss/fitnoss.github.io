@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react"
 import { useNavigate } from "react-router"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/shared/ui/button"
+import { scroller } from "@/shared/lib/scroller"
 import { cn } from "@/shared/lib/utils"
 
 type Props = {
@@ -13,14 +14,15 @@ type Props = {
   className?: string
 }
 
-/** Whether the window has scrolled off the top, where the wash sits behind the header. */
+/** Whether the page has scrolled off the top, where the wash sits behind the header. */
 function useScrolled() {
-  const [scrolled, setScrolled] = useState(() => window.scrollY > 0)
+  const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 0)
+    const el = scroller()
+    const onScroll = () => setScrolled(el.scrollTop > 0)
     onScroll()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
+    el.addEventListener("scroll", onScroll, { passive: true })
+    return () => el.removeEventListener("scroll", onScroll)
   }, [])
   return scrolled
 }
@@ -28,8 +30,7 @@ function useScrolled() {
 /**
  * Sticky page header, see-through at the top so the wash shows, frosted once content scrolls under it.
  * The frosted backdrop is a full-viewport-wide strip behind the centered column (the page clips it
- * horizontally), so on wide screens it doesn't read as a box. It also bleeds upward off-screen, so a
- * frame of lag while the mobile URL bar slides never shows content above the header. Top-level pages (no back button) get a
+ * horizontally), so on wide screens it doesn't read as a box. Top-level pages (no back button) get a
  * large title, nested pages a compact one next to the back arrow.
  */
 export function PageHeader({ title, back, actions, children, className }: Props) {
@@ -42,8 +43,8 @@ export function PageHeader({ title, back, actions, children, className }: Props)
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 transform-gpu pt-safe",
-        "before:absolute before:-top-24 before:bottom-0 before:left-1/2 before:-z-10 before:-ml-[50vw] before:w-screen before:transition-colors before:duration-200",
+        "sticky top-0 z-30 pt-safe",
+        "before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:-ml-[50vw] before:w-screen before:transition-colors before:duration-200",
         scrolled ? "before:bg-page/80 before:backdrop-blur-xl" : "before:bg-transparent",
         className,
       )}

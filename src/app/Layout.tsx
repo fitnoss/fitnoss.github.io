@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useSyncExternalStore } from "react"
+import { Suspense, useEffect, useRef, useSyncExternalStore } from "react"
 import { useTranslation } from "react-i18next"
 import { NavLink, Outlet, useLocation } from "react-router"
 import { ChartNoAxesColumn, Dumbbell, Ellipsis, ListChecks, Moon, Sun, Timer } from "lucide-react"
@@ -14,8 +14,8 @@ const TABS = [
   { to: "/more", icon: Ellipsis, label: "nav.more", end: false, also: ["/dev/"] },
 ]
 
-// Fake rounded corners of the content sheet. The window scrolls (the virtual list relies on it),
-// so the corners are fixed overlays painted in the chrome color.
+// Fake rounded corners of the content sheet: overlays painted in the chrome color, since rounding the
+// scroller itself would clip its sticky header and frosted backdrop.
 const corner = (at: string) => ({
   background: `radial-gradient(circle at ${at}, transparent 17.5px, var(--chrome) 18px)`,
 })
@@ -51,20 +51,43 @@ export function Layout() {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const active = useSessionStore((s) => !!s.active)
+  const main = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    window.scrollTo(0, 0)
+    main.current?.scrollTo(0, 0)
   }, [pathname])
 
-  // svh, not dvh: dvh changes every frame while the mobile URL bar slides, re-laying out the page and
-  // making the fixed tab bar and sticky header shake.
+  // App shell: a fixed full-screen frame where only <main> scrolls and the tab bar is a plain flex item.
+  // A scrolling document in iOS home-screen apps leaves fixed bars floating off the screen edge and
+  // makes the sticky header shake.
   return (
-    <div className="min-h-svh">
+    <div className="fixed inset-0 flex flex-col md:flex-row">
+      <div className="relative min-h-0 flex-1 md:order-last">
+        <main
+          ref={main}
+          id="scroller"
+          className="bg-page absolute inset-0 isolate overflow-x-hidden overflow-y-auto overscroll-y-none [scrollbar-gutter:stable]"
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(34rem,70svh)] wash" />
+          <div className="mx-auto max-w-2xl">
+            <Suspense fallback={null}>
+              <Outlet />
+            </Suspense>
+          </div>
+        </main>
+
+        {/* Mobile: rounded bottom of the sheet above the tab bar. Desktop: rounded left side next to the sidebar. */}
+        <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-30 size-[18px] md:hidden" style={corner("100% 0")} />
+        <div aria-hidden className="pointer-events-none absolute right-0 bottom-0 z-30 size-[18px] md:hidden" style={corner("0 0")} />
+        <div aria-hidden className="pointer-events-none absolute top-0 left-0 z-30 hidden size-[18px] md:block" style={corner("100% 100%")} />
+        <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-30 hidden size-[18px] md:block" style={corner("100% 0")} />
+      </div>
+
       <nav
         className={cn(
-          "bg-chrome fixed z-40 transform-gpu",
-          "inset-x-0 bottom-0 grid h-[calc(3.75rem+env(safe-area-inset-bottom))] grid-cols-5 px-1.5 pt-1.5 pb-safe",
-          "md:inset-x-auto md:top-0 md:left-0 md:flex md:h-dvh md:w-[6rem] md:flex-col md:gap-1 md:px-2 md:pt-3 md:pb-3",
+          "bg-chrome z-40 shrink-0",
+          "grid h-[calc(3.75rem+env(safe-area-inset-bottom))] grid-cols-5 px-1.5 pt-1.5 pb-safe",
+          "md:flex md:h-auto md:w-[6rem] md:flex-col md:gap-1 md:px-2 md:pt-3 md:pb-3",
         )}
       >
         {TABS.map(({ to, icon: Icon, label, end, also }) => [
@@ -93,21 +116,6 @@ export function Layout() {
           </NavLink>,
         ])}
       </nav>
-
-      <main className="bg-page relative isolate min-h-svh overflow-x-clip pb-[calc(3.75rem+env(safe-area-inset-bottom))] md:ml-[6rem] md:pb-0">
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(34rem,70svh)] wash" />
-        <div className="mx-auto max-w-2xl">
-          <Suspense fallback={null}>
-            <Outlet />
-          </Suspense>
-        </div>
-      </main>
-
-      {/* Mobile: rounded bottom of the sheet above the tab bar. Desktop: rounded left side next to the sidebar. */}
-      <div aria-hidden className="pointer-events-none fixed z-30 size-[18px] transform-gpu md:hidden" style={{ ...corner("100% 0"), left: 0, bottom: "calc(3.75rem + env(safe-area-inset-bottom))" }} />
-      <div aria-hidden className="pointer-events-none fixed z-30 size-[18px] transform-gpu md:hidden" style={{ ...corner("0 0"), right: 0, bottom: "calc(3.75rem + env(safe-area-inset-bottom))" }} />
-      <div aria-hidden className="pointer-events-none fixed top-0 left-[6rem] z-30 hidden size-[18px] md:block" style={corner("100% 100%")} />
-      <div aria-hidden className="pointer-events-none fixed bottom-0 left-[6rem] z-30 hidden size-[18px] md:block" style={corner("100% 0")} />
     </div>
   )
 }

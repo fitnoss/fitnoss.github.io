@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { ChevronRight, Plus } from "lucide-react"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
+import { scroller } from "@/shared/lib/scroller"
 import { cn } from "@/shared/lib/utils"
 import { useExercises } from "@/entities/exercise/store"
 import { groups, itemLabels } from "@/entities/program/types"
@@ -25,7 +26,8 @@ export function useCarousel(exercises: SessionExercise[]) {
     const from = el.scrollLeft
     el.scrollTo({ left, behavior: smooth ? "smooth" : "instant" })
     if (!smooth) return
-    if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: "smooth" })
+    const page = scroller()
+    if (page.scrollTop > 0) page.scrollTo({ top: 0, behavior: "smooth" })
     // A smooth scroll in a snap container can get dropped; if it never started, jump instead.
     setTimeout(() => {
       if (Math.abs(el.scrollLeft - from) < 2 && Math.abs(el.scrollLeft - left) >= 2) el.scrollTo({ left, behavior: "instant" })
