@@ -65,7 +65,7 @@ export function Layout() {
       <div className="relative min-h-0 flex-1 md:order-last">
         <main
           ref={main}
-          id="scroller"
+          id="page-scroll"
           className="bg-page absolute inset-0 isolate overflow-x-hidden overflow-y-auto overscroll-y-none [scrollbar-gutter:stable]"
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(34rem,70svh)] wash" />

@@ -126,14 +126,14 @@ html.dark[data-accent] {
   html.dark {
     color-scheme: dark;
   }
-  /* The document never scrolls; pages scroll inside #scroller (see Layout). */
+  /* The document never scrolls; pages scroll inside #page-scroll (see Layout). */
   html,
   body {
     height: 100%;
     overflow: hidden;
     overscroll-behavior: none;
   }
-  html:has(dialog[open]) #scroller {
+  html:has(dialog[open]) #page-scroll {
     overflow: hidden;
   }
   body {
