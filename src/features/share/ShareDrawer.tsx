@@ -45,7 +45,6 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
       open={open}
       onOpenChange={onOpenChange}
       title={t("share.title")}
-      description={t("share.description")}
       bodyClassName="space-y-3"
       footer={
         <div className="grid grid-cols-2 gap-2">

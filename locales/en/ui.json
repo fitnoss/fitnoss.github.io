@@ -213,7 +213,6 @@
   },
   "share": {
     "title": "Share program",
-    "description": "The whole program is packed into the link — no account or server needed.",
     "length_one": "{{count}} character",
     "length_other": "{{count}} characters",
     "copyLink": "Copy link",
