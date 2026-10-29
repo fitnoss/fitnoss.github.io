@@ -56,11 +56,13 @@ export function Layout() {
     window.scrollTo(0, 0)
   }, [pathname])
 
+  // svh, not dvh: dvh changes every frame while the mobile URL bar slides, re-laying out the page and
+  // making the fixed tab bar and sticky header shake.
   return (
-    <div className="min-h-dvh">
+    <div className="min-h-svh">
       <nav
         className={cn(
-          "bg-chrome fixed z-40",
+          "bg-chrome fixed z-40 transform-gpu",
           "inset-x-0 bottom-0 grid h-[calc(3.75rem+env(safe-area-inset-bottom))] grid-cols-5 px-1.5 pt-1.5 pb-safe",
           "md:inset-x-auto md:top-0 md:left-0 md:flex md:h-dvh md:w-[6rem] md:flex-col md:gap-1 md:px-2 md:pt-3 md:pb-3",
         )}
@@ -92,7 +94,7 @@ export function Layout() {
         ])}
       </nav>
 
-      <main className="bg-page relative isolate min-h-dvh overflow-x-clip pb-[calc(3.75rem+env(safe-area-inset-bottom))] md:ml-[6rem] md:pb-0">
+      <main className="bg-page relative isolate min-h-svh overflow-x-clip pb-[calc(3.75rem+env(safe-area-inset-bottom))] md:ml-[6rem] md:pb-0">
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 wash" />
         <div className="mx-auto max-w-2xl">
           <Suspense fallback={null}>
@@ -102,8 +104,8 @@ export function Layout() {
       </main>
 
       {/* Mobile: rounded bottom of the sheet above the tab bar. Desktop: rounded left side next to the sidebar. */}
-      <div aria-hidden className="pointer-events-none fixed z-30 size-[18px] md:hidden" style={{ ...corner("100% 0"), left: 0, bottom: "calc(3.75rem + env(safe-area-inset-bottom))" }} />
-      <div aria-hidden className="pointer-events-none fixed z-30 size-[18px] md:hidden" style={{ ...corner("0 0"), right: 0, bottom: "calc(3.75rem + env(safe-area-inset-bottom))" }} />
+      <div aria-hidden className="pointer-events-none fixed z-30 size-[18px] transform-gpu md:hidden" style={{ ...corner("100% 0"), left: 0, bottom: "calc(3.75rem + env(safe-area-inset-bottom))" }} />
+      <div aria-hidden className="pointer-events-none fixed z-30 size-[18px] transform-gpu md:hidden" style={{ ...corner("0 0"), right: 0, bottom: "calc(3.75rem + env(safe-area-inset-bottom))" }} />
       <div aria-hidden className="pointer-events-none fixed top-0 left-[6rem] z-30 hidden size-[18px] md:block" style={corner("100% 100%")} />
       <div aria-hidden className="pointer-events-none fixed bottom-0 left-[6rem] z-30 hidden size-[18px] md:block" style={corner("100% 0")} />
     </div>

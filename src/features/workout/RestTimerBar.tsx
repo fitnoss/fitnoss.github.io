@@ -68,7 +68,7 @@ export function RestTimerBar() {
   const pill = "h-10 rounded-full px-3.5 text-sm font-semibold tabular-nums bg-surface hairline hover:bg-surface-hover active:bg-surface-press"
 
   return (
-    <div className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom))] z-40 px-3 pb-3 md:bottom-0 md:left-[6rem] md:pb-5">
+    <div className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom))] z-40 transform-gpu px-3 pb-3 md:bottom-0 md:left-[6rem] md:pb-5">
       <div className="bg-page/85 hairline rounded-panel relative mx-auto max-w-md overflow-hidden shadow-2xl shadow-black/15 backdrop-blur-xl [animation:toast-in_.2s_ease-out] dark:shadow-black/50">
         <div className="bg-accent absolute inset-y-0 left-0 opacity-15 dark:opacity-25 transition-[width] duration-300 ease-linear" style={{ width: `${progress * 100}%` }} />
         <div className="relative flex items-center gap-1.5 p-2 pl-4">
