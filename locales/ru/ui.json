@@ -271,7 +271,10 @@
     "next": "Дальше",
     "nextInSuperset": "Дальше в суперсете",
     "progressionUp": "Вес вырос",
-    "progressionDeload": "Разгрузка"
+    "progressionDeload": "Разгрузка",
+    "warmup": "Разминка",
+    "removeWarmup": "Убрать разминку",
+    "warmupShort": "Р"
   },
   "journal": {
     "title": "Прогресс",

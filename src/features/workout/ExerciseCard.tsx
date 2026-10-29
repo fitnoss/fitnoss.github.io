@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router"
-import { ArrowDown, ArrowUp, Check, Clock, Link2, Minus, Plus, Trash2, TrendingDown, TrendingUp, Unlink2 } from "lucide-react"
+import { ArrowDown, ArrowUp, Check, Clock, Flame, Link2, Minus, Plus, Trash2, TrendingDown, TrendingUp, Unlink2, X } from "lucide-react"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { RestInput } from "@/shared/components/RestInput"
 import { Button } from "@/shared/ui/button"
@@ -9,9 +9,11 @@ import { Input } from "@/shared/ui/field"
 import { Menu, MenuItem } from "@/shared/ui/menu"
 import { Panel } from "@/shared/ui/panel"
 import { cn } from "@/shared/lib/utils"
+import { useSettings } from "@/shared/storage/settings"
 import { useExercises } from "@/entities/exercise/store"
 import { parseReps } from "@/entities/program/types"
 import { useSessionStore, type SessionExercise } from "@/entities/session/store"
+import { warmupGear, warmupSets } from "@/entities/session/warmup"
 import { formatDuration, formatRepsLabel } from "@/features/programs/format"
 import { primeAudio } from "./RestTimerBar"
 
@@ -32,12 +34,19 @@ type Props = {
 export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSetDone }: Props) {
   const { t } = useTranslation()
   const { byCode, text } = useExercises()
-  const { updateSet, toggleSet, addSet, removeSet, removeExercise, moveExercise, setRest, toggleSuperset } = useSessionStore()
+  const { updateSet, toggleSet, addSet, removeSet, removeExercise, moveExercise, setRest, toggleSuperset, setWarmup } = useSessionStore()
+  const { barWeight, plates } = useSettings()
   const [restOpen, setRestOpen] = useState(false)
   const ex = byCode.get(e.ex)
   const reps = parseReps(e.reps)
   const timed = reps.kind === "time"
   const allDone = e.sets.length > 0 && e.sets.every((s) => s.done)
+  const hasWarmup = e.sets.some((s) => s.warmup)
+  const work = e.sets.find((s) => !s.warmup)?.weight
+  const gear = ex && warmupGear(ex.eq, barWeight, plates)
+  const ramp = gear && work ? warmupSets(work, gear) : []
+  // Working sets are numbered from 1, warm-ups get a letter instead.
+  let n = 0
 
   return (
     <Panel className={cn("space-y-3 p-2.5", allDone && "shadow-[inset_0_0_0_1.5px_var(--accent)]")}>
@@ -123,7 +132,8 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
         {e.sets.map((s, j) => (
           <SetRow
             key={j}
-            n={j + 1}
+            label={s.warmup ? t("workout.warmupShort") : String(++n)}
+            warmup={s.warmup}
             weight={s.weight}
             reps={s.reps ?? (timed ? reps.s : undefined)}
             done={s.done}
@@ -145,6 +155,12 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
         <Button variant="ghost" size="sm" onClick={() => addSet(i)} aria-label="+">
           <Plus className="size-4" />
         </Button>
+        {(hasWarmup || ramp.length > 0) && (
+          <Button variant="ghost" size="sm" className="text-muted ml-2" onClick={() => setWarmup(i, hasWarmup ? [] : ramp)}>
+            {hasWarmup ? <X className="size-4" /> : <Flame className="size-4" />}
+            {t(hasWarmup ? "workout.removeWarmup" : "workout.warmup")}
+          </Button>
+        )}
       </div>
     </Panel>
   )
@@ -156,7 +172,8 @@ function num(v: string) {
 }
 
 function SetRow(props: {
-  n: number
+  label: string
+  warmup?: boolean
   weight?: number
   reps?: number
   done: boolean
@@ -164,11 +181,11 @@ function SetRow(props: {
   onReps: (v?: number) => void
   onToggle: () => void
 }) {
-  const { n, weight, reps, done, onWeight, onReps, onToggle } = props
-  const field = cn("h-11 text-center text-[17px] font-semibold tabular-nums", done && "text-muted")
+  const { label, warmup, weight, reps, done, onWeight, onReps, onToggle } = props
+  const field = cn("h-11 text-center text-[17px] font-semibold tabular-nums", (done || warmup) && "text-muted")
   return (
     <>
-      <span className={cn("text-sm font-semibold tabular-nums", done ? "text-accent" : "text-muted")}>{n}</span>
+      <span className={cn("text-sm font-semibold tabular-nums", done ? "text-accent" : "text-muted")}>{label}</span>
       <Input inputMode="decimal" className={field} value={weight ?? ""} placeholder="—" onChange={(e) => onWeight(num(e.target.value))} />
       <Input inputMode="numeric" className={field} value={reps ?? ""} placeholder="—" onChange={(e) => onReps(num(e.target.value))} />
       <button

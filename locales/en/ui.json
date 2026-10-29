@@ -257,7 +257,10 @@
     "next": "Next",
     "nextInSuperset": "Next in superset",
     "progressionUp": "Weight up",
-    "progressionDeload": "Deload"
+    "progressionDeload": "Deload",
+    "warmup": "Warm-up",
+    "removeWarmup": "Remove warm-up",
+    "warmupShort": "W"
   },
   "journal": {
     "title": "Progress",

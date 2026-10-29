@@ -5,7 +5,13 @@ import { useSettings } from "@/shared/storage/settings"
 import { DEFAULT_SCHEME, moveItem, removeItem, restAfter, targetReps, withLink, type ProgramDay, type ProgramItem } from "@/entities/program/types"
 import { progression } from "./progression"
 
-export type SetLog = { reps?: number; weight?: number; done: boolean }
+export type SetLog = {
+  reps?: number
+  weight?: number
+  done: boolean
+  /** A warm-up set: no rest timer after it, and it's dropped when the workout is saved. */
+  warmup?: true
+}
 
 export type SessionExercise = {
   ex: number
@@ -41,6 +47,8 @@ type State = {
   setRest: (i: number, seconds: number) => void
   /** Links exercise i to the previous one as a superset, or unlinks it. */
   toggleSuperset: (i: number) => void
+  /** Puts these warm-up sets in front of exercise i, replacing any it has; an empty list removes them. */
+  setWarmup: (i: number, sets: Pick<SetLog, "weight" | "reps">[]) => void
   updateSet: (i: number, j: number, patch: Partial<SetLog>) => void
   toggleSet: (i: number, j: number) => void
   addSet: (i: number) => void
@@ -117,6 +125,11 @@ export const useSessionStore = create<State>()(
         moveExercise: (i, dir) => edit((s) => ({ ...s, exercises: moveItem(s.exercises, i, dir) })),
         setRest: (i, rest) => editEx(i, (e) => ({ ...e, rest })),
         toggleSuperset: (i) => i > 0 && editEx(i, (e) => withLink(e, e.superset ? undefined : true)),
+        setWarmup: (i, warmup) =>
+          editEx(i, (e) => ({
+            ...e,
+            sets: [...warmup.map((s) => ({ ...s, done: false, warmup: true as const })), ...e.sets.filter((s) => !s.warmup)],
+          })),
         updateSet: (i, j, patch) => editEx(i, (e) => ({ ...e, sets: e.sets.map((x, k) => (k === j ? { ...x, ...patch } : x)) })),
         toggleSet: (i, j) => {
           const e = get().active?.exercises[i]
@@ -126,7 +139,7 @@ export const useSessionStore = create<State>()(
           const { exercises } = get().active!
           const isLastOfWorkout = exercises.every((x) => x.sets.every((s) => s.done))
           const rest = restAfter(exercises, i)
-          if (done && rest > 0 && !isLastOfWorkout) get().startRest(rest)
+          if (done && rest > 0 && !isLastOfWorkout && !e.sets[j].warmup) get().startRest(rest)
         },
         addSet: (i) =>
           editEx(i, (e) => {
@@ -149,7 +162,7 @@ export const useSessionStore = create<State>()(
             ...s,
             endedAt: Date.now(),
             exercises: s.exercises
-              .map((e) => ({ ...e, sets: e.sets.filter((x) => x.done) }))
+              .map((e) => ({ ...e, sets: e.sets.filter((x) => x.done && !x.warmup) }))
               .filter((e) => e.sets.length > 0),
           }
           set((st) => ({
