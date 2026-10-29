@@ -82,7 +82,7 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
       <div className="mx-auto flex size-56 items-center justify-center overflow-hidden rounded-2xl bg-white p-1">
         {qr && <img src={qr} alt="QR" className="size-full" />}
       </div>
-      <div className="bg-surface hairline rounded-control p-3 font-mono text-xs break-all select-all">{url}</div>
+      <div className="bg-surface hairline rounded-control p-3 font-mono text-[12.5px] leading-relaxed font-medium break-all select-all">{url}</div>
     </Sheet>
   )
 }
