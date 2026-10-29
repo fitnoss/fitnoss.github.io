@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Check, Copy, FileText, Share } from "lucide-react"
 import { Button } from "@/shared/ui/button"
@@ -8,6 +8,7 @@ import { useExercises } from "@/entities/exercise/store"
 import type { ProgramData } from "@/entities/program/types"
 import { programToText } from "@/features/programs/format"
 import { encodeProgram } from "./codec/fitpack"
+import { QrCode } from "./QrCode"
 
 export function shareUrl(p: ProgramData) {
   return `${location.origin}${import.meta.env.BASE_URL}#${encodeProgram(p)}`
@@ -27,18 +28,9 @@ type Props = { program: ProgramData; open: boolean; onOpenChange: (o: boolean) =
 export function ShareDrawer({ program, open, onOpenChange }: Props) {
   const { t } = useTranslation()
   const { byCode, text } = useExercises()
-  const [qr, setQr] = useState("")
   const [copied, setCopied] = useState(false)
   const url = useMemo(() => (open ? shareUrl(program) : ""), [open, program])
   const plain = () => programToText(t, program, (c) => text(byCode.get(c)).name, url)
-
-  useEffect(() => {
-    if (!url) return
-    // Dark modules on a white tile scan reliably in both themes.
-    import("qrcode")
-      .then(({ default: QRCode }) => QRCode.toDataURL(url, { margin: 2, width: 480, errorCorrectionLevel: "M" }))
-      .then(setQr)
-  }, [url])
 
   return (
     <Sheet
@@ -80,7 +72,7 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
       }
     >
       <div className="mx-auto flex size-56 items-center justify-center overflow-hidden rounded-2xl bg-white p-1">
-        {qr && <img src={qr} alt="QR" className="size-full" />}
+        {url && <QrCode value={url} className="size-full" />}
       </div>
       <div className="bg-surface hairline rounded-control p-3 font-mono text-[12.5px] leading-relaxed font-medium break-all select-all">{url}</div>
     </Sheet>
