@@ -8,7 +8,7 @@ const mask = (layer: "fill" | "lines"): CSSProperties => {
 
 /**
  * fitnoss mark: the cat benching a barbell. Two mask layers (public/logo/) painted by the app theme,
- * so it inverts with the app's dark mode rather than the system's (unlike favicon.svg).
+ * so it inverts with the app's dark mode (favicon.svg is always on a white tile).
  */
 export function Logo({ className }: { className?: string }) {
   return (
