@@ -45,19 +45,20 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
         options={(["reps", "range", "time", "amrap", "max"] as const).map((k) => ({ value: k, label: t(`scheme.kind.${k}`) }))}
       />
 
-      <div className="flex flex-wrap justify-center gap-x-4 gap-y-3">
-        <Stepper label={t("scheme.sets")} value={item.sets} min={1} max={30} onChange={(sets) => onChange({ ...item, sets })} />
+      <div className="flex flex-wrap gap-x-4 gap-y-3">
+        <Stepper className="items-start" label={t("scheme.sets")} value={item.sets} min={1} max={30} onChange={(sets) => onChange({ ...item, sets })} />
         {reps.kind === "reps" && (
-          <Stepper label={t("scheme.reps")} value={reps.n} min={1} max={500} onChange={(n) => setReps({ kind: "reps", n })} />
+          <Stepper className="items-start" label={t("scheme.reps")} value={reps.n} min={1} max={500} onChange={(n) => setReps({ kind: "reps", n })} />
         )}
         {reps.kind === "range" && (
           <>
-            <Stepper label={t("scheme.from")} value={reps.a} min={1} max={reps.b} onChange={(a) => setReps({ ...reps, a })} />
-            <Stepper label={t("scheme.to")} value={reps.b} min={reps.a} max={500} onChange={(b) => setReps({ ...reps, b })} />
+            <Stepper className="items-start" label={t("scheme.from")} value={reps.a} min={1} max={reps.b} onChange={(a) => setReps({ ...reps, a })} />
+            <Stepper className="items-start" label={t("scheme.to")} value={reps.b} min={reps.a} max={500} onChange={(b) => setReps({ ...reps, b })} />
           </>
         )}
         {reps.kind === "time" && (
           <Stepper
+            className="items-start"
             label={t("scheme.duration")}
             value={reps.s}
             min={5}
@@ -68,9 +69,9 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
           />
         )}
         {inSuperset ? (
-          <p className="text-muted w-full text-center text-xs">{t("programs.supersetRest")}</p>
+          <p className="text-muted w-full text-xs">{t("programs.supersetRest")}</p>
         ) : (
-          <div className="flex flex-col items-center gap-1.5">
+          <div className="flex flex-col items-start gap-1.5">
             <span className="text-muted text-xs font-medium">{t("scheme.rest")}</span>
             <RestInput value={item.rest} onChange={(rest) => onChange({ ...item, rest })} />
           </div>
