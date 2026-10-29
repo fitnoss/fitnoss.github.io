@@ -194,6 +194,10 @@
     "weight": "Вес, кг",
     "note": "Заметка",
     "notePlaceholder": "например, пауза внизу",
+    "progression": "Автопрогрессия",
+    "progressionReps": "Сделали все подходы по {{n}} — в следующий раз вес +{{inc}} кг.",
+    "progressionRange": "Добавляйте по повтору, пока все подходы не дойдут до {{b}}. Тогда вес +{{inc}} кг и снова с {{a}}.",
+    "progressionDeload": "{{n}} неудачи подряд на одном весе — вес −{{pct}}%.",
     "kind": {
       "reps": "Повторы",
       "range": "Диапазон",
@@ -265,7 +269,9 @@
     "viewList": "Списком",
     "viewCards": "Карточками",
     "next": "Дальше",
-    "nextInSuperset": "Дальше в суперсете"
+    "nextInSuperset": "Дальше в суперсете",
+    "progressionUp": "Вес вырос",
+    "progressionDeload": "Разгрузка"
   },
   "journal": {
     "title": "Прогресс",

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router"
-import { ArrowDown, ArrowUp, Check, Clock, Link2, Minus, Plus, Trash2, Unlink2 } from "lucide-react"
+import { ArrowDown, ArrowUp, Check, Clock, Link2, Minus, Plus, Trash2, TrendingDown, TrendingUp, Unlink2 } from "lucide-react"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { RestInput } from "@/shared/components/RestInput"
 import { Button } from "@/shared/ui/button"
@@ -63,6 +63,13 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
           </div>
           <div className="text-muted mt-0.5 flex items-center gap-1 text-[13px]">
             {t("workout.target")}: {formatRepsLabel(t, e.reps)}
+            {e.progression && (
+              <span className={cn("inline-flex items-center gap-0.5 font-medium", e.progression === "up" ? "text-accent" : "text-fg")}>
+                {" "}·{" "}
+                {e.progression === "up" ? <TrendingUp className="size-3.5" /> : <TrendingDown className="size-3.5" />}
+                {t(e.progression === "up" ? "workout.progressionUp" : "workout.progressionDeload")}
+              </span>
+            )}
             {restsAfter && (
               <>
                 {" "}·

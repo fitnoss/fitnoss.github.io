@@ -104,6 +104,23 @@ describe("fitpack", () => {
     expect(twice.length).toBeLessThanOrEqual(once.length + 1)
   })
 
+  it("keeps progression steps, repeating the last one cheaply", () => {
+    const p: ProgramData = {
+      name: "",
+      days: [
+        {
+          name: "",
+          items: [{ ...item(0, 5, "5"), inc: 2.5 }, { ...item(1, 3, "8-12"), inc: 1.25 }, { ...item(2), inc: 1.25 }, item(3), { ...item(4), inc: 5 }],
+        },
+        { name: "", items: [{ ...item(0, 5, "5"), inc: 5 }] },
+      ],
+    }
+    expect(decodeProgram(encodeProgram(p))).toEqual(p)
+    const plain = encodeProgram({ name: "", days: [{ name: "", items: [item(0), item(1), item(2)] }] })
+    const stepped = encodeProgram({ name: "", days: [{ name: "", items: [0, 1, 2].map((ex) => ({ ...item(ex), inc: 2.5 })) }] })
+    expect(stepped.length).toBeLessThanOrEqual(plain.length + 2)
+  })
+
   it("keeps supersets and weekdays", () => {
     const p: ProgramData = {
       name: "",
@@ -130,6 +147,7 @@ describe("fitpack", () => {
         reps: repsArb,
         rest: fc.integer({ min: 0, max: 120 }).map((n) => n * 5),
         weight: fc.integer({ min: 1, max: 800 }).map((n) => n / 2),
+        inc: fc.integer({ min: 1, max: 80 }).map((n) => n / 4),
         note: fc.string({ minLength: 1, maxLength: 20 }).filter((s) => s.trim() === s && s.length > 0),
         superset: fc.constant(true as const),
       },

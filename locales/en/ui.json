@@ -186,6 +186,10 @@
     "weight": "Weight, kg",
     "note": "Note",
     "notePlaceholder": "e.g. pause at the bottom",
+    "progression": "Auto-progression",
+    "progressionReps": "All sets done for {{n}} reps — next time the weight goes up {{inc}} kg.",
+    "progressionRange": "Add a rep per set until all sets reach {{b}}. Then +{{inc}} kg and back to {{a}}.",
+    "progressionDeload": "{{n}} failed workouts in a row at the same weight — the weight drops {{pct}}%.",
     "kind": {
       "reps": "Reps",
       "range": "Range",
@@ -251,7 +255,9 @@
     "viewList": "List",
     "viewCards": "Cards",
     "next": "Next",
-    "nextInSuperset": "Next in superset"
+    "nextInSuperset": "Next in superset",
+    "progressionUp": "Weight up",
+    "progressionDeload": "Deload"
   },
   "journal": {
     "title": "Progress",

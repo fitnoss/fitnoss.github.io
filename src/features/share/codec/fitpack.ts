@@ -1,15 +1,16 @@
 /**
  * FitPack — a bit-level format for sharing programs in a URL fragment.
  *
- *   header   3b version · 1b hasName · 1b hasWeights · 1b hasNotes · 1b hasSupersets · 1b hasSchedule
+ *   header   3b version · 1b hasName · 1b hasWeights · 1b hasNotes · 1b hasSupersets · 1b hasSchedule · 1b hasSteps
  *   name     text (if hasName)
  *   days     3b (count - 1)
  *   day      4b name (0 = "Day N", 1..14 preset token, 15 = text) · [7b weekdays, bit 0 = Monday] · varint item count
- *   item     [1b superset with previous, not on the first item] · exercise code (prefix code) · scheme · [weight] · [note]
+ *   item     [1b superset with previous, not on the first item] · exercise code (prefix code) · scheme · [weight] · [step] · [note]
  *   scheme   move-to-front list of recent schemes, initially [3×10 90s]
  *            0 = recent[0] · 10 + 2b = recent[1..4] · 11 + explicit:
  *            sets, reps and rest, each a Huffman code over a table of common values (+ escape)
  *   weight   0 = none · 10 + 6b = n × 2.5 kg (plates; n = 1..63) · 11 + varint (kg × 2)
+ *   step     auto-progression increment: 0 = none · 10 = same as the previous step (initially 2.5 kg) · 11 + varint (kg × 4)
  *   note     0 = none · 10 = same as the previous note · 11 + text
  *   crc6     over everything above, then zero padding to a 6-bit boundary
  *
@@ -143,6 +144,11 @@ function readWeight(r: BitReader) {
   return r.bit() ? r.varint() / 2 : r.read(6) * 2.5
 }
 
+const FIRST_STEP = 2.5
+
+/** Steps are stored in quarter kilos; anything that rounds to zero means no progression. */
+const quarters = (kg: number | undefined) => Math.max(0, Math.round((kg ?? 0) * 4))
+
 function writeReps(w: BitWriter, reps: string) {
   const i = REPS.indexOf(reps)
   if (i >= 0) return REPS_CODE.write(w, i)
@@ -188,6 +194,7 @@ export function encodeProgram(p: ProgramData): string {
   const hasNotes = items.some((it) => !!it.note?.trim())
   const hasSupersets = p.days.some((d) => d.items.some((it, i) => i > 0 && it.superset))
   const hasSchedule = p.days.some((d) => d.weekdays?.length)
+  const hasSteps = items.some((it) => quarters(it.inc) > 0)
   const days = p.days.slice(0, MAX_DAYS)
   if (days.length === 0) throw new RangeError("program has no days")
 
@@ -197,11 +204,13 @@ export function encodeProgram(p: ProgramData): string {
   w.bit(hasNotes)
   w.bit(hasSupersets)
   w.bit(hasSchedule)
+  w.bit(hasSteps)
   if (hasName) writeText(w, p.name.trim())
 
   w.write(days.length - 1, 3)
   const recent = new Recent()
   let lastNote = ""
+  let lastStep = quarters(FIRST_STEP)
   for (const day of days) {
     const dn = DAY_NAMES.indexOf(day.name.trim() as (typeof DAY_NAMES)[number])
     if (dn >= 0) {
@@ -228,6 +237,16 @@ export function encodeProgram(p: ProgramData): string {
       }
       recent.use(it)
       if (hasWeights) writeWeight(w, it.weight)
+      if (hasSteps) {
+        const step = quarters(it.inc)
+        if (!step) w.bit(false)
+        else if (step === lastStep) w.write(0b10, 2)
+        else {
+          w.write(0b11, 2)
+          w.varint(step)
+          lastStep = step
+        }
+      }
       if (hasNotes) {
         const note = it.note?.trim() ?? ""
         if (!note) w.bit(false)
@@ -255,12 +274,14 @@ export function decodeProgram(payload: string): ProgramData {
   const hasNotes = r.bit()
   const hasSupersets = r.bit()
   const hasSchedule = r.bit()
+  const hasSteps = r.bit()
   const name = hasName ? readText(r) : ""
 
   const dayCount = r.read(3) + 1
   const days: ProgramData["days"] = []
   const recent = new Recent()
   let lastNote = ""
+  let lastStep = quarters(FIRST_STEP)
   for (let d = 0; d < dayCount; d++) {
     const dn = r.read(4)
     const dayName = dn === 15 ? readText(r) : DAY_NAMES[dn]
@@ -282,6 +303,13 @@ export function decodeProgram(payload: string): ProgramData {
       if (superset) item.superset = true
       const weight = hasWeights ? readWeight(r) : undefined
       if (weight) item.weight = weight
+      if (hasSteps && r.bit()) {
+        if (r.bit()) {
+          lastStep = r.varint()
+          if (!lastStep) throw new DecodeError("zero step")
+        }
+        item.inc = lastStep / 4
+      }
       if (hasNotes && r.bit()) {
         if (!r.bit()) {
           if (!lastNote) throw new DecodeError("no note to repeat")

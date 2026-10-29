@@ -1,6 +1,6 @@
 import type { TFunction } from "i18next"
 import i18n from "@/shared/i18n"
-import { itemLabels, parseReps, restAfter, type ProgramData, type ProgramItem, type Reps } from "@/entities/program/types"
+import { canProgress, itemLabels, parseReps, restAfter, type ProgramData, type ProgramItem, type Reps } from "@/entities/program/types"
 
 export function formatRepsLabel(t: TFunction, reps: Reps) {
   const p = parseReps(reps)
@@ -25,9 +25,10 @@ export function formatDuration(t: TFunction, s: number) {
   return r ? t("units.minSec", { m, s: r }) : t("units.min", { n: m })
 }
 
-export function formatScheme(t: TFunction, it: Pick<ProgramItem, "sets" | "reps" | "rest" | "weight">) {
+export function formatScheme(t: TFunction, it: Pick<ProgramItem, "sets" | "reps" | "rest" | "weight" | "inc">) {
   const parts = [`${it.sets} × ${formatRepsLabel(t, it.reps)}`]
   if (it.weight) parts.push(t("units.kg", { n: it.weight }))
+  if (it.inc && canProgress(it.reps)) parts.push(`↗ ${t("units.kg", { n: `+${it.inc}` })}`)
   if (it.rest) parts.push(`⏱ ${formatDuration(t, it.rest)}`)
   return parts.join(" · ")
 }

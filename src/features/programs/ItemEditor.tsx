@@ -3,8 +3,14 @@ import { Field, Input } from "@/shared/ui/field"
 import { Segmented } from "@/shared/ui/segmented"
 import { RestInput } from "@/shared/components/RestInput"
 import { Stepper } from "@/shared/components/Stepper"
-import { formatReps, parseReps, type ParsedReps, type ProgramItem } from "@/entities/program/types"
+import { Switch } from "@/shared/ui/switch"
+import { canProgress, formatReps, parseReps, type ParsedReps, type ProgramItem } from "@/entities/program/types"
+import { DELOAD, DELOAD_AFTER } from "@/entities/session/progression"
 import { formatDuration } from "./format"
+
+/** Progression steps in kg: dumbbells go up by 1–2 kg, barbells by pairs of plates. */
+const STEPS = [1, 1.25, 2, 2.5, 5]
+const DEFAULT_STEP = 2.5
 
 type Props = {
   item: ProgramItem
@@ -24,7 +30,11 @@ const KIND_DEFAULTS: Record<ParsedReps["kind"], ParsedReps> = {
 export function ItemEditor({ item, onChange, inSuperset }: Props) {
   const { t } = useTranslation()
   const reps = parseReps(item.reps)
-  const setReps = (p: ParsedReps) => onChange({ ...item, reps: formatReps(p) })
+  const setReps = (p: ParsedReps) => {
+    const next = { ...item, reps: formatReps(p) }
+    if (!canProgress(next.reps)) delete next.inc
+    onChange(next)
+  }
 
   return (
     <div className="space-y-4">
@@ -89,6 +99,36 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
         </Field>
       </div>
 
+      {(reps.kind === "reps" || reps.kind === "range") && (
+        <div className="bg-page rounded-control space-y-3 p-3">
+          <label className="flex cursor-pointer items-center justify-between gap-3">
+            <span className="text-[15px] font-medium">{t("scheme.progression")}</span>
+            <Switch
+              checked={!!item.inc}
+              onChange={(on) => {
+                const { inc: _, ...rest } = item
+                onChange(on ? { ...item, inc: DEFAULT_STEP } : rest)
+              }}
+            />
+          </label>
+          {item.inc && (
+            <>
+              <Segmented
+                size="sm"
+                value={String(item.inc)}
+                onChange={(v) => onChange({ ...item, inc: Number(v) })}
+                options={STEPS.map((n) => ({ value: String(n), label: t("units.kg", { n: `+${n}` }) }))}
+              />
+              <p className="text-muted text-xs leading-snug">
+                {reps.kind === "reps"
+                  ? t("scheme.progressionReps", { n: reps.n, inc: item.inc })
+                  : t("scheme.progressionRange", { a: reps.a, b: reps.b, inc: item.inc })}{" "}
+                {t("scheme.progressionDeload", { n: DELOAD_AFTER, pct: DELOAD * 100 })}
+              </p>
+            </>
+          )}
+        </div>
+      )}
     </div>
   )
 }

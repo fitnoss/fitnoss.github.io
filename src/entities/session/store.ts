@@ -2,7 +2,8 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { uid } from "@/shared/lib/id"
 import { useSettings } from "@/shared/storage/settings"
-import { DEFAULT_SCHEME, moveItem, removeItem, restAfter, targetReps, withLink, type ProgramDay } from "@/entities/program/types"
+import { DEFAULT_SCHEME, moveItem, removeItem, restAfter, targetReps, withLink, type ProgramDay, type ProgramItem } from "@/entities/program/types"
+import { progression } from "./progression"
 
 export type SetLog = { reps?: number; weight?: number; done: boolean }
 
@@ -13,6 +14,8 @@ export type SessionExercise = {
   sets: SetLog[]
   /** Done back-to-back with the previous exercise, as in ProgramItem. */
   superset?: true
+  /** Auto-progression moved the weight for this workout (see progression.ts). */
+  progression?: "up" | "deload"
 }
 
 export type Session = {
@@ -59,16 +62,23 @@ export function lastSets(history: Session[], ex: number): SetLog[] | undefined {
   }
 }
 
-function plannedExercise(history: Session[], ex: number, sets: number, reps: string, rest: number): SessionExercise {
+function plannedExercise(history: Session[], it: Pick<ProgramItem, "ex" | "sets" | "reps" | "rest" | "weight" | "inc">): SessionExercise {
+  const { ex, reps, rest } = it
+  const auto = progression(history, it)
+  if (auto) {
+    const e: SessionExercise = { ex, reps, rest, sets: auto.sets.map((s) => ({ ...s, done: false })) }
+    if (auto.change) e.progression = auto.change
+    return e
+  }
   const prev = lastSets(history, ex)
   const target = targetReps(reps)
   return {
     ex,
     reps,
     rest,
-    sets: Array.from({ length: sets }, (_, j) => {
+    sets: Array.from({ length: it.sets }, (_, j) => {
       const p = prev?.[Math.min(j, prev.length - 1)]
-      return { reps: target ?? p?.reps, weight: p?.weight, done: false }
+      return { reps: target ?? p?.reps, weight: p?.weight ?? it.weight, done: false }
     }),
   }
 }
@@ -91,9 +101,7 @@ export const useSessionStore = create<State>()(
               programId,
               day,
               startedAt: Date.now(),
-              exercises: (plan?.items ?? []).map((it) =>
-                withLink(plannedExercise(history, it.ex, it.sets, it.reps, it.rest), it.superset),
-              ),
+              exercises: (plan?.items ?? []).map((it) => withLink(plannedExercise(history, it), it.superset)),
             },
           })
         },
@@ -102,7 +110,7 @@ export const useSessionStore = create<State>()(
             ...s,
             exercises: [
               ...s.exercises,
-              plannedExercise(get().history, ex, DEFAULT_SCHEME.sets, DEFAULT_SCHEME.reps, useSettings.getState().defaultRest),
+              plannedExercise(get().history, { ex, ...DEFAULT_SCHEME, rest: useSettings.getState().defaultRest }),
             ],
           })),
         removeExercise: (i) => edit((s) => ({ ...s, exercises: removeItem(s.exercises, i) })),

@@ -9,6 +9,11 @@ export type ProgramItem = {
   reps: Reps
   rest: number
   weight?: number
+  /**
+   * Auto-progression step in kg, for "reps" and "range" schemes: once every set hits the top
+   * of the target, the next workout adds this much (see entities/session/progression.ts).
+   */
+  inc?: number
   note?: string
   /** Done back-to-back with the previous exercise (a superset); only the last one of the group rests. */
   superset?: true
@@ -71,6 +76,12 @@ export function targetReps(r: Reps): number | undefined {
   if (p.kind === "reps") return p.n
   if (p.kind === "range") return p.b
   return undefined
+}
+
+/** Auto-progression works on a rep count to beat: fixed reps or a range. */
+export function canProgress(r: Reps) {
+  const kind = parseReps(r).kind
+  return kind === "reps" || kind === "range"
 }
 
 type Linked = { superset?: true; rest: number }
