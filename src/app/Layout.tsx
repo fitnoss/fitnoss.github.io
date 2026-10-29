@@ -95,7 +95,7 @@ export function Layout() {
       </nav>
 
       <main className="bg-page relative isolate min-h-svh overflow-x-clip pb-[calc(3.75rem+env(safe-area-inset-bottom))] md:ml-[6rem] md:pb-0">
-        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 wash" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(34rem,70svh)] wash" />
         <div className="mx-auto max-w-2xl">
           <Suspense fallback={null}>
             <Outlet />

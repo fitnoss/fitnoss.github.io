@@ -229,21 +229,24 @@ dialog.sheet {
   }
 }
 
-/* Soft grey glow at the top of the page; two lobes slowly drift past each other. */
+/*
+ * Soft glow at the top of the page; two lobes slowly drift past each other. Each fades out at 70%
+ * of its radius, so with the centres kept between 38% and 62% the lobes never reach the side edges.
+ */
 @property --wash-x {
   syntax: "<percentage>";
   inherits: false;
-  initial-value: 35%;
+  initial-value: 38%;
 }
 @utility wash {
   background:
-    radial-gradient(ellipse 50% 100% at var(--wash-x) 0%, var(--wash), transparent 70%),
-    radial-gradient(ellipse 40% 80% at calc(100% - var(--wash-x)) 0%, var(--wash-soft), transparent 70%);
+    radial-gradient(ellipse 54% 100% at var(--wash-x) 0%, var(--wash), transparent 70%),
+    radial-gradient(ellipse 44% 85% at calc(100% - var(--wash-x)) 0%, var(--wash-soft), transparent 70%);
   animation: wash-drift 14s ease-in-out infinite alternate;
 }
 @keyframes wash-drift {
   to {
-    --wash-x: 65%;
+    --wash-x: 62%;
   }
 }
 
