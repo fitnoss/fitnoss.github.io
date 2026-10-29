@@ -45,9 +45,10 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // App shell + exercise data are precached; images are cached as they are viewed.
+        // App shell + exercise data are precached; images are cached as they are viewed. The flag
+        // font is only fetched on Windows (see main.tsx), so it's cached on use rather than for everyone.
         globPatterns: ["**/*.{js,css,html,svg,woff2}", "data/*.json", "locales/**/*.json"],
-        globIgnores: ["img/**"],
+        globIgnores: ["img/**", "**/TwemojiCountryFlags-*.woff2"],
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         navigateFallback: "/index.html",
         runtimeCaching: [
@@ -55,6 +56,11 @@ export default defineConfig({
             urlPattern: ({ url }) => url.pathname.startsWith("/img/ex/"),
             handler: "CacheFirst",
             options: { cacheName: "ex-images", expiration: { maxEntries: 5000 } },
+          },
+          {
+            urlPattern: ({ url }) => /\/TwemojiCountryFlags-[^/]+\.woff2$/.test(url.pathname),
+            handler: "CacheFirst",
+            options: { cacheName: "flag-font" },
           },
           {
             urlPattern: ({ url }) => url.hostname === "i.ytimg.com",

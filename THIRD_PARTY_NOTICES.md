@@ -14,6 +14,18 @@ Videos are embedded with the standard YouTube player (youtube-nocookie.com) and 
 by fitnoss. They remain the property of their authors and are subject to the
 [YouTube Terms of Service](https://www.youtube.com/t/terms).
 
+## Flag emoji on Windows
+
+Windows doesn't draw country flag emoji, so there the app loads the "Twemoji Country Flags" font from
+[country-flag-emoji-polyfill](https://github.com/talkjs/country-flag-emoji-polyfill) (MIT, © TalkJS). The flag
+artwork is from [Twemoji](https://github.com/twitter/twemoji), © Twitter, Inc and other contributors, licensed
+under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Other systems show their own emoji.
+
+## Fonts
+
+[Onest](https://github.com/simpals/onest) and [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) are
+bundled via Fontsource, both under the [SIL Open Font License 1.1](https://openfontlicense.org).
+
 ## Software
 
 fitnoss is built with open-source libraries, each under its own license (see `package.json` and

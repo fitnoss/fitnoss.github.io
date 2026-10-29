@@ -15,6 +15,12 @@ import { AccentPicker } from "./AccentPicker"
 import { downloadAllImages, exportBackup, importBackup } from "./backup"
 import { useTranslationCoverage } from "./coverage"
 
+/**
+ * Flags next to each language in the picker; English is spoken on both sides of the Atlantic.
+ * Native emoji, so each device draws its own (Windows gets Twemoji's, see main.tsx).
+ */
+const FLAGS: Record<string, string[]> = { ru: ["🇷🇺"], en: ["🇬🇧", "🇺🇸"] }
+
 function Row({ icon: Icon, children, to }: { icon: typeof Info; children: React.ReactNode; to: string }) {
   return (
     <Link to={to} className="hover:bg-surface-hover flex h-[52px] items-center gap-3 px-4">
@@ -98,10 +104,17 @@ export function MorePage() {
             options={languages.map((l) => ({
               value: l.code,
               label: (
-                <>
+                <span className="inline-flex items-center gap-1.5">
+                  {FLAGS[l.code] && (
+                    <span aria-hidden className="inline-flex gap-1">
+                      {FLAGS[l.code].map((f) => (
+                        <span key={f}>{f}</span>
+                      ))}
+                    </span>
+                  )}
                   {l.nativeName}
-                  {coverage[l.code] !== undefined && coverage[l.code] < 100 && <span className="ml-1 text-[11px] opacity-60">{coverage[l.code]}%</span>}
-                </>
+                  {coverage[l.code] !== undefined && coverage[l.code] < 100 && <span className="text-[11px] opacity-60">{coverage[l.code]}%</span>}
+                </span>
               ),
             }))}
           />

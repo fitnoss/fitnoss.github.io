@@ -92,7 +92,8 @@ html.dark[data-accent] {
 }
 
 @theme inline {
-  --font-sans: "Onest", ui-sans-serif, system-ui, sans-serif;
+  /* "Twemoji Country Flags" only exists where the flag polyfill adds it (main.tsx), and only covers flags. */
+  --font-sans: "Twemoji Country Flags", "Onest", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius-control: 11px;
   --radius-panel: 18px;
