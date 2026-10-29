@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link, useNavigate } from "react-router"
+import { Link, useLocation, useNavigate } from "react-router"
 import { CalendarDays, Check, ChevronRight, Coffee, ListChecks, Play, Plus, Timer } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
@@ -29,7 +29,14 @@ function slotsOn(programs: Program[], wd: number): Slot[] {
 export function ProgramsPage() {
   const { t } = useTranslation()
   const programs = useProgramStore((s) => s.programs)
-  const [newOpen, setNewOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
+  // Other screens link here with { newProgram: true } to open the sheet right away.
+  const [newOpen, setNewOpen] = useState(() => !!(location.state as { newProgram?: boolean } | null)?.newProgram)
+  useEffect(() => {
+    // Drop the flag so a reload or going back doesn't open the sheet again.
+    if (location.state) navigate(location.pathname, { replace: true, state: null })
+  }, [location.state, location.pathname, navigate])
 
   return (
     <>

@@ -65,7 +65,7 @@ function StartWorkout() {
         ) : (
           <p className="text-muted text-center text-sm">
             {t("workout.noPrograms")}{" "}
-            <Link to="/" className="text-fg font-medium underline underline-offset-4">
+            <Link to="/" state={{ newProgram: true }} className="text-fg font-medium underline underline-offset-4">
               {t("workout.createProgram")}
             </Link>
           </p>
