@@ -44,7 +44,9 @@ export function Toaster() {
           className="bg-inverse text-inverse-fg pointer-events-auto flex max-w-sm items-center gap-2.5 rounded-full py-2 pr-2 pl-4 text-sm font-medium shadow-lg shadow-black/20 [animation:toast-in_.2s_ease-out]"
           onClick={() => dismiss(t.id)}
         >
-          {t.kind === "success" && <Check className="text-accent size-4 shrink-0" strokeWidth={3} />}
+          {t.kind === "success" && (
+            <Check className="bg-inverse-fg text-inverse size-5 shrink-0 rounded-full p-[3px]" strokeWidth={3.5} />
+          )}
           {t.kind === "error" && <CircleAlert className="text-danger size-4 shrink-0" />}
           <span className="py-1 pr-2">{t.text}</span>
           {t.action && (

@@ -47,7 +47,7 @@ export function MenuItem({ danger, className, ...props }: React.ComponentProps<"
       type="button"
       role="menuitem"
       className={cn(
-        "hover:bg-surface-hover flex h-10 w-full items-center gap-2.5 rounded-lg px-3 text-left text-sm font-medium [&_svg]:size-4",
+        "hover:bg-surface-hover flex h-10 w-full items-center gap-2.5 rounded-lg px-3 text-left text-sm font-medium whitespace-nowrap [&_svg]:size-4",
         danger && "text-danger",
         className,
       )}

@@ -42,7 +42,7 @@
   --accent: #25262c;
   --accent-fg: #ffffff;
   --danger: #d61c2e;
-  --success: var(--fg);
+  --success: #16a34a;
   --backdrop: rgb(255 255 255 / 0.5);
   --wash: rgb(0 0 0 / 0.06);
   --wash-soft: rgb(0 0 0 / 0.035);
@@ -64,7 +64,7 @@
   --accent: #ffffff;
   --accent-fg: #000000;
   --danger: #ff4d5e;
-  --success: var(--fg);
+  --success: #30d158;
   --backdrop: rgb(0 0 0 / 0.55);
   --wash: rgb(255 255 255 / 0.1);
   --wash-soft: rgb(255 255 255 / 0.055);
