@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { ChevronRight, Plus } from "lucide-react"
 import { Sheet } from "@/shared/ui/sheet"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
@@ -17,7 +17,7 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const create = useProgramStore((s) => s.create)
-  const { byCode } = useExercises()
+  const { byCode, text } = useExercises()
   const lang = i18n.resolvedLanguage === "ru" ? "ru" : "en"
 
   const go = (id: string) => {
@@ -53,23 +53,30 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
           })
           const shown = photos.slice(0, THUMBS)
           return (
-            <button
+            // The whole card picks the template (the button's ::after covers it); the photos on top open their exercises.
+            <div
               key={tpl.id}
-              type="button"
-              className="bg-surface hairline hover:bg-surface-hover flex w-full items-center gap-3 rounded-2xl p-4 text-left transition-colors"
-              onClick={() => go(create({ name: tpl.name[lang], days: structuredClone(tpl.days) }).id)}
+              className="bg-surface hairline hover:bg-surface-hover relative flex w-full items-center gap-3 rounded-2xl p-4 transition-colors"
             >
               <span className="min-w-0 flex-1">
-                <span className="block font-semibold">{tpl.name[lang]}</span>
-                <span className="text-muted mt-0.5 block text-sm">{tpl.description[lang]}</span>
-                <span className="text-muted mt-1.5 block text-xs tabular-nums">
-                  {t("programs.daysCount", { count: tpl.days.length })} ·{" "}
-                  {t("programs.exercisesCount", { count: tpl.days.reduce((n, d) => n + d.items.length, 0) })}
-                  {weekdays.length > 0 && <> · {formatWeekdays(weekdays)}</>}
-                </span>
+                <button
+                  type="button"
+                  className="block text-left after:absolute after:inset-0 after:rounded-2xl"
+                  onClick={() => go(create({ name: tpl.name[lang], days: structuredClone(tpl.days) }).id)}
+                >
+                  <span className="block font-semibold">{tpl.name[lang]}</span>
+                  <span className="text-muted mt-0.5 block text-sm">{tpl.description[lang]}</span>
+                  <span className="text-muted mt-1.5 block text-xs tabular-nums">
+                    {t("programs.daysCount", { count: tpl.days.length })} ·{" "}
+                    {t("programs.exercisesCount", { count: tpl.days.reduce((n, d) => n + d.items.length, 0) })}
+                    {weekdays.length > 0 && <> · {formatWeekdays(weekdays)}</>}
+                  </span>
+                </button>
                 <span className="mt-3 flex gap-1">
                   {shown.map((ex, i) => (
-                    <ExerciseImage key={i} ex={ex} alt="" animate={false} className="hairline size-9 shrink-0 rounded-[8px]" />
+                    <Link key={i} to={`/ex/${ex.s}`} className="relative shrink-0" aria-label={text(ex).name}>
+                      <ExerciseImage ex={ex} alt="" animate={false} className="hairline size-9 rounded-[8px]" />
+                    </Link>
                   ))}
                   {items.length > shown.length && (
                     <span className="bg-page hairline text-muted flex size-9 shrink-0 items-center justify-center rounded-[8px] text-xs font-semibold tabular-nums">
@@ -79,7 +86,7 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
                 </span>
               </span>
               <ChevronRight className="text-muted size-5 shrink-0" />
-            </button>
+            </div>
           )
         })}
       </div>

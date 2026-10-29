@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate, useParams } from "react-router"
+import { Link, useNavigate, useParams } from "react-router"
 import { ArrowDown, ArrowUp, CalendarDays, ChevronDown, Copy, Link2, Pencil, Play, Plus, Share, Trash2 } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
@@ -274,8 +274,8 @@ function ItemCard({
   canUp: boolean
   canDown: boolean
   /** Superset with the exercise above / below; absent at the ends of the day. */
-  linkUp?: Link
-  linkDown?: Link
+  linkUp?: SupersetToggle
+  linkDown?: SupersetToggle
   onRemove: () => void
 }) {
   const { t } = useTranslation()
@@ -284,12 +284,15 @@ function ItemCard({
 
   return (
     <Panel className={cn("overflow-hidden transition-colors", !open && "hover:bg-surface-hover")}>
-      <button type="button" className="flex w-full items-center gap-3 p-2.5 pr-4 text-left" onClick={onToggle} aria-expanded={open}>
+      <div className="flex items-center">
         {ex ? (
-          <ExerciseImage ex={ex} alt="" animate={false} className="hairline size-14 shrink-0 rounded-[10px]" />
+          <Link to={`/ex/${ex.s}`} className="shrink-0 py-2.5 pl-2.5" aria-label={text(ex).name}>
+            <ExerciseImage ex={ex} alt="" animate={false} className="hairline size-14 rounded-[10px]" />
+          </Link>
         ) : (
-          <div className="bg-elevated size-14 shrink-0 rounded-[10px]" />
+          <div className="bg-elevated my-2.5 ml-2.5 size-14 shrink-0 rounded-[10px]" />
         )}
+        <button type="button" className="flex min-w-0 flex-1 items-center gap-3 self-stretch py-2.5 pr-4 pl-3 text-left" onClick={onToggle} aria-expanded={open}>
         <div className="min-w-0 flex-1">
           <div className="line-clamp-2 text-[15px] leading-snug font-medium">
             <span className="text-muted mr-1.5 tabular-nums">{label}</span>
@@ -298,7 +301,8 @@ function ItemCard({
           <div className="text-muted mt-0.5 text-[13px]">{formatScheme(t, inSuperset ? { ...item, rest: 0 } : item)}</div>
         </div>
         <ChevronDown className={cn("text-muted size-5 shrink-0 transition-transform", open && "rotate-180")} />
-      </button>
+        </button>
+      </div>
       {open && (
         <div className="px-2.5 pb-2.5">
           <div className="bg-page rounded-control p-2.5">
@@ -333,10 +337,10 @@ function ItemCard({
   )
 }
 
-type Link = { linked: boolean; toggle: () => void }
+type SupersetToggle = { linked: boolean; toggle: () => void }
 
 /** Arrow toggle in the "Superset with:" row: lit while linked to the exercise above / below. */
-function LinkToggle({ dir, linked, toggle }: Link & { dir: "up" | "down" }) {
+function LinkToggle({ dir, linked, toggle }: SupersetToggle & { dir: "up" | "down" }) {
   const { t } = useTranslation()
   const Arrow = dir === "up" ? ArrowUp : ArrowDown
   const label = linked ? (dir === "up" ? "programs.unlinkUp" : "programs.unlinkDown") : dir === "up" ? "programs.linkUp" : "programs.linkDown"

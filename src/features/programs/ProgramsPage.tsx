@@ -185,7 +185,7 @@ function TodayCard({
   onStart: () => void
 }) {
   const { t } = useTranslation()
-  const { byCode } = useExercises()
+  const { byCode, text } = useExercises()
   const d = program.days[day]
   const shown = d.items.slice(0, 5)
   const sets = d.items.reduce((n, it) => n + it.sets, 0)
@@ -213,7 +213,9 @@ function TodayCard({
         {shown.map((it, i) => {
           const ex = byCode.get(it.ex)
           return ex ? (
-            <ExerciseImage key={i} ex={ex} alt="" animate={false} className="hairline size-12 shrink-0 rounded-[10px]" />
+            <Link key={i} to={`/ex/${ex.s}`} className="shrink-0" aria-label={text(ex).name}>
+              <ExerciseImage ex={ex} alt="" animate={false} className="hairline size-12 rounded-[10px]" />
+            </Link>
           ) : (
             <div key={i} className="bg-page size-12 shrink-0 rounded-[10px]" />
           )
