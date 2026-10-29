@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import { SearchX } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
-import { Logo } from "@/shared/components/Logo"
+import { Logo, Wordmark } from "@/shared/components/Logo"
 import { Empty } from "@/shared/ui/panel"
 import { useExercises, useFavorites } from "@/entities/exercise/store"
 import { ExerciseList } from "./ExerciseList"
@@ -26,7 +26,7 @@ export function CatalogPage() {
         title={
           <span className="flex items-center gap-3">
             <Logo className="h-12 w-14 md:h-16 md:w-[4.5rem]" />
-            fitcraft
+            <Wordmark />
           </span>
         }
         actions={<span className="text-muted pr-2 text-sm tabular-nums">{t("catalog.count", { count: items.length })}</span>}

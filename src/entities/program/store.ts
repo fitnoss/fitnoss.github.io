@@ -36,6 +36,6 @@ export const useProgramStore = create<State>()(
         return get().create({ name: `${src.name} ${suffix}`.trim(), days: structuredClone(src.days) })
       },
     }),
-    { name: "fitcraft:programs", version: 1 },
+    { name: "fitnoss:programs", version: 1 },
   ),
 )

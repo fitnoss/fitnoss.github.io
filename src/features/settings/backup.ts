@@ -5,7 +5,7 @@ import type { Program } from "@/entities/program/types"
 import { useSessionStore, type Session } from "@/entities/session/store"
 
 type Backup = {
-  app: "fitcraft"
+  app: "fitnoss"
   version: 1
   exportedAt: string
   programs: Program[]
@@ -15,7 +15,7 @@ type Backup = {
 
 export function exportBackup() {
   const data: Backup = {
-    app: "fitcraft",
+    app: "fitnoss",
     version: 1,
     exportedAt: new Date().toISOString(),
     programs: useProgramStore.getState().programs,
@@ -25,7 +25,7 @@ export function exportBackup() {
   const blob = new Blob([JSON.stringify(data)], { type: "application/json" })
   const a = document.createElement("a")
   a.href = URL.createObjectURL(blob)
-  a.download = `fitcraft-backup-${data.exportedAt.slice(0, 10)}.json`
+  a.download = `fitnoss-backup-${data.exportedAt.slice(0, 10)}.json`
   a.click()
   setTimeout(() => URL.revokeObjectURL(a.href), 1000)
 }
@@ -33,8 +33,8 @@ export function exportBackup() {
 /** Merges a backup into local data; existing items with the same id are kept. */
 export async function importBackup(file: File) {
   const data = JSON.parse(await file.text()) as Partial<Backup>
-  if (data.app !== "fitcraft" || !Array.isArray(data.programs) || !Array.isArray(data.history)) {
-    throw new Error("not a fitcraft backup")
+  if (data.app !== "fitnoss" || !Array.isArray(data.programs) || !Array.isArray(data.history)) {
+    throw new Error("not a fitnoss backup")
   }
   const programs = useProgramStore.getState().programs
   const ids = new Set(programs.map((p) => p.id))

@@ -4,7 +4,7 @@ import { initReactI18next } from "react-i18next"
 export type LanguageInfo = { code: string; name: string; nativeName: string }
 
 const BASE = import.meta.env.BASE_URL
-const STORAGE_KEY = "fitcraft:lang"
+const STORAGE_KEY = "fitnoss:lang"
 
 export let languages: LanguageInfo[] = [{ code: "en", name: "English", nativeName: "English" }]
 

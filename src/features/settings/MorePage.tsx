@@ -91,7 +91,7 @@ export function MorePage() {
           title={t("more.language")}
           hint={
             <a
-              href="https://github.com/fitcraft/fitcraft.github.io/blob/main/CONTRIBUTING.md#translations"
+              href="https://github.com/fitnoss/fitnoss.github.io/blob/main/CONTRIBUTING.md#translations"
               target="_blank"
               rel="noreferrer"
               className="hover:text-fg underline underline-offset-4"

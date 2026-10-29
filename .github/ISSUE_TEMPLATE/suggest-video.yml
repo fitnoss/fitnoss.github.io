@@ -7,8 +7,8 @@ body:
     id: exercise
     attributes:
       label: Exercise link
-      description: Open the exercise on fitcraft.github.io and paste the address
-      placeholder: https://fitcraft.github.io/#/ex/barbell-full-squat
+      description: Open the exercise on fitnoss.github.io and paste the address
+      placeholder: https://fitnoss.github.io/#/ex/barbell-full-squat
     validations:
       required: true
   - type: input

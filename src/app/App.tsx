@@ -31,7 +31,7 @@ export function App() {
           <Route path="programs" element={<ProgramsPage />} />
           <Route path="programs/:id" element={<ProgramEditorPage />} />
           <Route path="s/:payload" element={<SharePage />} />
-          {/* Short share links: https://fitcraft.github.io/#<payload> */}
+          {/* Short share links: https://fitnoss.github.io/#<payload> */}
           <Route path=":payload" element={<SharePage />} />
           <Route path="workout" element={<WorkoutPage />} />
           <Route path="progress" element={<JournalPage />} />

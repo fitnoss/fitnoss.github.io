@@ -1,4 +1,4 @@
-# Как помочь fitcraft
+# Как помочь fitnoss
 
 ## Translations
 

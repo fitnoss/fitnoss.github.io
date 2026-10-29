@@ -159,7 +159,7 @@ export const useSessionStore = create<State>()(
           }),
       }
     },
-    { name: "fitcraft:sessions", version: 1 },
+    { name: "fitnoss:sessions", version: 1 },
   ),
 )
 

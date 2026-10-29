@@ -11,12 +11,12 @@ to WebP at build time; Russian texts are translations of the original English.
 ## YouTube videos
 
 Videos are embedded with the standard YouTube player (youtube-nocookie.com) and are not copied or hosted
-by fitcraft. They remain the property of their authors and are subject to the
+by fitnoss. They remain the property of their authors and are subject to the
 [YouTube Terms of Service](https://www.youtube.com/t/terms).
 
 ## Software
 
-fitcraft is built with open-source libraries, each under its own license (see `package.json` and
+fitnoss is built with open-source libraries, each under its own license (see `package.json` and
 `node_modules/*/LICENSE`), including React, React Router, Tailwind CSS, shadcn/ui (MIT), Radix UI (MIT),
 Lucide (ISC), Recharts (MIT), i18next (MIT), Zustand (MIT), TanStack Virtual (MIT), MiniSearch (MIT),
 dnd-kit (MIT), vaul (MIT), sonner (MIT), qrcode (MIT) and Workbox (MIT).

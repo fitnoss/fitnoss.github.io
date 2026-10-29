@@ -15,7 +15,7 @@ import type { Video } from "@/entities/exercise/types"
 
 type Candidate = { id: string; title: string; channel: string; duration?: number }
 
-const STORAGE = "fitcraft:dev:videos"
+const STORAGE = "fitnoss:dev:videos"
 
 export default function VideoReviewPage() {
   const { list, text, videos } = useExercises()

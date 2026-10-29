@@ -7,7 +7,7 @@ const mask = (layer: "fill" | "lines"): CSSProperties => {
 }
 
 /**
- * fitcraft mark: the cat benching a barbell. Two mask layers (public/logo/) painted by the app theme,
+ * fitnoss mark: the cat benching a barbell. Two mask layers (public/logo/) painted by the app theme,
  * so it inverts with the app's dark mode rather than the system's (unlike favicon.svg).
  */
 export function Logo({ className }: { className?: string }) {
@@ -15,6 +15,15 @@ export function Logo({ className }: { className?: string }) {
     <span aria-hidden className={cn("relative inline-block shrink-0", className)}>
       <span className="absolute inset-0 bg-white dark:bg-black" style={mask("fill")} />
       <span className="absolute inset-0 bg-black dark:bg-white" style={mask("lines")} />
+    </span>
+  )
+}
+
+/** The "fitnoss" wordmark, with "oss" a shade lighter than the rest. */
+export function Wordmark() {
+  return (
+    <span>
+      fitn<span className="text-muted">oss</span>
     </span>
   )
 }

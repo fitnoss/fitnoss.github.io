@@ -310,7 +310,7 @@
     "defaultRestHint": "Used for exercises added to a workout without a program, and for the first exercise of a new program. In a program, rest is set per exercise; during a workout, tap ⏱ on an exercise to change it.",
     "title": "More",
     "language": "Language",
-    "helpTranslate": "Help translate fitcraft",
+    "helpTranslate": "Help translate fitnoss",
     "theme": "Appearance",
     "themes": {
       "system": "System",
@@ -330,7 +330,7 @@
     "export": "Export",
     "import": "Import",
     "imported": "Imported {{programs}} programs and {{sessions}} workouts",
-    "importFailed": "This file is not a fitcraft backup",
+    "importFailed": "This file is not a fitnoss backup",
     "offline": "Offline",
     "offlineHint": "Exercise data is available offline already. Download all photos (~26 MB) to browse everything without internet.",
     "offlineDownload": "Download all photos",
@@ -338,12 +338,12 @@
   },
   "about": {
     "title": "About",
-    "text": "fitcraft is a free exercise library, program builder and training log. No sign-up, no ads.",
+    "text": "fitnoss is a free exercise library, program builder and training log. No sign-up, no ads.",
     "privacy": "Everything you create stays in your browser. Share links carry the program itself, nothing is sent to a server.",
     "credits": "Credits",
     "exerciseData": "Exercise descriptions and photos:",
     "videos": "Videos are embedded from YouTube and belong to their authors.",
-    "license": "fitcraft is open source under the MIT license. See",
+    "license": "fitnoss is open source under the MIT license. See",
     "disclaimerTitle": "Disclaimer",
     "disclaimer": "The information here is not medical advice. Check with a doctor before starting a new training program and stop if you feel pain."
   },

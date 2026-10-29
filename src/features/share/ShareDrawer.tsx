@@ -72,7 +72,7 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
             <Button
               variant="ghost"
               className="col-span-2"
-              onClick={() => navigator.share({ title: program.name || "fitcraft", text: plain() }).catch(() => {})}
+              onClick={() => navigator.share({ title: program.name || "fitnoss", text: plain() }).catch(() => {})}
             >
               <Share /> {t("share.native")}
             </Button>

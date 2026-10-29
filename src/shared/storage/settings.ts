@@ -41,7 +41,7 @@ export const useSettings = create<Settings>()(
       },
       set: (patch) => set(patch),
     }),
-    { name: "fitcraft:settings", version: 1 },
+    { name: "fitnoss:settings", version: 1 },
   ),
 )
 
@@ -51,7 +51,7 @@ export function isDark(theme: Theme) {
 
 export function applyTheme(theme: Theme) {
   try {
-    localStorage.setItem("fitcraft:theme", theme)
+    localStorage.setItem("fitnoss:theme", theme)
   } catch {}
   const dark = isDark(theme)
   document.documentElement.classList.toggle("dark", dark)
@@ -65,8 +65,8 @@ export function applyTheme(theme: Theme) {
 export function applyAccent(accent: string | null) {
   const root = document.documentElement
   try {
-    if (accent) localStorage.setItem("fitcraft:accent", accent)
-    else localStorage.removeItem("fitcraft:accent")
+    if (accent) localStorage.setItem("fitnoss:accent", accent)
+    else localStorage.removeItem("fitnoss:accent")
   } catch {}
   if (accent) {
     root.style.setProperty("--accent", accent)

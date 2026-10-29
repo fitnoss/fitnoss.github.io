@@ -8,7 +8,7 @@ import { VitePWA } from "vite-plugin-pwa"
 /** Serves data/videos.candidates.json to the dev-only video review page. */
 function devFiles(): Plugin {
   return {
-    name: "fitcraft-dev-files",
+    name: "fitnoss-dev-files",
     apply: "serve",
     configureServer(server) {
       server.middlewares.use("/__dev/videos.candidates.json", (_req, res) => {
@@ -30,8 +30,8 @@ export default defineConfig({
       registerType: "prompt",
       includeAssets: ["favicon.svg", "icons/*.png"],
       manifest: {
-        name: "fitcraft",
-        short_name: "fitcraft",
+        name: "fitnoss",
+        short_name: "fitnoss",
         description: "Exercise library, workout programs and training log. Works offline.",
         start_url: "/",
         scope: "/",

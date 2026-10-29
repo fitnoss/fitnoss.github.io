@@ -85,6 +85,6 @@ export const useFavorites = create<Favorites>()(
       codes: [],
       toggle: (c) => set((s) => ({ codes: s.codes.includes(c) ? s.codes.filter((x) => x !== c) : [c, ...s.codes] })),
     }),
-    { name: "fitcraft:favorites", version: 1 },
+    { name: "fitnoss:favorites", version: 1 },
   ),
 )
