@@ -10,12 +10,16 @@ export type ProgramItem = {
   rest: number
   weight?: number
   note?: string
+  /** Done back-to-back with the previous exercise (a superset); only the last one of the group rests. */
+  superset?: true
 }
 
 export type ProgramDay = {
   /** Empty name means "Day N" in the viewer's language. */
   name: string
   items: ProgramItem[]
+  /** Weekdays this day is scheduled on, sorted, 0 = Monday … 6 = Sunday. */
+  weekdays?: number[]
 }
 
 export type Program = {
@@ -67,4 +71,57 @@ export function targetReps(r: Reps): number | undefined {
   if (p.kind === "reps") return p.n
   if (p.kind === "range") return p.b
   return undefined
+}
+
+type Linked = { superset?: true; rest: number }
+
+/** Indices grouped into supersets: [[0], [1, 2], [3]]. */
+export function groups(items: { superset?: true }[]): number[][] {
+  const out: number[][] = []
+  items.forEach((it, i) => {
+    if (it.superset && out.length) out.at(-1)!.push(i)
+    else out.push([i])
+  })
+  return out
+}
+
+/** "1", "2a", "2b", "3": the position of each item, with supersets lettered. */
+export function itemLabels(items: { superset?: true }[]): string[] {
+  const labels: string[] = []
+  groups(items).forEach((g, n) => g.forEach((i, k) => (labels[i] = g.length > 1 ? `${n + 1}${"abcdefghij"[k] ?? k + 1}` : String(n + 1))))
+  return labels
+}
+
+/** Rest after item i: none while a superset continues with the next exercise. */
+export function restAfter(items: Linked[], i: number) {
+  return items[i + 1]?.superset ? 0 : items[i].rest
+}
+
+/**
+ * Swaps items i and i + dir. Superset links stay with the positions, so moving an exercise
+ * reorders it inside its superset, or moves it into the neighbouring one.
+ */
+export function moveItem<T extends { superset?: true }>(items: T[], i: number, dir: -1 | 1): T[] {
+  const j = i + dir
+  if (j < 0 || j >= items.length) return items
+  const out = [...items]
+  ;[out[i], out[j]] = [withLink(items[j], items[i].superset), withLink(items[i], items[j].superset)]
+  return out
+}
+
+/** Removes item i; if it led a superset, the next exercise leads it now. */
+export function removeItem<T extends { superset?: true }>(items: T[], i: number): T[] {
+  const out = items.filter((_, k) => k !== i)
+  if (out[i] && !items[i].superset) out[i] = withLink(out[i], undefined)
+  return out
+}
+
+export function withLink<T extends { superset?: true }>(it: T, superset: true | undefined): T {
+  const { superset: _, ...rest } = it
+  return (superset ? { ...rest, superset } : rest) as T
+}
+
+/** 0 = Monday … 6 = Sunday. */
+export function weekdayOf(date: Date) {
+  return (date.getDay() + 6) % 7
 }

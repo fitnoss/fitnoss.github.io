@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router"
-import { ArrowDown, ArrowUp, Check, Clock, Minus, Play, Plus, Trash2, X } from "lucide-react"
+import { Check, GalleryHorizontalEnd, LayoutList, Play, Plus, X } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
-import { ExerciseImage } from "@/shared/components/ExerciseImage"
+import { SupersetGroup } from "@/shared/components/SupersetGroup"
 import { Button } from "@/shared/ui/button"
 import { Chip } from "@/shared/ui/chip"
-import { Input } from "@/shared/ui/field"
 import { Menu, MenuItem } from "@/shared/ui/menu"
 import { Panel, Section } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
-import { cn } from "@/shared/lib/utils"
-import { useExercises } from "@/entities/exercise/store"
+import { useSettings } from "@/shared/storage/settings"
 import { useProgramStore } from "@/entities/program/store"
-import { parseReps } from "@/entities/program/types"
-import { useSessionStore, type Session, type SessionExercise } from "@/entities/session/store"
+import { groups } from "@/entities/program/types"
+import { useSessionStore, type Session } from "@/entities/session/store"
 import { ExercisePicker } from "@/features/programs/ExercisePicker"
-import { dayName, formatRepsLabel, formatDuration } from "@/features/programs/format"
+import { dayName, formatWeekdays } from "@/features/programs/format"
+import { CardsPager, CardsView, useCarousel } from "./CardsView"
+import { ExerciseCard } from "./ExerciseCard"
 import { RestTimerBar, primeAudio } from "./RestTimerBar"
+import { useStartDay } from "./useStartDay"
 import { useWakeLock } from "./useWakeLock"
 
 export function WorkoutPage() {
@@ -29,6 +30,7 @@ function StartWorkout() {
   const { t } = useTranslation()
   const programs = useProgramStore((s) => s.programs)
   const start = useSessionStore((s) => s.start)
+  const startDay = useStartDay()
 
   return (
     <>
@@ -49,12 +51,10 @@ function StartWorkout() {
                         key={i}
                         className="bg-page disabled:opacity-40"
                         disabled={!d.items.length}
-                        onClick={() => {
-                          primeAudio()
-                          start({ title: `${p.name || t("programs.untitled")} · ${dayName(t, d.name, i)}`, programId: p.id, day: i, plan: d })
-                        }}
+                        onClick={() => startDay(p, i)}
                       >
                         <Play className="size-3 fill-current" /> {dayName(t, d.name, i)}
+                        {d.weekdays?.length ? <span className="text-[13px] opacity-60">{formatWeekdays(d.weekdays)}</span> : null}
                       </Chip>
                     ))}
                   </div>
@@ -65,7 +65,7 @@ function StartWorkout() {
         ) : (
           <p className="text-muted text-center text-sm">
             {t("workout.noPrograms")}{" "}
-            <Link to="/programs" className="text-fg font-medium underline underline-offset-4">
+            <Link to="/" className="text-fg font-medium underline underline-offset-4">
               {t("workout.createProgram")}
             </Link>
           </p>
@@ -93,6 +93,9 @@ function ActiveWorkout({ session }: { session: Session }) {
   const { finish, discard, addExercise } = useSessionStore()
   const [pickerOpen, setPickerOpen] = useState(false)
   const elapsed = useElapsed(session.startedAt)
+  const view = useSettings((s) => s.workoutView)
+  const setSettings = useSettings((s) => s.set)
+  const carousel = useCarousel(session.exercises)
   useWakeLock(true)
 
   const doneSets = session.exercises.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0)
@@ -129,6 +132,15 @@ function ActiveWorkout({ session }: { session: Session }) {
               <Check /> {t("workout.finish")}
             </Button>
             <Menu>
+              <div className="text-muted px-3 pt-1.5 pb-1 text-xs font-medium">{t("workout.view")}</div>
+              {(["list", "cards"] as const).map((v) => (
+                <MenuItem key={v} onClick={() => setSettings({ workoutView: v })} aria-checked={view === v} role="menuitemradio">
+                  {v === "list" ? <LayoutList /> : <GalleryHorizontalEnd />}
+                  <span className="flex-1">{t(v === "list" ? "workout.viewList" : "workout.viewCards")}</span>
+                  {view === v && <Check className="text-accent" />}
+                </MenuItem>
+              ))}
+              <div className="bg-line mx-2 my-1 h-px" />
               <MenuItem danger onClick={() => confirm(t("workout.confirmDiscard")) && discard()}>
                 <X /> {t("workout.discard")}
               </MenuItem>
@@ -136,163 +148,45 @@ function ActiveWorkout({ session }: { session: Session }) {
           </>
         }
       >
-        <div className="bg-surface h-0.5">
-          <div className="bg-accent h-full transition-[width] duration-300" style={{ width: `${totalSets ? (doneSets / totalSets) * 100 : 0}%` }} />
-        </div>
-      </PageHeader>
-      <div className="space-y-2 px-4 pt-3 pb-36">
-        {session.exercises.map((e, i) => (
-          <ExerciseCard key={`${i}-${e.ex}`} e={e} i={i} last={i === session.exercises.length - 1} />
-        ))}
-        <button
-          type="button"
-          onClick={() => setPickerOpen(true)}
-          className="rounded-panel text-muted hover:text-fg hover:bg-surface flex h-14 w-full items-center justify-center gap-2 font-medium shadow-[inset_0_0_0_1.5px_var(--line)] transition-colors"
-        >
-          <Plus className="size-5" /> {t("workout.addExercise")}
-        </button>
-      </div>
-      <RestTimerBar />
-      <ExercisePicker open={pickerOpen} onOpenChange={setPickerOpen} onPick={(codes) => codes.forEach(addExercise)} />
-    </>
-  )
-}
-
-const REST_PRESETS = [0, 30, 45, 60, 90, 120, 180, 240]
-
-function ExerciseCard({ e, i, last }: { e: SessionExercise; i: number; last: boolean }) {
-  const { t } = useTranslation()
-  const { byCode, text } = useExercises()
-  const { updateSet, toggleSet, addSet, removeSet, removeExercise, moveExercise, setRest } = useSessionStore()
-  const [restOpen, setRestOpen] = useState(false)
-  const ex = byCode.get(e.ex)
-  const reps = parseReps(e.reps)
-  const timed = reps.kind === "time"
-  const allDone = e.sets.length > 0 && e.sets.every((s) => s.done)
-
-  return (
-    <Panel className={cn("space-y-3 p-2.5", allDone && "shadow-[inset_0_0_0_1.5px_var(--accent)]")}>
-      <div className="flex items-center gap-3">
-        {ex && (
-          <Link to={`/ex/${ex.s}`} className="shrink-0">
-            <ExerciseImage ex={ex} alt="" className="hairline size-14 rounded-[10px]" />
-          </Link>
-        )}
-        <div className="min-w-0 flex-1">
-          <div className="line-clamp-2 text-[15px] leading-snug font-semibold">{ex ? text(ex).name : t("exercise.unknown")}</div>
-          <div className="text-muted mt-0.5 flex items-center gap-1 text-[13px]">
-            {t("workout.target")}: {formatRepsLabel(t, e.reps)} ·
-            <button
-              type="button"
-              onClick={() => setRestOpen((o) => !o)}
-              aria-expanded={restOpen}
-              aria-label={t("workout.changeRest")}
-              className="hover:text-fg inline-flex items-center gap-1 underline decoration-dotted underline-offset-4"
-            >
-              <Clock className="size-3.5" /> {e.rest ? formatDuration(t, e.rest) : t("workout.noRest")}
-            </button>
+        {view === "cards" ? (
+          <CardsPager session={session} carousel={carousel} />
+        ) : (
+          <div className="bg-surface h-0.5">
+            <div className="bg-accent h-full transition-[width] duration-300" style={{ width: `${totalSets ? (doneSets / totalSets) * 100 : 0}%` }} />
           </div>
-        </div>
-        <Menu size="icon-sm">
-          {i > 0 && (
-            <MenuItem onClick={() => moveExercise(i, -1)}>
-              <ArrowUp /> {t("workout.moveUp")}
-            </MenuItem>
-          )}
-          {!last && (
-            <MenuItem onClick={() => moveExercise(i, 1)}>
-              <ArrowDown /> {t("workout.moveDown")}
-            </MenuItem>
-          )}
-          <MenuItem danger onClick={() => removeExercise(i)}>
-            <Trash2 /> {t("common.delete")}
-          </MenuItem>
-        </Menu>
-      </div>
-
-      {restOpen && (
-        <div role="radiogroup" aria-label={t("workout.rest")} className="no-scrollbar -mx-2.5 flex gap-1.5 overflow-x-auto px-2.5">
-          {REST_PRESETS.map((s) => (
-            <Chip
-              key={s}
-              role="radio"
-              aria-checked={e.rest === s}
-              active={e.rest === s}
-              className="h-8 px-3 text-[13px]"
-              onClick={() => {
-                setRest(i, s)
-                setRestOpen(false)
-              }}
-            >
-              {s ? formatDuration(t, s) : t("workout.noRest")}
-            </Chip>
-          ))}
+        )}
+      </PageHeader>
+      {view === "cards" ? (
+        <CardsView session={session} carousel={carousel} onAdd={() => setPickerOpen(true)} />
+      ) : (
+        <div className="space-y-2 px-4 pt-3 pb-36">
+          {groups(session.exercises).map((g) => {
+            const cards = g.map((i) => {
+              const e = session.exercises[i]
+              return <ExerciseCard key={`${i}-${e.ex}`} e={e} i={i} last={i === session.exercises.length - 1} restsAfter={!session.exercises[i + 1]?.superset} />
+            })
+            return g.length > 1 ? <SupersetGroup key={`g${g[0]}`}>{cards}</SupersetGroup> : cards
+          })}
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="rounded-panel text-muted hover:text-fg hover:bg-surface flex h-14 w-full items-center justify-center gap-2 font-medium shadow-[inset_0_0_0_1.5px_var(--line)] transition-colors"
+          >
+            <Plus className="size-5" /> {t("workout.addExercise")}
+          </button>
         </div>
       )}
-
-      <div className="bg-page rounded-control grid grid-cols-[2rem_1fr_1fr_2.75rem] items-center gap-x-2 gap-y-1.5 p-2 text-center">
-        <span className="text-muted text-[11px] font-medium">#</span>
-        <span className="text-muted text-[11px] font-medium">{t("workout.kg")}</span>
-        <span className="text-muted text-[11px] font-medium">{timed ? t("workout.seconds") : t("workout.reps")}</span>
-        <span />
-        {e.sets.map((s, j) => (
-          <SetRow
-            key={j}
-            n={j + 1}
-            weight={s.weight}
-            reps={s.reps ?? (timed ? reps.s : undefined)}
-            done={s.done}
-            onWeight={(weight) => updateSet(i, j, { weight })}
-            onReps={(r) => updateSet(i, j, { reps: r })}
-            onToggle={() => (primeAudio(), toggleSet(i, j))}
-          />
-        ))}
-      </div>
-      <div className="flex justify-center gap-1">
-        <Button variant="ghost" size="sm" disabled={e.sets.length === 0} onClick={() => removeSet(i, e.sets.length - 1)} aria-label="−">
-          <Minus className="size-4" />
-        </Button>
-        <span className="text-muted flex items-center px-1 text-[13px] font-medium">{t("workout.addSet")}</span>
-        <Button variant="ghost" size="sm" onClick={() => addSet(i)} aria-label="+">
-          <Plus className="size-4" />
-        </Button>
-      </div>
-    </Panel>
-  )
-}
-
-function num(v: string) {
-  const n = parseFloat(v.replace(",", "."))
-  return Number.isFinite(n) && n >= 0 ? n : undefined
-}
-
-function SetRow(props: {
-  n: number
-  weight?: number
-  reps?: number
-  done: boolean
-  onWeight: (v?: number) => void
-  onReps: (v?: number) => void
-  onToggle: () => void
-}) {
-  const { n, weight, reps, done, onWeight, onReps, onToggle } = props
-  const field = cn("h-11 text-center text-[17px] font-semibold tabular-nums", done && "text-muted")
-  return (
-    <>
-      <span className={cn("text-sm font-semibold tabular-nums", done ? "text-accent" : "text-muted")}>{n}</span>
-      <Input inputMode="decimal" className={field} value={weight ?? ""} placeholder="—" onChange={(e) => onWeight(num(e.target.value))} />
-      <Input inputMode="numeric" className={field} value={reps ?? ""} placeholder="—" onChange={(e) => onReps(num(e.target.value))} />
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-pressed={done}
-        className={cn(
-          "rounded-control flex size-11 items-center justify-center justify-self-center transition-colors",
-          done ? "bg-accent text-accent-fg" : "bg-surface hairline text-muted hover:bg-surface-hover",
-        )}
-      >
-        <Check className="size-5" strokeWidth={done ? 3 : 2} />
-      </button>
+      <RestTimerBar />
+      <ExercisePicker
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+        onPick={(codes) => {
+          const first = session.exercises.length
+          codes.forEach(addExercise)
+          // In cards view, show the first of the new exercises.
+          if (view === "cards") requestAnimationFrame(() => carousel.go(first))
+        }}
+      />
     </>
   )
 }

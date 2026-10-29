@@ -1,9 +1,10 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router"
-import { ArrowDown, ArrowUp, ChevronDown, Copy, Pencil, Play, Plus, Share, Trash2 } from "lucide-react"
+import { ArrowDown, ArrowUp, CalendarDays, ChevronDown, Copy, Link2, Pencil, Play, Plus, Share, Trash2 } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
+import { SupersetGroup } from "@/shared/components/SupersetGroup"
 import { Button } from "@/shared/ui/button"
 import { Chip } from "@/shared/ui/chip"
 import { Input } from "@/shared/ui/field"
@@ -15,13 +16,23 @@ import { cn } from "@/shared/lib/utils"
 import { useSettings } from "@/shared/storage/settings"
 import { useExercises } from "@/entities/exercise/store"
 import { useProgramStore } from "@/entities/program/store"
-import { DEFAULT_SCHEME, type Program, type ProgramDay, type ProgramItem } from "@/entities/program/types"
-import { useSessionStore } from "@/entities/session/store"
+import {
+  DEFAULT_SCHEME,
+  groups,
+  itemLabels,
+  moveItem,
+  removeItem,
+  withLink,
+  type Program,
+  type ProgramDay,
+  type ProgramItem,
+} from "@/entities/program/types"
 import { DAY_NAMES } from "@/features/share/codec/fitpack"
 import { ShareDrawer } from "@/features/share/ShareDrawer"
 import { ExercisePicker } from "./ExercisePicker"
 import { ItemEditor } from "./ItemEditor"
-import { dayName, formatScheme } from "./format"
+import { useStartDay } from "@/features/workout/useStartDay"
+import { dayName, formatScheme, formatWeekdays, weekdayName } from "./format"
 
 const MAX_DAYS = 8
 
@@ -36,13 +47,12 @@ export function ProgramEditorPage() {
   const [shareOpen, setShareOpen] = useState(false)
   const [dayDialog, setDayDialog] = useState(false)
   const [expanded, setExpanded] = useState<number | null>(null)
-  const startWorkout = useSessionStore((s) => s.start)
-  const hasActive = useSessionStore((s) => !!s.active)
+  const startDay = useStartDay()
 
   if (!program) {
     return (
       <>
-        <PageHeader title={t("programs.notFound")} back="/programs" />
+        <PageHeader title={t("programs.notFound")} back="/" />
         <p className="text-muted p-8 text-center">{t("programs.notFound")}</p>
       </>
     )
@@ -63,23 +73,54 @@ export function ProgramEditorPage() {
   }
 
   const move = (i: number, dir: -1 | 1) => {
-    const items = [...current.items]
-    ;[items[i], items[i + dir]] = [items[i + dir], items[i]]
-    setItems(items)
+    setItems(moveItem(current.items, i, dir))
     setExpanded(i + dir)
   }
 
-  const start = () => {
-    if (hasActive && !confirm(t("workout.replaceActive"))) return
-    startWorkout({ title: `${program.name || t("programs.untitled")} · ${dayName(t, current.name, d)}`, programId: program.id, day: d, plan: current })
-    navigate("/workout")
+  /** A weekday belongs to one day of the program: picking it here takes it from the others. */
+  const setWeekdays = (weekdays: number[]) =>
+    set((p) => ({
+      ...p,
+      days: p.days.map((x, i) => {
+        const own = i === d ? weekdays : (x.weekdays ?? []).filter((wd) => !weekdays.includes(wd))
+        const { weekdays: _, ...rest } = x
+        return own.length ? { ...rest, weekdays: [...own].sort() } : rest
+      }),
+    }))
+
+  /** Links item k to the one above it as a superset, or unlinks them. */
+  const toggleLink = (k: number) => setItems(current.items.map((x, j) => (j === k ? withLink(x, x.superset ? undefined : true) : x)))
+
+  const labels = itemLabels(current.items)
+  const card = (i: number) => {
+    const it = current.items[i]
+    return (
+      <ItemCard
+        key={`${i}-${it.ex}`}
+        item={it}
+        label={labels[i]}
+        inSuperset={!!current.items[i + 1]?.superset}
+        open={expanded === i}
+        onToggle={() => setExpanded(expanded === i ? null : i)}
+        onChange={(next) => setItems(current.items.map((x, k) => (k === i ? next : x)))}
+        onMove={current.items.length > 1 ? (dir) => move(i, dir) : undefined}
+        canUp={i > 0}
+        canDown={i < current.items.length - 1}
+        linkUp={i > 0 ? { linked: !!it.superset, toggle: () => toggleLink(i) } : undefined}
+        linkDown={i < current.items.length - 1 ? { linked: !!current.items[i + 1].superset, toggle: () => toggleLink(i + 1) } : undefined}
+        onRemove={() => {
+          setItems(removeItem(current.items, i))
+          setExpanded(null)
+        }}
+      />
+    )
   }
 
   return (
     <>
       <PageHeader
         title={program.name || t("programs.untitled")}
-        back="/programs"
+        back="/"
         actions={
           <>
             <Button
@@ -105,7 +146,7 @@ export function ProgramEditorPage() {
                 onClick={() => {
                   if (!confirm(t("programs.confirmDelete"))) return
                   remove(program.id)
-                  navigate("/programs", { replace: true })
+                  navigate("/", { replace: true })
                 }}
               >
                 <Trash2 /> {t("common.delete")}
@@ -123,7 +164,7 @@ export function ProgramEditorPage() {
             className="h-12 text-[17px] font-semibold"
           />
         </div>
-        <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-3">
+        <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-2">
           {program.days.map((x, i) => (
             <Chip
               key={i}
@@ -137,6 +178,7 @@ export function ProgramEditorPage() {
               }}
             >
               {dayName(t, x.name, i)}
+              {x.weekdays?.length ? <span className="text-[13px] opacity-60">{formatWeekdays(x.weekdays)}</span> : null}
               {i === d && <Pencil className="size-3.5 opacity-70" />}
             </Chip>
           ))}
@@ -146,26 +188,21 @@ export function ProgramEditorPage() {
             </Chip>
           )}
         </div>
+        <button
+          type="button"
+          onClick={() => setDayDialog(true)}
+          className={cn(
+            "mx-4 mb-2.5 flex items-center gap-1.5 text-[13px] font-medium transition-colors",
+            "text-muted hover:text-fg",
+          )}
+        >
+          <CalendarDays className="size-4" />
+          {t(current.weekdays?.length ? "programs.editWeekdays" : "programs.setWeekdays")}
+        </button>
       </PageHeader>
 
       <div className="space-y-2 px-4 pt-1 pb-8">
-        {current.items.map((it, i) => (
-          <ItemCard
-            key={`${i}-${it.ex}`}
-            item={it}
-            index={i}
-            open={expanded === i}
-            onToggle={() => setExpanded(expanded === i ? null : i)}
-            onChange={(next) => setItems(current.items.map((x, k) => (k === i ? next : x)))}
-            onMove={i > 0 || i < current.items.length - 1 ? (dir) => move(i, dir) : undefined}
-            canUp={i > 0}
-            canDown={i < current.items.length - 1}
-            onRemove={() => {
-              setItems(current.items.filter((_, k) => k !== i))
-              setExpanded(null)
-            }}
-          />
-        ))}
+        {groups(current.items).map((g) => (g.length > 1 ? <SupersetGroup key={`g${g[0]}`}>{g.map(card)}</SupersetGroup> : card(g[0])))}
 
         <button
           type="button"
@@ -176,7 +213,7 @@ export function ProgramEditorPage() {
         </button>
 
         {current.items.length > 0 && (
-          <Button variant="primary" size="lg" className="mt-4 h-14 w-full" onClick={start}>
+          <Button variant="primary" size="lg" className="mt-4 h-14 w-full" onClick={() => startDay(program, d)}>
             <Play className="size-4 fill-current" /> {t("programs.startDay", { day: dayName(t, current.name, d) })}
           </Button>
         )}
@@ -198,6 +235,8 @@ export function ProgramEditorPage() {
         day={current}
         index={d}
         canDelete={program.days.length > 1}
+        takenWeekdays={program.days.flatMap((x, i) => (i === d ? [] : (x.weekdays ?? [])))}
+        onWeekdays={setWeekdays}
         onRename={(name) => setDayData((x) => ({ ...x, name }))}
         onDelete={() => {
           set((p) => ({ ...p, days: p.days.filter((_, i) => i !== d) }))
@@ -212,23 +251,31 @@ export function ProgramEditorPage() {
 
 function ItemCard({
   item,
-  index,
+  label,
+  inSuperset,
   open,
   onToggle,
   onChange,
   onMove,
   canUp,
   canDown,
+  linkUp,
+  linkDown,
   onRemove,
 }: {
   item: ProgramItem
-  index: number
+  label: string
+  /** The next exercise continues this superset. */
+  inSuperset: boolean
   open: boolean
   onToggle: () => void
   onChange: (it: ProgramItem) => void
   onMove?: (dir: -1 | 1) => void
   canUp: boolean
   canDown: boolean
+  /** Superset with the exercise above / below; absent at the ends of the day. */
+  linkUp?: Link
+  linkDown?: Link
   onRemove: () => void
 }) {
   const { t } = useTranslation()
@@ -245,18 +292,26 @@ function ItemCard({
         )}
         <div className="min-w-0 flex-1">
           <div className="line-clamp-2 text-[15px] leading-snug font-medium">
-            <span className="text-muted mr-1.5 tabular-nums">{index + 1}</span>
+            <span className="text-muted mr-1.5 tabular-nums">{label}</span>
             {ex ? text(ex).name : t("exercise.unknown")}
           </div>
-          <div className="text-muted mt-0.5 text-[13px]">{formatScheme(t, item)}</div>
+          <div className="text-muted mt-0.5 text-[13px]">{formatScheme(t, inSuperset ? { ...item, rest: 0 } : item)}</div>
         </div>
         <ChevronDown className={cn("text-muted size-5 shrink-0 transition-transform", open && "rotate-180")} />
       </button>
       {open && (
         <div className="px-2.5 pb-2.5">
           <div className="bg-page rounded-control p-2.5">
-            <ItemEditor item={item} onChange={onChange} />
+            <ItemEditor item={item} onChange={onChange} inSuperset={inSuperset} />
           </div>
+          {(linkUp || linkDown) && (
+            <div className="flex items-center gap-1.5 pt-2 pl-1">
+              <Link2 className="text-muted size-4" />
+              <span className="text-muted mr-0.5 text-[13px] font-medium">{t("programs.supersetWith")}</span>
+              {linkUp && <LinkToggle dir="up" {...linkUp} />}
+              {linkDown && <LinkToggle dir="down" {...linkDown} />}
+            </div>
+          )}
           <div className="flex items-center gap-1 pt-2">
             {onMove && (
               <>
@@ -278,12 +333,38 @@ function ItemCard({
   )
 }
 
+type Link = { linked: boolean; toggle: () => void }
+
+/** Arrow toggle in the "Superset with:" row: lit while linked to the exercise above / below. */
+function LinkToggle({ dir, linked, toggle }: Link & { dir: "up" | "down" }) {
+  const { t } = useTranslation()
+  const Arrow = dir === "up" ? ArrowUp : ArrowDown
+  const label = linked ? (dir === "up" ? "programs.unlinkUp" : "programs.unlinkDown") : dir === "up" ? "programs.linkUp" : "programs.linkDown"
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-pressed={linked}
+      aria-label={t(label)}
+      title={t(label)}
+      className={cn(
+        "rounded-control flex size-8 items-center justify-center transition-colors",
+        linked ? "bg-accent text-accent-fg" : "bg-page text-muted hover:text-fg shadow-[inset_0_0_0_1px_var(--line)]",
+      )}
+    >
+      <Arrow className="size-4" />
+    </button>
+  )
+}
+
 function DaySheet({
   open,
   onOpenChange,
   day,
   index,
   canDelete,
+  takenWeekdays,
+  onWeekdays,
   onRename,
   onDelete,
 }: {
@@ -292,6 +373,9 @@ function DaySheet({
   day: ProgramDay
   index: number
   canDelete: boolean
+  /** Weekdays other days of the program are on; picking one moves it here. */
+  takenWeekdays: number[]
+  onWeekdays: (weekdays: number[]) => void
   onRename: (name: string) => void
   onDelete: () => void
 }) {
@@ -335,6 +419,32 @@ function DaySheet({
             {t(`dayPreset.${p.slice(1)}`)}
           </Chip>
         ))}
+      </div>
+      <div className="space-y-2 pt-2">
+        <div className="text-muted text-xs font-medium">{t("programs.weekdays")}</div>
+        <div className="grid grid-cols-7 gap-1.5">
+          {[0, 1, 2, 3, 4, 5, 6].map((wd) => {
+            const on = !!day.weekdays?.includes(wd)
+            const taken = !on && takenWeekdays.includes(wd)
+            return (
+              <button
+                key={wd}
+                type="button"
+                aria-pressed={on}
+                onClick={() => onWeekdays(on ? day.weekdays!.filter((x) => x !== wd) : [...(day.weekdays ?? []), wd])}
+                className={cn(
+                  "rounded-control relative flex h-11 items-center justify-center text-sm font-semibold transition-colors",
+                  on ? "bg-inverse text-inverse-fg" : "bg-surface hairline hover:bg-surface-hover",
+                  taken && "text-muted",
+                )}
+              >
+                {weekdayName(wd)}
+                {taken && <span className="bg-muted absolute bottom-1.5 size-1 rounded-full" />}
+              </button>
+            )
+          })}
+        </div>
+        <p className="text-muted text-xs leading-relaxed">{t("programs.weekdaysHint")}</p>
       </div>
     </Sheet>
   )

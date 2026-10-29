@@ -122,7 +122,7 @@
     "new": "New",
     "create": "Create program",
     "emptyTitle": "No programs yet",
-    "emptyText": "Build your own or start from a template below.",
+    "emptyText": "Build your own from scratch or pick a ready-made template.",
     "untitled": "Untitled program",
     "namePlaceholder": "Program name",
     "daysCount_one": "{{count}} day",
@@ -130,7 +130,6 @@
     "exercisesCount_one": "{{count}} exercise",
     "exercisesCount_other": "{{count}} exercises",
     "templates": "Templates",
-    "use": "Use",
     "dayN": "Day {{n}}",
     "addDay": "Day",
     "dayNamePlaceholder": "Day {{n}}",
@@ -144,7 +143,22 @@
     "confirmDelete": "Delete this program?",
     "notFound": "Program not found",
     "added": "Added to program",
-    "newWithExercise": "New program"
+    "newWithExercise": "New program",
+    "superset": "Superset",
+    "supersetRest": "Rest comes after the last exercise of the superset",
+    "weekdays": "Weekdays",
+    "setWeekdays": "Set weekdays",
+    "weekdaysHint": "On these days the workout waits on the home screen, one tap to start.",
+    "myPrograms": "My programs",
+    "linkUp": "Superset with above",
+    "linkDown": "Superset with below",
+    "unlinkUp": "Unlink from above",
+    "unlinkDown": "Unlink from below",
+    "editWeekdays": "Change weekdays",
+    "supersetWith": "Superset with:",
+    "newTitle": "New program",
+    "fromScratch": "From scratch",
+    "fromScratchHint": "An empty program to fill yourself"
   },
   "dayPreset": {
     "upper": "Upper",
@@ -232,7 +246,12 @@
     "restDone": "Go! 💪",
     "skipRest": "Skip rest",
     "moveUp": "Move up",
-    "moveDown": "Move down"
+    "moveDown": "Move down",
+    "view": "View",
+    "viewList": "List",
+    "viewCards": "Cards",
+    "next": "Next",
+    "nextInSuperset": "Next in superset"
   },
   "journal": {
     "title": "Progress",
@@ -332,7 +351,7 @@
     "imported": "Imported {{programs}} programs and {{sessions}} workouts",
     "importFailed": "This file is not a fitnoss backup",
     "offline": "Offline",
-    "offlineHint": "Exercise data is available offline already. Download all photos (~26 MB) to browse everything without internet.",
+    "offlineHint": "Exercise data is available offline already. Download all photos (~100 MB) to browse everything without internet.",
     "offlineDownload": "Download all photos",
     "offlineDone": "All photos are available offline"
   },
@@ -350,5 +369,20 @@
   "pwa": {
     "update": "A new version is available",
     "reload": "Update"
+  },
+  "home": {
+    "today": "Today, {{weekday}}",
+    "start": "Start workout",
+    "inProgress": "Workout in progress",
+    "continue": "Continue",
+    "doneToday": "Done today",
+    "again": "Do it again",
+    "restDay": "Rest day",
+    "next": "Next up: {{when}}",
+    "tomorrow": "tomorrow",
+    "startNow": "Start now",
+    "scheduleHint": "Assign weekdays to your program days, and today's workout starts with one tap.",
+    "setsCount_one": "{{count}} set",
+    "setsCount_other": "{{count}} sets"
   }
 }

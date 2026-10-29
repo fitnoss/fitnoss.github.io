@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { Link } from "react-router"
 import { Calculator, ChevronRight, CloudDownload, Download, Info, Upload, Video } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
-import { Stepper } from "@/shared/components/Stepper"
+import { RestInput } from "@/shared/components/RestInput"
 import { Button } from "@/shared/ui/button"
 import { Panel, Section } from "@/shared/ui/panel"
 import { Segmented } from "@/shared/ui/segmented"
@@ -11,7 +11,6 @@ import { Switch } from "@/shared/ui/switch"
 import { toast } from "@/shared/ui/toast"
 import { languages, setLanguage } from "@/shared/i18n"
 import { useSettings, type Theme } from "@/shared/storage/settings"
-import { formatDuration } from "@/features/programs/format"
 import { AccentPicker } from "./AccentPicker"
 import { downloadAllImages, exportBackup, importBackup } from "./backup"
 import { useTranslationCoverage } from "./coverage"
@@ -71,16 +70,9 @@ export function MorePage() {
 
         <Section title={t("more.workout")} hint={t("more.defaultRestHint")}>
           <Panel className="divide-y overflow-hidden">
-            <div className="flex h-[60px] items-center justify-between gap-3 pr-2 pl-4">
+            <div className="flex min-h-[60px] flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2.5 pr-2.5 pl-4">
               <span className="text-[15px] font-medium">{t("more.defaultRest")}</span>
-              <Stepper
-                value={settings.defaultRest}
-                min={0}
-                max={600}
-                step={15}
-                format={(v) => (v ? formatDuration(t, v) : t("workout.noRest"))}
-                onChange={(defaultRest) => settings.set({ defaultRest })}
-              />
+              <RestInput value={settings.defaultRest} onChange={(defaultRest) => settings.set({ defaultRest })} />
             </div>
             <Toggle label={t("more.sound")} checked={settings.sound} onChange={(sound) => settings.set({ sound })} />
             <Toggle label={t("more.vibration")} checked={settings.vibration} onChange={(vibration) => settings.set({ vibration })} />

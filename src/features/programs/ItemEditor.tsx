@@ -1,11 +1,17 @@
 import { useTranslation } from "react-i18next"
 import { Field, Input } from "@/shared/ui/field"
 import { Segmented } from "@/shared/ui/segmented"
+import { RestInput } from "@/shared/components/RestInput"
 import { Stepper } from "@/shared/components/Stepper"
 import { formatReps, parseReps, type ParsedReps, type ProgramItem } from "@/entities/program/types"
 import { formatDuration } from "./format"
 
-type Props = { item: ProgramItem; onChange: (item: ProgramItem) => void }
+type Props = {
+  item: ProgramItem
+  onChange: (item: ProgramItem) => void
+  /** The next exercise continues a superset, so this one has no rest of its own. */
+  inSuperset?: boolean
+}
 
 const KIND_DEFAULTS: Record<ParsedReps["kind"], ParsedReps> = {
   reps: { kind: "reps", n: 10 },
@@ -15,7 +21,7 @@ const KIND_DEFAULTS: Record<ParsedReps["kind"], ParsedReps> = {
   max: { kind: "max" },
 }
 
-export function ItemEditor({ item, onChange }: Props) {
+export function ItemEditor({ item, onChange, inSuperset }: Props) {
   const { t } = useTranslation()
   const reps = parseReps(item.reps)
   const setReps = (p: ParsedReps) => onChange({ ...item, reps: formatReps(p) })
@@ -51,15 +57,14 @@ export function ItemEditor({ item, onChange }: Props) {
             onChange={(s) => setReps({ kind: "time", s })}
           />
         )}
-        <Stepper
-          label={t("scheme.rest")}
-          value={item.rest}
-          min={0}
-          max={600}
-          step={15}
-          format={(v) => formatDuration(t, v)}
-          onChange={(rest) => onChange({ ...item, rest })}
-        />
+        {inSuperset ? (
+          <p className="text-muted w-full text-center text-xs">{t("programs.supersetRest")}</p>
+        ) : (
+          <div className="flex flex-col items-center gap-1.5">
+            <span className="text-muted text-xs font-medium">{t("scheme.rest")}</span>
+            <RestInput value={item.rest} onChange={(rest) => onChange({ ...item, rest })} />
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-[6.5rem_1fr] gap-2">
@@ -83,6 +88,7 @@ export function ItemEditor({ item, onChange }: Props) {
           />
         </Field>
       </div>
+
     </div>
   )
 }

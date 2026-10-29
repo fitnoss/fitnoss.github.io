@@ -2,7 +2,7 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { uid } from "@/shared/lib/id"
 import { useSettings } from "@/shared/storage/settings"
-import { DEFAULT_SCHEME, targetReps, type ProgramDay } from "@/entities/program/types"
+import { DEFAULT_SCHEME, moveItem, removeItem, restAfter, targetReps, withLink, type ProgramDay } from "@/entities/program/types"
 
 export type SetLog = { reps?: number; weight?: number; done: boolean }
 
@@ -11,6 +11,8 @@ export type SessionExercise = {
   reps: string
   rest: number
   sets: SetLog[]
+  /** Done back-to-back with the previous exercise, as in ProgramItem. */
+  superset?: true
 }
 
 export type Session = {
@@ -34,6 +36,8 @@ type State = {
   removeExercise: (i: number) => void
   moveExercise: (i: number, dir: -1 | 1) => void
   setRest: (i: number, seconds: number) => void
+  /** Links exercise i to the previous one as a superset, or unlinks it. */
+  toggleSuperset: (i: number) => void
   updateSet: (i: number, j: number, patch: Partial<SetLog>) => void
   toggleSet: (i: number, j: number) => void
   addSet: (i: number) => void
@@ -87,7 +91,9 @@ export const useSessionStore = create<State>()(
               programId,
               day,
               startedAt: Date.now(),
-              exercises: (plan?.items ?? []).map((it) => plannedExercise(history, it.ex, it.sets, it.reps, it.rest)),
+              exercises: (plan?.items ?? []).map((it) =>
+                withLink(plannedExercise(history, it.ex, it.sets, it.reps, it.rest), it.superset),
+              ),
             },
           })
         },
@@ -99,24 +105,20 @@ export const useSessionStore = create<State>()(
               plannedExercise(get().history, ex, DEFAULT_SCHEME.sets, DEFAULT_SCHEME.reps, useSettings.getState().defaultRest),
             ],
           })),
-        removeExercise: (i) => edit((s) => ({ ...s, exercises: s.exercises.filter((_, k) => k !== i) })),
-        moveExercise: (i, dir) =>
-          edit((s) => {
-            const j = i + dir
-            if (j < 0 || j >= s.exercises.length) return s
-            const exercises = [...s.exercises]
-            ;[exercises[i], exercises[j]] = [exercises[j], exercises[i]]
-            return { ...s, exercises }
-          }),
+        removeExercise: (i) => edit((s) => ({ ...s, exercises: removeItem(s.exercises, i) })),
+        moveExercise: (i, dir) => edit((s) => ({ ...s, exercises: moveItem(s.exercises, i, dir) })),
         setRest: (i, rest) => editEx(i, (e) => ({ ...e, rest })),
+        toggleSuperset: (i) => i > 0 && editEx(i, (e) => withLink(e, e.superset ? undefined : true)),
         updateSet: (i, j, patch) => editEx(i, (e) => ({ ...e, sets: e.sets.map((x, k) => (k === j ? { ...x, ...patch } : x)) })),
         toggleSet: (i, j) => {
           const e = get().active?.exercises[i]
           if (!e) return
           const done = !e.sets[j].done
           get().updateSet(i, j, { done })
-          const isLastOfWorkout = get().active!.exercises.every((x) => x.sets.every((s) => s.done))
-          if (done && e.rest > 0 && !isLastOfWorkout) get().startRest(e.rest)
+          const { exercises } = get().active!
+          const isLastOfWorkout = exercises.every((x) => x.sets.every((s) => s.done))
+          const rest = restAfter(exercises, i)
+          if (done && rest > 0 && !isLastOfWorkout) get().startRest(rest)
         },
         addSet: (i) =>
           editEx(i, (e) => {

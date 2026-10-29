@@ -26,9 +26,10 @@ export function App() {
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<CatalogPage />} />
+          <Route index element={<ProgramsPage />} />
+          <Route path="exercises" element={<CatalogPage />} />
           <Route path="ex/:slug" element={<ExercisePage />} />
-          <Route path="programs" element={<ProgramsPage />} />
+          <Route path="programs" element={<Navigate to="/" replace />} />
           <Route path="programs/:id" element={<ProgramEditorPage />} />
           <Route path="s/:payload" element={<SharePage />} />
           {/* Short share links: https://fitnoss.github.io/#<payload> */}

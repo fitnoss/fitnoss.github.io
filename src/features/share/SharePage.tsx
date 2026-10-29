@@ -9,7 +9,9 @@ import { Empty, Panel, Section } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
 import { useExercises } from "@/entities/exercise/store"
 import { useProgramStore } from "@/entities/program/store"
-import { dayName, formatScheme } from "@/features/programs/format"
+import { itemLabels, restAfter } from "@/entities/program/types"
+import { dayName, formatScheme, formatWeekdays } from "@/features/programs/format"
+import { cn } from "@/shared/lib/utils"
 import { decodeProgram } from "./codec/fitpack"
 
 export function SharePage() {
@@ -30,7 +32,7 @@ export function SharePage() {
   if (!program) {
     return (
       <>
-        <PageHeader title={t("share.openTitle")} back="/programs" />
+        <PageHeader title={t("share.openTitle")} back="/" />
         <Empty icon={<Link2Off />} title={t("share.broken")}>
           {t("share.brokenHint")}
         </Empty>
@@ -42,7 +44,7 @@ export function SharePage() {
 
   return (
     <>
-      <PageHeader title={t("share.openTitle")} back="/programs" />
+      <PageHeader title={t("share.openTitle")} back="/" />
       <div className="space-y-6 px-4 pb-8">
         <div className="space-y-4">
           <div>
@@ -65,10 +67,15 @@ export function SharePage() {
           </Button>
         </div>
         {program.days.map((d, i) => (
-          <Section key={i} title={dayName(t, d.name, i)}>
+          <Section
+            key={i}
+            title={dayName(t, d.name, i)}
+            action={d.weekdays?.length ? <span className="text-muted text-[13px] font-medium">{formatWeekdays(d.weekdays)}</span> : undefined}
+          >
             <Panel className="divide-y overflow-hidden">
               {d.items.map((it, j) => {
                 const ex = byCode.get(it.ex)
+                const label = itemLabels(d.items)[j]
                 return (
                   <Link key={j} to={ex ? `/ex/${ex.s}` : "#"} className="hover:bg-surface-hover flex items-center gap-3 p-2.5">
                     {ex ? (
@@ -78,11 +85,11 @@ export function SharePage() {
                     )}
                     <div className="min-w-0">
                       <div className="text-[15px] leading-snug font-medium">
-                        <span className="text-muted mr-1.5 tabular-nums">{j + 1}</span>
+                        <span className={cn("mr-1.5 tabular-nums", /[a-z]/.test(label) ? "text-accent" : "text-muted")}>{label}</span>
                         {ready ? (ex ? text(ex).name : t("exercise.unknown")) : "…"}
                       </div>
                       <div className="text-muted text-[13px]">
-                        {formatScheme(t, it)}
+                        {formatScheme(t, { ...it, rest: restAfter(d.items, j) })}
                         {it.note && ` · ${it.note}`}
                       </div>
                     </div>

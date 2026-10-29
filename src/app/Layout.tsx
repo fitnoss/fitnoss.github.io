@@ -7,8 +7,8 @@ import { useSessionStore } from "@/entities/session/store"
 import { isDark, useSettings } from "@/shared/storage/settings"
 
 const TABS = [
-  { to: "/", icon: Dumbbell, label: "nav.exercises", end: true, also: ["/ex/"] },
-  { to: "/programs", icon: ListChecks, label: "nav.programs", end: false, also: ["/s/"] },
+  { to: "/", icon: ListChecks, label: "nav.programs", end: true, also: ["/programs/", "/s/"] },
+  { to: "/exercises", icon: Dumbbell, label: "nav.exercises", end: false, also: ["/ex/"] },
   { to: "/workout", icon: Timer, label: "nav.workout", end: false, also: [] },
   { to: "/progress", icon: ChartNoAxesColumn, label: "nav.progress", end: false, also: [] },
   { to: "/more", icon: Ellipsis, label: "nav.more", end: false, also: ["/dev/"] },

@@ -3,6 +3,8 @@ import { persist } from "zustand/middleware"
 import { contrastText } from "@/shared/lib/color"
 
 export type Theme = "system" | "light" | "dark"
+/** How a running workout is laid out: all exercises in a list, or one full-screen card at a time. */
+export type WorkoutView = "list" | "cards"
 
 type Settings = {
   theme: Theme
@@ -14,6 +16,7 @@ type Settings = {
   plates: number[]
   sound: boolean
   vibration: boolean
+  workoutView: WorkoutView
   setTheme: (t: Theme) => void
   setAccent: (accent: string | null) => void
   set: (patch: Partial<Omit<Settings, "set" | "setTheme" | "setAccent">>) => void
@@ -31,6 +34,7 @@ export const useSettings = create<Settings>()(
       plates: DEFAULT_PLATES,
       sound: true,
       vibration: true,
+      workoutView: "list",
       setTheme: (theme) => {
         set({ theme })
         applyTheme(theme)
