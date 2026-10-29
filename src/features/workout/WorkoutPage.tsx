@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router"
 import { Check, GalleryHorizontalEnd, LayoutList, Play, Plus, X } from "lucide-react"
+import { CongratsCat } from "@/shared/components/CongratsCat"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { SupersetGroup } from "@/shared/components/SupersetGroup"
 import { Button } from "@/shared/ui/button"
@@ -124,7 +125,7 @@ function ActiveWorkout({ session }: { session: Session }) {
               onClick={() => {
                 const done = finish()
                 if (done && done.exercises.length) {
-                  toast.success(t("workout.saved"))
+                  toast.success(t("workout.saved"), { icon: <CongratsCat /> })
                   navigate(`/progress/session/${done.id}`)
                 } else toast(t("workout.nothingSaved"))
               }}

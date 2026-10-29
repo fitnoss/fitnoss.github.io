@@ -186,6 +186,8 @@
     "weight": "Weight, kg",
     "note": "Note",
     "notePlaceholder": "e.g. pause at the bottom",
+    "restShort": "rest {{d}}",
+    "stepShort": "step +{{n}} kg",
     "progression": "Auto-progression",
     "progressionReps": "All sets done for {{n}} reps — next time the weight goes up {{inc}} kg.",
     "progressionRange": "Add a rep per set until all sets reach {{b}}. Then +{{inc}} kg and back to {{a}}.",
@@ -238,7 +240,7 @@
     "discard": "Discard workout",
     "confirmDiscard": "Discard this workout? Logged sets will be lost.",
     "replaceActive": "A workout is already in progress. Replace it?",
-    "saved": "Workout saved 💪",
+    "saved": "Workout saved",
     "nothingSaved": "No completed sets — nothing saved",
     "addExercise": "Add exercise",
     "addSet": "Set",
@@ -247,7 +249,7 @@
     "reps": "reps",
     "seconds": "sec",
     "rest": "Rest",
-    "restDone": "Go! 💪",
+    "restDone": "Go!",
     "skipRest": "Skip rest",
     "moveUp": "Move up",
     "moveDown": "Move down",
@@ -261,7 +263,7 @@
     "warmup": "Warm-up",
     "removeWarmup": "Remove warm-up",
     "warmupShort": "W",
-    "record": "New record: {{weight}} kg × {{reps}} 🏆"
+    "record": "New record: {{weight}} kg × {{reps}}"
   },
   "journal": {
     "title": "Progress",
@@ -336,7 +338,7 @@
   "more": {
     "workout": "Workout",
     "defaultRest": "Default rest",
-    "defaultRestHint": "Used for exercises added to a workout without a program, and for the first exercise of a new program. In a program, rest is set per exercise; during a workout, tap ⏱ on an exercise to change it.",
+    "defaultRestHint": "Used for exercises added to a workout without a program, and for the first exercise of a new program. In a program, rest is set per exercise; during a workout, tap the rest time on an exercise to change it.",
     "title": "More",
     "language": "Language",
     "helpTranslate": "Help translate fitnoss",

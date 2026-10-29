@@ -28,8 +28,8 @@ export function formatDuration(t: TFunction, s: number) {
 export function formatScheme(t: TFunction, it: Pick<ProgramItem, "sets" | "reps" | "rest" | "weight" | "inc">) {
   const parts = [`${it.sets} × ${formatRepsLabel(t, it.reps)}`]
   if (it.weight) parts.push(t("units.kg", { n: it.weight }))
-  if (it.inc && canProgress(it.reps)) parts.push(`↗ ${t("units.kg", { n: `+${it.inc}` })}`)
-  if (it.rest) parts.push(`⏱ ${formatDuration(t, it.rest)}`)
+  if (it.inc && canProgress(it.reps)) parts.push(t("scheme.stepShort", { n: it.inc }))
+  if (it.rest) parts.push(t("scheme.restShort", { d: formatDuration(t, it.rest) }))
   return parts.join(" · ")
 }
 
@@ -57,10 +57,10 @@ export function programToText(
   link?: string,
 ) {
   const lines: string[] = []
-  lines.push(`🏋️ ${p.name.trim() || t("programs.untitled")}`)
+  lines.push(p.name.trim() || t("programs.untitled"))
   p.days.forEach((d, i) => {
     const when = formatWeekdays(d.weekdays)
-    lines.push("", `📅 ${dayName(t, d.name, i)}${when ? ` (${when})` : ""}`)
+    lines.push("", `${dayName(t, d.name, i)}${when ? ` (${when})` : ""}:`)
     const labels = itemLabels(d.items)
     d.items.forEach((it, j) => {
       const scheme = formatScheme(t, { ...it, rest: restAfter(d.items, j) })

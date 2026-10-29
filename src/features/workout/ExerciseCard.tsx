@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router"
 import { ArrowDown, ArrowUp, Check, Clock, Flame, Link2, Minus, Plus, Trash2, TrendingDown, TrendingUp, Unlink2, X } from "lucide-react"
+import { CongratsCat } from "@/shared/components/CongratsCat"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { RestInput } from "@/shared/components/RestInput"
 import { Button } from "@/shared/ui/button"
@@ -148,7 +149,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
               const { history, active } = useSessionStore.getState()
               const set = active?.exercises[i]?.sets[j]
               if (active && set && beatsRecord(history, active, i, j)) {
-                toast.success(t("workout.record", { weight: set.weight, reps: set.reps }))
+                toast.success(t("workout.record", { weight: set.weight, reps: set.reps }), { icon: <CongratsCat /> })
               }
               onSetDone?.()
             }}
