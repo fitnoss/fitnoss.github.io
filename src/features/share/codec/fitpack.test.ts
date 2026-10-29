@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import fc from "fast-check"
-import type { ProgramData } from "@/entities/program/types"
+import { withLink, type ProgramData } from "@/entities/program/types"
 import { BitReader, BitWriter } from "./bits"
 import { DAY_NAMES, DecodeError, decodeProgram, encodeProgram } from "./fitpack"
 import { readText, writeText } from "./text"
@@ -25,13 +25,21 @@ describe("text", () => {
   }
 
   it("round-trips mixed text", () => {
-    for (const s of ["Мой сплит", "Push Pull Legs", "Ёлка Ъ 3x10 (база)!", "5/3/1 Wendler", "🔥 Жиросжигание", ""]) {
+    const samples = ["Мой сплит", "Push Pull Legs", "Ёлка Ъ 3x10 (база)!", "5/3/1 Wendler", "🔥 Жиросжигание", ""]
+    // Dictionary words in any case, inside other words and next to each other.
+    samples.push("Грудь и Трицепс", "ГРУДЬ", "PUSH day", "Пушка", "грудьспина", "Upper/Lower", "медленно вниз")
+    for (const s of samples) {
       expect(roundTrip(s).out).toBe(s)
     }
   })
 
   it("packs a 9-letter Russian word into ~55 bits", () => {
     expect(roundTrip("Мой сплит").bits).toBeLessThanOrEqual(56)
+  })
+
+  it("spells common words with one token", () => {
+    expect(roundTrip("Грудь и трицепс").bits).toBeLessThanOrEqual(48)
+    expect(roundTrip("Push Pull Legs").bits).toBeLessThanOrEqual(60)
   })
 
   it("round-trips arbitrary strings", () => {
@@ -43,7 +51,7 @@ describe("fitpack", () => {
   it("round-trips a 4-day split in a short link", () => {
     const code = encodeProgram(split)
     expect(decodeProgram(code)).toEqual(split)
-    expect(code.length).toBeLessThanOrEqual(66)
+    expect(code.length).toBeLessThanOrEqual(60)
   })
 
   it("encodes a nameless 3×5 program in ~30 chars", () => {
@@ -74,6 +82,40 @@ describe("fitpack", () => {
     expect(decodeProgram(encodeProgram(p))).toEqual(p)
   })
 
+  it("repeats notes and packs plate weights", () => {
+    const p: ProgramData = {
+      name: "",
+      days: [
+        {
+          name: "",
+          items: [
+            { ...item(0), weight: 60, note: "медленно вниз" },
+            { ...item(1), weight: 7.5 },
+            { ...item(2), weight: 13.5, note: "медленно вниз" },
+            { ...item(3), weight: 157.5, note: "пауза" },
+            { ...item(4), weight: 160, note: "медленно вниз" },
+          ],
+        },
+      ],
+    }
+    expect(decodeProgram(encodeProgram(p))).toEqual(p)
+    const once = encodeProgram({ name: "", days: [{ name: "", items: [{ ...item(0), note: "медленно вниз" }, item(1)] }] })
+    const twice = encodeProgram({ name: "", days: [{ name: "", items: [{ ...item(0), note: "медленно вниз" }, { ...item(1), note: "медленно вниз" }] }] })
+    expect(twice.length).toBeLessThanOrEqual(once.length + 1)
+  })
+
+  it("keeps supersets and weekdays", () => {
+    const p: ProgramData = {
+      name: "",
+      days: [
+        { name: "@upper", weekdays: [0, 3], items: [item(5), { ...item(6), superset: true }, item(11), { ...item(20), superset: true }, { ...item(14), superset: true }] },
+        { name: "@lower", weekdays: [6], items: [item(4)] },
+        { name: "", items: [item(1)] },
+      ],
+    }
+    expect(decodeProgram(encodeProgram(p))).toEqual(p)
+  })
+
   it("round-trips random programs", () => {
     const repsArb = fc.oneof(
       fc.constantFrom("5", "10", "8-12", "30s", "amrap", "max"),
@@ -89,13 +131,19 @@ describe("fitpack", () => {
         rest: fc.integer({ min: 0, max: 120 }).map((n) => n * 5),
         weight: fc.integer({ min: 1, max: 800 }).map((n) => n / 2),
         note: fc.string({ minLength: 1, maxLength: 20 }).filter((s) => s.trim() === s && s.length > 0),
+        superset: fc.constant(true as const),
       },
       { requiredKeys: ["ex", "sets", "reps", "rest"] },
     )
-    const dayArb = fc.record({
-      name: fc.oneof(fc.constantFrom(...DAY_NAMES), fc.string({ maxLength: 20 }).map((s) => s.trim())),
-      items: fc.array(itemArb, { maxLength: 10 }),
-    })
+    const dayArb = fc.record(
+      {
+        name: fc.oneof(fc.constantFrom(...DAY_NAMES), fc.string({ maxLength: 20 }).map((s) => s.trim())),
+        // The first exercise can't continue a superset.
+        items: fc.array(itemArb, { maxLength: 10 }).map((items) => items.map((it, i) => (i === 0 ? withLink(it, undefined) : it))),
+        weekdays: fc.uniqueArray(fc.integer({ min: 0, max: 6 }), { minLength: 1, maxLength: 7 }).map((a) => a.sort()),
+      },
+      { requiredKeys: ["name", "items"] },
+    )
     const programArb = fc.record({
       name: fc.string({ maxLength: 30 }).map((s) => s.trim()),
       days: fc.array(dayArb, { minLength: 1, maxLength: 8 }),
@@ -123,7 +171,7 @@ describe("fitpack", () => {
   })
 
   it("keeps v1 links stable", () => {
-    // If this changes, old links break. Bump the version instead.
+    // If this changes, old links break. Bump the version instead (fine to change while unreleased).
     expect(encodeProgram(split)).toMatchSnapshot()
   })
 })

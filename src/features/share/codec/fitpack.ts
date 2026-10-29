@@ -1,14 +1,16 @@
 /**
  * FitPack — a bit-level format for sharing programs in a URL fragment.
  *
- *   header   3b version · 1b hasName · 1b hasWeights · 1b hasNotes
+ *   header   3b version · 1b hasName · 1b hasWeights · 1b hasNotes · 1b hasSupersets · 1b hasSchedule
  *   name     text (if hasName)
  *   days     3b (count - 1)
- *   day      4b name (0 = "Day N", 1..14 preset token, 15 = text) · varint item count
- *   item     exercise code (prefix code) · scheme · [weight] · [note]
+ *   day      4b name (0 = "Day N", 1..14 preset token, 15 = text) · [7b weekdays, bit 0 = Monday] · varint item count
+ *   item     [1b superset with previous, not on the first item] · exercise code (prefix code) · scheme · [weight] · [note]
  *   scheme   move-to-front list of recent schemes, initially [3×10 90s]
  *            0 = recent[0] · 10 + 2b = recent[1..4] · 11 + explicit:
- *            sets 3b (0 = varint) + reps 4b (15 = escape) + rest 3b (7 = varint)
+ *            sets, reps and rest, each a Huffman code over a table of common values (+ escape)
+ *   weight   0 = none · 10 + 6b = n × 2.5 kg (plates; n = 1..63) · 11 + varint (kg × 2)
+ *   note     0 = none · 10 = same as the previous note · 11 + text
  *   crc6     over everything above, then zero padding to a 6-bit boundary
  *
  * Exercise codes are ordered by popularity (data/id-map.json is append-only), so the
@@ -16,8 +18,8 @@
  * must never change; to re-rank popularity later, add a v2 with its own rank table and
  * keep decoding v1.
  */
-import { DEFAULT_SCHEME, type ProgramData, type ProgramItem } from "@/entities/program/types"
-import { BitReader, BitWriter, DecodeError, base64urlToBits, bitsToBase64url, crc6 } from "./bits"
+import { DEFAULT_SCHEME, type ProgramData, type ProgramDay, type ProgramItem } from "@/entities/program/types"
+import { BitReader, BitWriter, DecodeError, Huffman, base64urlToBits, bitsToBase64url, crc6 } from "./bits"
 import { readText, writeText } from "./text"
 
 export { DecodeError }
@@ -31,8 +33,13 @@ export const DAY_NAMES = [
   "@legs_shoulders", "@chest", "@back", "@shoulders", "@arms", "@core",
 ] as const
 
+// Common values and how often they come up; the last weight of each code is the escape.
+const SETS = [1, 2, 3, 4, 5, 6, 7]
+const SETS_CODE = new Huffman([2, 5, 50, 30, 8, 2, 1, 2])
 const REPS = ["5", "6", "8", "10", "12", "15", "20", "8-12", "6-8", "10-15", "30s", "45s", "60s", "amrap", "max"]
+const REPS_CODE = new Huffman([4, 3, 8, 14, 14, 10, 5, 14, 6, 5, 4, 3, 3, 2, 4, 5])
 const REST = [30, 45, 60, 90, 120, 180, 240]
+const REST_CODE = new Huffman([5, 6, 20, 22, 18, 10, 4, 4])
 
 type Scheme = Pick<ProgramItem, "sets" | "reps" | "rest">
 
@@ -94,10 +101,52 @@ function readExercise(r: BitReader) {
   return base + r.varint()
 }
 
+function writeSets(w: BitWriter, sets: number) {
+  const i = SETS.indexOf(sets)
+  if (i >= 0) return SETS_CODE.write(w, i)
+  SETS_CODE.write(w, SETS.length)
+  w.varint(sets)
+}
+
+function readSets(r: BitReader) {
+  const i = SETS_CODE.read(r)
+  return i < SETS.length ? SETS[i] : r.varint()
+}
+
+function writeRest(w: BitWriter, rest: number) {
+  const i = REST.indexOf(rest)
+  if (i >= 0) return REST_CODE.write(w, i)
+  REST_CODE.write(w, REST.length)
+  w.varint(Math.round(rest / 5))
+}
+
+function readRest(r: BitReader) {
+  const i = REST_CODE.read(r)
+  return i < REST.length ? REST[i] : r.varint() * 5
+}
+
+function writeWeight(w: BitWriter, kg: number | undefined) {
+  const half = Math.round((kg ?? 0) * 2)
+  if (half <= 0) return w.bit(false)
+  const plates = half / 5
+  if (Number.isInteger(plates) && plates < 64) {
+    w.write(0b10, 2)
+    w.write(plates, 6)
+  } else {
+    w.write(0b11, 2)
+    w.varint(half)
+  }
+}
+
+function readWeight(r: BitReader) {
+  if (!r.bit()) return undefined
+  return r.bit() ? r.varint() / 2 : r.read(6) * 2.5
+}
+
 function writeReps(w: BitWriter, reps: string) {
   const i = REPS.indexOf(reps)
-  if (i >= 0) return w.write(i, 4)
-  w.write(15, 4)
+  if (i >= 0) return REPS_CODE.write(w, i)
+  REPS_CODE.write(w, REPS.length)
   let m: RegExpExecArray | null
   if ((m = /^(\d+)-(\d+)$/.exec(reps))) {
     const a = Number(m[1])
@@ -115,8 +164,8 @@ function writeReps(w: BitWriter, reps: string) {
 }
 
 function readReps(r: BitReader) {
-  const i = r.read(4)
-  if (i < 15) return REPS[i]
+  const i = REPS_CODE.read(r)
+  if (i < REPS.length) return REPS[i]
   switch (r.read(2)) {
     case 0:
       return String(r.varint())
@@ -137,6 +186,8 @@ export function encodeProgram(p: ProgramData): string {
   const hasName = p.name.trim().length > 0
   const hasWeights = items.some((it) => it.weight !== undefined && it.weight > 0)
   const hasNotes = items.some((it) => !!it.note?.trim())
+  const hasSupersets = p.days.some((d) => d.items.some((it, i) => i > 0 && it.superset))
+  const hasSchedule = p.days.some((d) => d.weekdays?.length)
   const days = p.days.slice(0, MAX_DAYS)
   if (days.length === 0) throw new RangeError("program has no days")
 
@@ -144,10 +195,13 @@ export function encodeProgram(p: ProgramData): string {
   w.bit(hasName)
   w.bit(hasWeights)
   w.bit(hasNotes)
+  w.bit(hasSupersets)
+  w.bit(hasSchedule)
   if (hasName) writeText(w, p.name.trim())
 
   w.write(days.length - 1, 3)
   const recent = new Recent()
+  let lastNote = ""
   for (const day of days) {
     const dn = DAY_NAMES.indexOf(day.name.trim() as (typeof DAY_NAMES)[number])
     if (dn >= 0) {
@@ -156,8 +210,10 @@ export function encodeProgram(p: ProgramData): string {
       w.write(15, 4)
       writeText(w, day.name.trim())
     }
+    if (hasSchedule) w.write((day.weekdays ?? []).reduce((m, wd) => m | (1 << wd), 0), 7)
     w.varint(day.items.length)
-    for (const it of day.items) {
+    for (const [i, it] of day.items.entries()) {
+      if (hasSupersets && i > 0) w.bit(!!it.superset)
       writeExercise(w, it.ex)
       const ri0 = recent.indexOf(it)
       if (ri0 === 0) w.write(0, 1)
@@ -166,29 +222,21 @@ export function encodeProgram(p: ProgramData): string {
         w.write(ri0 - 1, 2)
       } else {
         w.write(0b11, 2)
-        if (it.sets >= 1 && it.sets <= 7) w.write(it.sets, 3)
-        else {
-          w.write(0, 3)
-          w.varint(it.sets)
-        }
+        writeSets(w, it.sets)
         writeReps(w, it.reps)
-        const ri = REST.indexOf(it.rest)
-        if (ri >= 0) w.write(ri, 3)
-        else {
-          w.write(7, 3)
-          w.varint(Math.round(it.rest / 5))
-        }
+        writeRest(w, it.rest)
       }
       recent.use(it)
-      if (hasWeights) {
-        const has = it.weight !== undefined && it.weight > 0
-        w.bit(has)
-        if (has) w.varint(Math.round(it.weight! * 2))
-      }
+      if (hasWeights) writeWeight(w, it.weight)
       if (hasNotes) {
         const note = it.note?.trim() ?? ""
-        w.bit(note.length > 0)
-        if (note) writeText(w, note)
+        if (!note) w.bit(false)
+        else if (note === lastNote) w.write(0b10, 2)
+        else {
+          w.write(0b11, 2)
+          writeText(w, note)
+          lastNote = note
+        }
       }
     }
   }
@@ -205,37 +253,46 @@ export function decodeProgram(payload: string): ProgramData {
   const hasName = r.bit()
   const hasWeights = r.bit()
   const hasNotes = r.bit()
+  const hasSupersets = r.bit()
+  const hasSchedule = r.bit()
   const name = hasName ? readText(r) : ""
 
   const dayCount = r.read(3) + 1
   const days: ProgramData["days"] = []
   const recent = new Recent()
+  let lastNote = ""
   for (let d = 0; d < dayCount; d++) {
     const dn = r.read(4)
     const dayName = dn === 15 ? readText(r) : DAY_NAMES[dn]
+    const mask = hasSchedule ? r.read(7) : 0
     const count = r.varint()
     if (count > 100) throw new DecodeError("too many items")
     const items: ProgramItem[] = []
     for (let i = 0; i < count; i++) {
+      const superset = hasSupersets && i > 0 && r.bit()
       const ex = readExercise(r)
       let scheme: Scheme
       if (!r.bit()) scheme = recent.at(0)
       else if (!r.bit()) scheme = recent.at(1 + r.read(2))
       else {
-        let sets = r.read(3)
-        if (sets === 0) sets = r.varint()
-        const reps = readReps(r)
-        const ri = r.read(3)
-        const rest = ri < 7 ? REST[ri] : r.varint() * 5
-        scheme = { sets, reps, rest }
+        scheme = { sets: readSets(r), reps: readReps(r), rest: readRest(r) }
       }
       recent.use(scheme)
       const item: ProgramItem = { ex, ...scheme }
-      if (hasWeights && r.bit()) item.weight = r.varint() / 2
-      if (hasNotes && r.bit()) item.note = readText(r)
+      if (superset) item.superset = true
+      const weight = hasWeights ? readWeight(r) : undefined
+      if (weight) item.weight = weight
+      if (hasNotes && r.bit()) {
+        if (!r.bit()) {
+          if (!lastNote) throw new DecodeError("no note to repeat")
+          item.note = lastNote
+        } else item.note = lastNote = readText(r)
+      }
       items.push(item)
     }
-    days.push({ name: dayName, items })
+    const day: ProgramDay = { name: dayName, items }
+    if (mask) day.weekdays = [0, 1, 2, 3, 4, 5, 6].filter((wd) => mask & (1 << wd))
+    days.push(day)
   }
 
   const expected = crc6(bits.slice(0, r.pos))

@@ -53,6 +53,58 @@ export class BitReader {
   }
 }
 
+/**
+ * Canonical Huffman code for symbols 0..n-1 with the given frequencies: frequent symbols get
+ * short codes. Deterministic (ties break by symbol index), so both sides build the same code.
+ */
+export class Huffman {
+  private codes: { bits: number; len: number }[] = []
+  private decode = new Map<string, number>()
+
+  constructor(freq: number[]) {
+    type Node = { w: number; syms: number[]; order: number }
+    let nodes: Node[] = freq.map((w, s) => ({ w, syms: [s], order: s }))
+    const lens = freq.map(() => 0)
+    let order = freq.length
+    while (nodes.length > 1) {
+      nodes.sort((a, b) => a.w - b.w || a.order - b.order)
+      const [a, b] = nodes
+      for (const s of [...a.syms, ...b.syms]) lens[s]++
+      nodes = [{ w: a.w + b.w, syms: [...a.syms, ...b.syms], order: order++ }, ...nodes.slice(2)]
+    }
+    const syms = freq.map((_, s) => s).sort((a, b) => lens[a] - lens[b] || a - b)
+    let code = 0
+    let prev = lens[syms[0]]
+    for (const s of syms) {
+      code <<= lens[s] - prev
+      prev = lens[s]
+      this.codes[s] = { bits: code, len: lens[s] }
+      this.decode.set(`${lens[s]}:${code}`, s)
+      code++
+    }
+  }
+
+  /** Code length of a symbol, in bits. */
+  cost(sym: number) {
+    return this.codes[sym].len
+  }
+
+  write(w: BitWriter, sym: number) {
+    const { bits, len } = this.codes[sym]
+    w.write(bits, len)
+  }
+
+  read(r: BitReader) {
+    let code = 0
+    for (let len = 1; len <= 24; len++) {
+      code = code * 2 + r.read(1)
+      const s = this.decode.get(`${len}:${code}`)
+      if (s !== undefined) return s
+    }
+    throw new DecodeError("bad code")
+  }
+}
+
 /** CRC-6 (poly x^6 + x + 1) over a bit sequence. */
 export function crc6(bits: number[]) {
   let crc = 0
