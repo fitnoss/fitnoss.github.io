@@ -1,0 +1,29 @@
+name: Suggest a video
+description: Propose a YouTube video for an exercise
+title: "Video: "
+labels: [video]
+body:
+  - type: input
+    id: exercise
+    attributes:
+      label: Exercise link
+      description: Open the exercise on fitcraft.github.io and paste the address
+      placeholder: https://fitcraft.github.io/#/ex/barbell-full-squat
+    validations:
+      required: true
+  - type: input
+    id: video
+    attributes:
+      label: YouTube link
+      placeholder: https://www.youtube.com/watch?v=...
+    validations:
+      required: true
+  - type: input
+    id: start
+    attributes:
+      label: Start at (seconds, optional)
+  - type: dropdown
+    id: lang
+    attributes:
+      label: Video language
+      options: [English, Russian, Other / no speech]

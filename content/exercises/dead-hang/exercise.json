@@ -1,0 +1,30 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "static",
+  "equipment": "other",
+  "primary": ["forearms"],
+  "secondary": ["lats", "shoulders"],
+  "places": ["bars"],
+  "i18n": {
+    "en": {
+      "name": "Dead Hang",
+      "steps": [
+        "Grab a pull-up bar with an overhand grip, hands slightly wider than shoulders.",
+        "Lift your feet and hang with straight arms, shoulders relaxed.",
+        "Breathe calmly and hold for the target time.",
+        "Step down under control."
+      ]
+    },
+    "ru": {
+      "name": "Вис на турнике",
+      "steps": [
+        "Возьмитесь за турник прямым хватом чуть шире плеч.",
+        "Оторвите ноги от пола и повисните на прямых руках, плечи расслаблены.",
+        "Спокойно дышите и удерживайте положение заданное время.",
+        "Подконтрольно встаньте на пол."
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "body",
+  "primary": ["chest"],
+  "secondary": ["triceps", "shoulders"],
+  "places": ["home"],
+  "video": { "yt": "XXXXXXXXXXX", "start": 0 },
+  "i18n": {
+    "en": {
+      "name": "Exercise name",
+      "steps": ["Starting position.", "Movement.", "Return to the start."]
+    },
+    "ru": {
+      "name": "Название упражнения",
+      "steps": ["Исходное положение.", "Движение.", "Вернитесь в исходное положение."]
+    }
+  }
+}

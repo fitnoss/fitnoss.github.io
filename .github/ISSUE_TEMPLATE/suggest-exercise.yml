@@ -1,0 +1,16 @@
+name: Suggest an exercise
+description: An exercise that is missing from the catalog
+title: "Exercise: "
+labels: [exercise]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Name
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: How to do it
+      description: Steps, muscles worked, equipment. A video link helps a lot.

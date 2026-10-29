@@ -1,0 +1,31 @@
+{
+  "category": "plyometrics",
+  "level": "beginner",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "body",
+  "primary": ["quadriceps"],
+  "secondary": ["chest", "shoulders", "triceps", "glutes", "abdominals"],
+  "i18n": {
+    "en": {
+      "name": "Burpee",
+      "steps": [
+        "Stand with your feet shoulder-width apart.",
+        "Squat down and place your hands on the floor in front of your feet.",
+        "Jump your feet back into a plank and do one push-up.",
+        "Jump your feet back towards your hands.",
+        "Explode up into a jump with your arms overhead, land softly and repeat."
+      ]
+    },
+    "ru": {
+      "name": "Бёрпи",
+      "steps": [
+        "Встаньте, ноги на ширине плеч.",
+        "Присядьте и поставьте ладони на пол перед стопами.",
+        "Прыжком отведите ноги назад в планку и сделайте одно отжимание.",
+        "Прыжком верните ноги к рукам.",
+        "Мощно выпрыгните вверх, руки над головой, мягко приземлитесь и повторите."
+      ]
+    }
+  }
+}

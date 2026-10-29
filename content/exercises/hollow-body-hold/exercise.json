@@ -1,0 +1,29 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "static",
+  "equipment": "body",
+  "primary": ["abdominals"],
+  "secondary": ["quadriceps"],
+  "i18n": {
+    "en": {
+      "name": "Hollow Body Hold",
+      "steps": [
+        "Lie on your back with your arms extended overhead.",
+        "Press your lower back into the floor and tighten your abs.",
+        "Lift your shoulders and straight legs a few inches off the floor.",
+        "Hold the position without arching your lower back."
+      ]
+    },
+    "ru": {
+      "name": "Лодочка на спине (hollow body)",
+      "steps": [
+        "Лягте на спину, руки вытянуты за головой.",
+        "Прижмите поясницу к полу и напрягите пресс.",
+        "Приподнимите лопатки и прямые ноги на несколько сантиметров от пола.",
+        "Удерживайте положение, не отрывая поясницу от пола."
+      ]
+    }
+  }
+}

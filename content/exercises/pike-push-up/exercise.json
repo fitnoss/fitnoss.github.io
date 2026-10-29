@@ -1,0 +1,27 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "body",
+  "primary": ["shoulders"],
+  "secondary": ["triceps", "chest"],
+  "i18n": {
+    "en": {
+      "name": "Pike Push-Up",
+      "steps": [
+        "Start in a push-up position, then walk your feet in and raise your hips so your body forms an inverted V.",
+        "Bend your elbows and lower the top of your head towards the floor between your hands.",
+        "Press back up to straight arms, keeping your hips high."
+      ]
+    },
+    "ru": {
+      "name": "Отжимания пайк (уголком)",
+      "steps": [
+        "Встаньте в упор лёжа, подшагните ногами к рукам и поднимите таз — тело образует перевёрнутую букву V.",
+        "Сгибая локти, опустите макушку к полу между ладонями.",
+        "Выжмите себя обратно на прямые руки, таз держите высоко."
+      ]
+    }
+  }
+}
