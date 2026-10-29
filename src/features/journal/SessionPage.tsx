@@ -8,7 +8,8 @@ import { Panel } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
 import { useExercises } from "@/entities/exercise/store"
 import { useProgramStore } from "@/entities/program/store"
-import { sessionVolume, useSessionStore } from "@/entities/session/store"
+import { useSessionStore } from "@/entities/session/store"
+import { sessionVolume } from "@/entities/session/stats"
 
 export function SessionPage() {
   const { id = "" } = useParams()

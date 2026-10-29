@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { warmupGear, warmupSets } from "./warmup"
+import { beatsRecord } from "./stats"
+import type { Session, SetLog } from "./store"
 
 const barbell = warmupGear("barbell", 20, [25, 20, 15, 10, 5, 2.5, 1.25])!
 
@@ -34,5 +36,22 @@ describe("warm-up sets", () => {
       { weight: 16, reps: 2 },
     ])
     expect(warmupGear("body", 20, [])).toBeUndefined()
+  })
+})
+
+describe("records", () => {
+  const done = (weight: number, reps: number, warmup?: true): SetLog => ({ weight, reps, done: true, ...(warmup && { warmup }) })
+  const session = (...sets: SetLog[]): Session => ({ id: "s", title: "", startedAt: 0, exercises: [{ ex: 1, reps: "5", rest: 90, sets }] })
+  const history = [session(done(100, 5), done(100, 4))]
+
+  it("beats the best estimated 1RM, this workout included", () => {
+    expect(beatsRecord(history, session(done(100, 6)), 0, 0)).toBe(true)
+    expect(beatsRecord(history, session(done(100, 5)), 0, 0)).toBe(false)
+    expect(beatsRecord(history, session(done(102.5, 6), done(100, 6)), 0, 1)).toBe(false)
+  })
+
+  it("ignores warm-ups and first-time exercises", () => {
+    expect(beatsRecord(history, session(done(120, 5, true)), 0, 0)).toBe(false)
+    expect(beatsRecord([], session(done(100, 5)), 0, 0)).toBe(false)
   })
 })

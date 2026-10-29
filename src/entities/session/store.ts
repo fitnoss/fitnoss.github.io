@@ -185,13 +185,3 @@ export const useSessionStore = create<State>()(
     { name: "fitnoss:sessions", version: 1 },
   ),
 )
-
-/** Epley estimated one-rep max. */
-export function e1rm(weight: number, reps: number) {
-  if (!weight || !reps) return 0
-  return reps === 1 ? weight : weight * (1 + reps / 30)
-}
-
-export function sessionVolume(s: Session) {
-  return s.exercises.reduce((sum, e) => sum + e.sets.reduce((a, x) => a + (x.weight ?? 0) * (x.reps ?? 0), 0), 0)
-}

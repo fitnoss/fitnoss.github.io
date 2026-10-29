@@ -7,7 +7,8 @@ import { Empty, Panel } from "@/shared/ui/panel"
 import { Segmented } from "@/shared/ui/segmented"
 import { cn } from "@/shared/lib/utils"
 import { useExercises } from "@/entities/exercise/store"
-import { e1rm, sessionVolume, useSessionStore, type Session } from "@/entities/session/store"
+import { useSessionStore, type Session } from "@/entities/session/store"
+import { e1rm, sessionVolume } from "@/entities/session/stats"
 
 const DAY = 86_400_000
 

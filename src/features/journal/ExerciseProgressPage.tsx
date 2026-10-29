@@ -7,7 +7,8 @@ import { Empty, Panel } from "@/shared/ui/panel"
 import { Segmented } from "@/shared/ui/segmented"
 import { LineChart } from "@/shared/ui/line-chart"
 import { useExercises } from "@/entities/exercise/store"
-import { e1rm, useSessionStore } from "@/entities/session/store"
+import { useSessionStore } from "@/entities/session/store"
+import { e1rm } from "@/entities/session/stats"
 
 type Metric = "e1rm" | "weight" | "volume" | "reps"
 

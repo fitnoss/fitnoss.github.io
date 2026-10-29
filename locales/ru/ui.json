@@ -274,7 +274,8 @@
     "progressionDeload": "Разгрузка",
     "warmup": "Разминка",
     "removeWarmup": "Убрать разминку",
-    "warmupShort": "Р"
+    "warmupShort": "Р",
+    "record": "Новый рекорд: {{weight}} кг × {{reps}} 🏆"
   },
   "journal": {
     "title": "Прогресс",

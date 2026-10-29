@@ -260,7 +260,8 @@
     "progressionDeload": "Deload",
     "warmup": "Warm-up",
     "removeWarmup": "Remove warm-up",
-    "warmupShort": "W"
+    "warmupShort": "W",
+    "record": "New record: {{weight}} kg × {{reps}} 🏆"
   },
   "journal": {
     "title": "Progress",

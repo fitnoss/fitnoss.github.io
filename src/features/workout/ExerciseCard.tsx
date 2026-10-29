@@ -8,10 +8,12 @@ import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/field"
 import { Menu, MenuItem } from "@/shared/ui/menu"
 import { Panel } from "@/shared/ui/panel"
+import { toast } from "@/shared/ui/toast"
 import { cn } from "@/shared/lib/utils"
 import { useSettings } from "@/shared/storage/settings"
 import { useExercises } from "@/entities/exercise/store"
 import { parseReps } from "@/entities/program/types"
+import { beatsRecord } from "@/entities/session/stats"
 import { useSessionStore, type SessionExercise } from "@/entities/session/store"
 import { warmupGear, warmupSets } from "@/entities/session/warmup"
 import { formatDuration, formatRepsLabel } from "@/features/programs/format"
@@ -142,7 +144,13 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
             onToggle={() => {
               primeAudio()
               toggleSet(i, j)
-              if (!s.done) onSetDone?.()
+              if (s.done) return
+              const { history, active } = useSessionStore.getState()
+              const set = active?.exercises[i]?.sets[j]
+              if (active && set && beatsRecord(history, active, i, j)) {
+                toast.success(t("workout.record", { weight: set.weight, reps: set.reps }))
+              }
+              onSetDone?.()
             }}
           />
         ))}
