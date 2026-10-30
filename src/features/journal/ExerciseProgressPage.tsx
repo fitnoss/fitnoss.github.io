@@ -72,9 +72,10 @@ export function ExerciseProgressPage() {
             <Panel className="p-4">
               <div className="mb-4 flex items-baseline justify-between">
                 <span className="text-muted text-sm">{t("progress.best")}</span>
-                <span className="text-[28px] leading-none font-bold tracking-tight tabular-nums">{best}</span>
+                <span className="text-[28px] leading-none font-bold tracking-tight tabular-nums">{shown === "reps" ? `${best} ${t("workout.reps")}` : t("units.kg", { n: best })}</span>
               </div>
-              <LineChart key={shown} data={points.map((p) => ({ label: p.date, value: p[shown] }))} />
+              <p className="text-muted mb-3 text-xs">{t("progress.sample", { count: points.length })} · {points[0].date} — {points.at(-1)!.date}</p>
+              {points.length > 1 ? <><p className="mb-3 text-sm">{t("progress.change")}: {points.at(-1)![shown] - points.at(-2)![shown] > 0 ? "+" : ""}{points.at(-1)![shown] - points.at(-2)![shown]} {t(shown === "reps" ? "workout.reps" : "workout.kg")}</p><LineChart key={shown} data={points.map((p) => ({ label: p.date, value: p[shown] }))} /></> : <p className="text-muted text-sm">{t("progress.oneEntry")}</p>}
             </Panel>
             <Panel className="divide-y overflow-hidden">
               {[...points].reverse().map((p) => (

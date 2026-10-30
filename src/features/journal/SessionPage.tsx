@@ -1,3 +1,4 @@
+import { confirmAction } from "@/shared/ui/confirm"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate, useParams } from "react-router"
 import { ListPlus, Trash2 } from "lucide-react"
@@ -41,8 +42,8 @@ export function SessionPage() {
             variant="ghost"
             size="icon"
             aria-label={t("common.delete")}
-            onClick={() => {
-              if (!confirm(t("journal.confirmDelete"))) return
+            onClick={async () => {
+              if (!await confirmAction(t("journal.confirmDelete"))) return
               remove(s.id)
               navigate("/progress", { replace: true })
             }}
@@ -75,6 +76,7 @@ export function SessionPage() {
                 {ex && <ExerciseImage ex={ex} alt="" animate={false} className="hairline size-11 shrink-0 rounded-[10px]" />}
                 <div className="text-[15px] font-semibold">{text(ex).name}</div>
               </Link>
+              {e.note && <p className="text-muted text-sm whitespace-pre-wrap">{e.note}</p>}
               <div className="flex flex-wrap gap-1.5">
                 {e.sets.map((x, j) => (
                   <LoggedSet key={j} set={x} timed={parseReps(e.reps).kind === "time"} />

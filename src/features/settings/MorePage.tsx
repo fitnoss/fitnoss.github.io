@@ -10,9 +10,11 @@ import { Segmented } from "@/shared/ui/segmented"
 import { Switch } from "@/shared/ui/switch"
 import { toast } from "@/shared/ui/toast"
 import { languages, setLanguage } from "@/shared/i18n"
+import { useExercises } from "@/entities/exercise/store"
 import { useSettings, type Theme } from "@/shared/storage/settings"
 import { AccentPicker } from "./AccentPicker"
-import { downloadAllImages, exportBackup, importBackup } from "./backup"
+import { Sheet } from "@/shared/ui/sheet"
+import { backupSummary, downloadAllImages, exportBackup, readBackup, mergeBackup, LAST_EXPORT, OFFLINE_STATUS, type Backup } from "./backup"
 import { useTranslationCoverage } from "./coverage"
 
 /**
@@ -40,51 +42,26 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
   )
 }
 
-export function MorePage() {
+export function SettingsPage({ section = "settings" }: { section?: "settings" | "data" | "offline" }) {
   const { t, i18n } = useTranslation()
   const settings = useSettings()
+  const { ready } = useExercises()
   const fileRef = useRef<HTMLInputElement>(null)
   const [dl, setDl] = useState<{ done: number; total: number } | null>(null)
+  const [pendingBackup, setPendingBackup] = useState<Backup | null>(null)
+  const [lastExport, setLastExport] = useState(() => localStorage.getItem(LAST_EXPORT))
+  const [offlineResult, setOfflineResult] = useState<{ downloaded: number; failed: number; total: number; at: string } | null>(() => {
+    try { return JSON.parse(localStorage.getItem(OFFLINE_STATUS) ?? "null") } catch { return null }
+  })
   const coverage = useTranslationCoverage()
 
   return (
     <>
-      <PageHeader title={t("more.title")} />
+      <PageHeader title={t(section === "settings" ? "more.settings" : `more.${section}`)} back="/more" />
       <div className="space-y-8 px-4 pb-10">
-        <Panel className="divide-y overflow-hidden">
-          <Row icon={Calculator} to="/more/calc">
-            {t("calc.title")}
-          </Row>
-          <Row icon={Info} to="/more/about">
-            {t("about.title")}
-          </Row>
-          {import.meta.env.DEV && (
-            <Row icon={Video} to="/dev/videos">
-              Video review (dev)
-            </Row>
-          )}
-        </Panel>
 
-        <Section title={t("more.theme")}>
-          <Segmented
-            value={settings.theme}
-            onChange={(v: Theme) => settings.setTheme(v)}
-            options={(["system", "light", "dark"] as const).map((th) => ({ value: th, label: t(`more.themes.${th}`) }))}
-          />
-          <AccentPicker />
-        </Section>
 
-        <Section title={t("more.workout")} hint={t("more.defaultRestHint")}>
-          <Panel className="divide-y overflow-hidden">
-            <div className="flex min-h-[60px] flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2.5 pr-2.5 pl-4">
-              <span className="text-[15px] font-medium">{t("more.defaultRest")}</span>
-              <RestInput value={settings.defaultRest} onChange={(defaultRest) => settings.set({ defaultRest })} />
-            </div>
-            <Toggle label={t("more.sound")} checked={settings.sound} onChange={(sound) => settings.set({ sound })} />
-            <Toggle label={t("more.vibration")} checked={settings.vibration} onChange={(vibration) => settings.set({ vibration })} />
-          </Panel>
-        </Section>
-
+        {section === "settings" && <>
         <Section
           title={t("more.language")}
           hint={
@@ -120,15 +97,38 @@ export function MorePage() {
           />
         </Section>
 
-        <Section title={t("more.data")} hint={t("more.dataHint")}>
+        <Section title={t("more.theme")}>
+          <Segmented
+            value={settings.theme}
+            onChange={(v: Theme) => settings.setTheme(v)}
+            options={(["system", "light", "dark"] as const).map((th) => ({ value: th, label: t(`more.themes.${th}`) }))}
+          />
+          <AccentPicker />
+        </Section>
+
+        <Section title={t("more.workout")} hint={t("more.defaultRestHint")}>
+          <Panel className="divide-y overflow-hidden">
+            <div className="flex min-h-[60px] flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2.5 pr-2.5 pl-4">
+              <span className="text-[15px] font-medium">{t("more.defaultRest")}</span>
+              <RestInput value={settings.defaultRest} onChange={(defaultRest) => settings.set({ defaultRest })} />
+            </div>
+            <Toggle label={t("more.sound")} checked={settings.sound} onChange={(sound) => settings.set({ sound })} />
+            <Toggle label={t("more.vibration")} checked={settings.vibration} onChange={(vibration) => settings.set({ vibration })} />
+          </Panel>
+        </Section>
+
+        </>}
+        {section === "data" && <Section title={t("more.data")} hint={t("more.dataHint")}>
           <div className="grid grid-cols-2 gap-2">
-            <Button onClick={exportBackup}>
+            <Button onClick={() => { exportBackup(); setLastExport(localStorage.getItem(LAST_EXPORT)) }}>
               <Download /> {t("more.export")}
             </Button>
             <Button onClick={() => fileRef.current?.click()}>
               <Upload /> {t("more.import")}
             </Button>
           </div>
+          <p className="text-muted text-xs">{t("more.backupContents")}</p>
+          <p className="text-muted text-xs">{lastExport ? t("more.lastExport", { date: new Date(lastExport).toLocaleString(i18n.language) }) : t("more.neverExported")}</p>
           <input
             ref={fileRef}
             type="file"
@@ -139,16 +139,16 @@ export function MorePage() {
               e.target.value = ""
               if (!file) return
               try {
-                const r = await importBackup(file)
-                toast.success(t("more.imported", r))
+                setPendingBackup(await readBackup(file))
               } catch {
                 toast.error(t("more.importFailed"))
               }
             }}
           />
-        </Section>
+        </Section>}
 
-        <Section title={t("more.offline")} hint={t("more.offlineHint")}>
+        {section === "offline" && <Section title={t("more.offline")} hint={t("more.offlineHint")}>
+          {offlineResult && <p role="status" className="text-sm">{t("more.offlineStatus", offlineResult)} · {new Date(offlineResult.at).toLocaleDateString(i18n.language)}</p>}
           {dl ? (
             <Panel className="space-y-2 p-4">
               <div className="bg-page h-1.5 overflow-hidden rounded-full">
@@ -161,19 +161,43 @@ export function MorePage() {
           ) : (
             <Button
               className="w-full"
-              disabled={!("caches" in window)}
+              disabled={!ready || !("caches" in window)}
               onClick={async () => {
                 setDl({ done: 0, total: 0 })
-                await downloadAllImages((done, total) => setDl({ done, total }))
-                toast.success(t("more.offlineDone"))
-                setDl(null)
+                try {
+                  const result = await downloadAllImages((done, total) => setDl({ done, total }))
+                  setOfflineResult(result)
+                  if (result.failed) toast.error(t("more.offlinePartial", result))
+                  else toast.success(t("more.offlineDone"))
+                } catch { toast.error(t("more.offlineFailed")) }
+                finally { setDl(null) }
               }}
             >
-              <CloudDownload /> {t("more.offlineDownload")}
+              <CloudDownload /> {t(offlineResult?.failed ? "more.offlineRetry" : "more.offlineDownload")}
             </Button>
           )}
-        </Section>
+        </Section>}
       </div>
+      <Sheet open={!!pendingBackup} onOpenChange={(o) => !o && setPendingBackup(null)} title={t("more.import")} footer={
+        <div className="flex gap-2"><Button onClick={() => setPendingBackup(null)}>{t("common.cancel")}</Button><Button variant="primary" onClick={() => {
+          if (!pendingBackup) return
+          const result = mergeBackup(pendingBackup)
+          setPendingBackup(null)
+          toast.success(t("more.imported", result))
+        }}>{t("more.merge")}</Button></div>
+      }>{pendingBackup && <div className="space-y-3"><p>{t("more.mergeHint")}</p><p>{t("more.importPreview", backupSummary(pendingBackup))}</p><p className="text-muted text-sm">{t("more.backupContents")}</p></div>}</Sheet>
     </>
   )
+}
+
+export function MorePage() {
+  const { t } = useTranslation()
+  return <><PageHeader title={t("more.title")} /><div className="px-4 pb-8"><Panel className="divide-y overflow-hidden">
+    <Row icon={Info} to="/more/settings">{t("more.settings")}</Row>
+    <Row icon={Calculator} to="/more/calc">{t("calc.title")}</Row>
+    <Row icon={Download} to="/more/data">{t("more.data")}</Row>
+    <Row icon={CloudDownload} to="/more/offline">{t("more.offline")}</Row>
+    <Row icon={Info} to="/more/about">{t("about.title")}</Row>
+    {import.meta.env.DEV && <Row icon={Video} to="/dev/videos">Video review (dev)</Row>}
+  </Panel></div></>
 }

@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { confirmAction } from "@/shared/ui/confirm"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate, useParams } from "react-router"
 import { ArrowDown, ArrowUp, CalendarDays, ChevronDown, Copy, Link2, Pencil, Play, Plus, Share, Trash2 } from "lucide-react"
@@ -35,18 +36,25 @@ import { useStartDay } from "@/features/workout/useStartDay"
 import { dayName, formatScheme, formatWeekdays, weekdayName } from "./format"
 
 const MAX_DAYS = 8
+const editorStates = new Map<string, { day: number; expanded: number | null; editing: boolean }>()
 
 export function ProgramEditorPage() {
   const { id = "" } = useParams()
+  return <ProgramEditor key={id} id={id} />
+}
+
+function ProgramEditor({ id }: { id: string }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const program = useProgramStore((s) => s.programs.find((p) => p.id === id))
   const { update, remove, duplicate } = useProgramStore()
-  const [day, setDay] = useState(0)
+  const [day, setDay] = useState(editorStates.get(id)?.day ?? 0)
+  const [editing, setEditing] = useState(editorStates.get(id)?.editing ?? !program?.days.some((d) => d.items.length))
   const [pickerOpen, setPickerOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [dayDialog, setDayDialog] = useState(false)
-  const [expanded, setExpanded] = useState<number | null>(null)
+  const [expanded, setExpanded] = useState<number | null>(editorStates.get(id)?.expanded ?? null)
+  useEffect(() => { editorStates.set(id, { day, expanded, editing }) }, [id, day, expanded, editing])
   const startDay = useStartDay()
 
   if (!program) {
@@ -100,8 +108,8 @@ export function ProgramEditorPage() {
         item={it}
         label={labels[i]}
         inSuperset={!!current.items[i + 1]?.superset}
-        open={expanded === i}
-        onToggle={() => setExpanded(expanded === i ? null : i)}
+        open={editing && expanded === i}
+        onToggle={() => { setEditing(true); setExpanded(expanded === i ? null : i) }}
         onChange={(next) => setItems(current.items.map((x, k) => (k === i ? next : x)))}
         onMove={current.items.length > 1 ? (dir) => move(i, dir) : undefined}
         canUp={i > 0}
@@ -109,7 +117,12 @@ export function ProgramEditorPage() {
         linkUp={i > 0 ? { linked: !!it.superset, toggle: () => toggleLink(i) } : undefined}
         linkDown={i < current.items.length - 1 ? { linked: !!current.items[i + 1].superset, toggle: () => toggleLink(i + 1) } : undefined}
         onRemove={() => {
-          setItems(removeItem(current.items, i))
+          const before = current.items
+          const after = removeItem(current.items, i)
+          setItems(after)
+          toast(t("workout.exerciseRemoved"), { action: { label: t("common.undo"), onClick: () => {
+            update(program.id, (p) => ({ ...p, days: p.days.map((x, k) => k === d && x.items === after ? { ...x, items: before } : x) }))
+          } } })
           setExpanded(null)
         }}
       />
@@ -143,8 +156,8 @@ export function ProgramEditorPage() {
               </MenuItem>
               <MenuItem
                 danger
-                onClick={() => {
-                  if (!confirm(t("programs.confirmDelete"))) return
+                onClick={async () => {
+                  if (!await confirmAction(t("programs.confirmDelete"))) return
                   remove(program.id)
                   navigate("/", { replace: true })
                 }}
@@ -155,22 +168,23 @@ export function ProgramEditorPage() {
           </>
         }
       >
-        <div className="px-4 pb-2.5">
+        {editing && <div className="px-4 pb-2.5">
           <Input
+            aria-label={t("programs.namePlaceholder")}
             value={program.name}
             onChange={(e) => set((p) => ({ ...p, name: e.target.value }))}
             placeholder={t("programs.namePlaceholder")}
             maxLength={60}
             className="h-12 text-[17px] font-semibold"
           />
-        </div>
+        </div>}
         <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-2">
           {program.days.map((x, i) => (
             <Chip
               key={i}
               active={i === d}
               onClick={() => {
-                if (i === d) setDayDialog(true)
+                if (i === d && editing) setDayDialog(true)
                 else {
                   setDay(i)
                   setExpanded(null)
@@ -179,16 +193,16 @@ export function ProgramEditorPage() {
             >
               {dayName(t, x.name, i)}
               {x.weekdays?.length ? <span className="text-[13px] opacity-60">{formatWeekdays(x.weekdays)}</span> : null}
-              {i === d && <Pencil className="size-3.5 opacity-70" />}
+              {i === d && editing && <Pencil className="size-3.5 opacity-70" />}
             </Chip>
           ))}
-          {program.days.length < MAX_DAYS && (
+          {editing && program.days.length < MAX_DAYS && (
             <Chip onClick={addDay} className="text-muted bg-transparent shadow-[inset_0_0_0_1px_var(--line)]">
               <Plus className="size-4" /> {t("programs.addDay")}
             </Chip>
           )}
         </div>
-        <button
+        {editing && <button
           type="button"
           onClick={() => setDayDialog(true)}
           className={cn(
@@ -198,25 +212,24 @@ export function ProgramEditorPage() {
         >
           <CalendarDays className="size-4" />
           {t(current.weekdays?.length ? "programs.editWeekdays" : "programs.setWeekdays")}
-        </button>
+        </button>}
       </PageHeader>
 
       <div className="space-y-2 px-4 pt-1 pb-8">
+        <div className="flex flex-wrap items-center gap-2 pb-2">
+          <Button className="flex-1" onClick={() => setEditing(!editing)}>{t(editing ? "common.done" : "programs.edit")}</Button>
+          {current.items.length > 0 && <Button variant="primary" className="flex-1" onClick={() => startDay(program, d)}><Play className="size-4" />{t("home.start")}</Button>}
+          {editing && <p role="status" className="text-muted w-full text-xs">{t("programs.autosaved")}</p>}
+        </div>
         {groups(current.items).map((g) => (g.length > 1 ? <SupersetGroup key={`g${g[0]}`}>{g.map(card)}</SupersetGroup> : card(g[0])))}
 
-        <button
+        {editing && <button
           type="button"
           onClick={() => setPickerOpen(true)}
           className="rounded-panel text-muted hover:text-fg hover:bg-surface flex h-14 w-full items-center justify-center gap-2 font-medium shadow-[inset_0_0_0_1.5px_var(--line)] transition-colors"
         >
           <Plus className="size-5" /> {t("programs.addExercises")}
-        </button>
-
-        {current.items.length > 0 && (
-          <Button variant="primary" size="lg" className="mt-4 h-14 w-full" onClick={() => startDay(program, d)}>
-            <Play className="size-4 fill-current" /> {t("programs.startDay", { day: dayName(t, current.name, d) })}
-          </Button>
-        )}
+        </button>}
       </div>
 
       <ExercisePicker
@@ -309,12 +322,12 @@ function ItemCard({
             <ItemEditor item={item} onChange={onChange} inSuperset={inSuperset} />
           </div>
           {(linkUp || linkDown) && (
-            <div className="flex items-center gap-1.5 pt-2 pl-1">
+            <details><summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">{t("programs.superset")}</summary><div className="flex items-center gap-1.5 pt-2 pl-1">
               <Link2 className="text-muted size-4" />
               <span className="text-muted mr-0.5 text-[13px] font-medium">{t("programs.supersetWith")}</span>
               {linkUp && <LinkToggle dir="up" {...linkUp} />}
               {linkDown && <LinkToggle dir="down" {...linkDown} />}
-            </div>
+            </div></details>
           )}
           <div className="flex items-center gap-1 pt-2">
             {onMove && (
@@ -352,7 +365,7 @@ function LinkToggle({ dir, linked, toggle }: SupersetToggle & { dir: "up" | "dow
       aria-label={t(label)}
       title={t(label)}
       className={cn(
-        "rounded-control flex size-8 items-center justify-center transition-colors",
+        "rounded-control flex size-11 items-center justify-center transition-colors",
         linked ? "bg-accent text-accent-fg" : "bg-page text-muted hover:text-fg shadow-[inset_0_0_0_1px_var(--line)]",
       )}
     >
@@ -395,7 +408,7 @@ function DaySheet({
       footer={
         <div className="flex gap-2">
           {canDelete && (
-            <Button variant="danger" onClick={() => confirm(t("programs.confirmDeleteDay")) && onDelete()}>
+            <Button variant="danger" onClick={async () => await confirmAction(t("programs.confirmDeleteDay")) && onDelete()}>
               <Trash2 className="size-4" /> {t("programs.deleteDay")}
             </Button>
           )}

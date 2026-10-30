@@ -1,3 +1,4 @@
+import { confirmAction } from "@/shared/ui/confirm"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import type { Program } from "@/entities/program/types"
@@ -9,9 +10,9 @@ import { primeAudio } from "./RestTimerBar"
 export function useStartDay() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  return (program: Program, index: number) => {
+  return async (program: Program, index: number) => {
     const { active, start } = useSessionStore.getState()
-    if (active && !confirm(t("workout.replaceActive"))) return
+    if (active && !await confirmAction(t("workout.replaceActive"))) return
     primeAudio()
     const day = program.days[index]
     start({ title: `${program.name || t("programs.untitled")} · ${dayName(t, day.name, index)}`, programId: program.id, day: index, plan: day })

@@ -12,11 +12,11 @@ const VARIANTS = {
 }
 
 const SIZES = {
-  md: "h-10 px-4 text-[15px]",
-  sm: "h-8 gap-1.5 px-3 text-sm",
+  md: "h-11 px-4 text-[15px]",
+  sm: "h-11 gap-1.5 px-3 text-sm",
   lg: "h-12 px-5 text-base",
-  icon: "size-10",
-  "icon-sm": "size-8",
+  icon: "size-11",
+  "icon-sm": "size-11",
 }
 
 export type ButtonVariant = keyof typeof VARIANTS

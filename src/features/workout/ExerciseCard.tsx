@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { ArrowDown, ArrowLeftRight, ArrowUp, Check, Clock, Flame, Link2, Minus, Plus, Trash2, TrendingDown, TrendingUp, Unlink2, X } from "lucide-react"
 import { CongratsCat } from "@/shared/components/CongratsCat"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
@@ -15,12 +15,13 @@ import { useSettings } from "@/shared/storage/settings"
 import { useExercises } from "@/entities/exercise/store"
 import { parseReps } from "@/entities/program/types"
 import { beatsRecord } from "@/entities/session/stats"
-import { useSessionStore, type SessionExercise, type SetLog } from "@/entities/session/store"
+import { lastSets, useSessionStore, type SessionExercise, type SetLog } from "@/entities/session/store"
 import { isWarmup, setType } from "@/entities/session/sets"
 import { warmupGear, warmupSets } from "@/entities/session/warmup"
 import { formatDuration, formatRepsLabel } from "@/features/programs/format"
 import { primeAudio } from "./RestTimerBar"
 import { ReplaceExerciseSheet } from "./ReplaceExerciseSheet"
+import { Sheet } from "@/shared/ui/sheet"
 import { SetDetailsSheet } from "./SetDetailsSheet"
 
 type Props = {
@@ -41,6 +42,11 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
   const { t } = useTranslation()
   const { byCode, text } = useExercises()
   const { updateSet, toggleSet, addSet, removeSet, removeExercise, replaceExercise, moveExercise, setRest, toggleSuperset, setWarmup } = useSessionStore()
+  const navigate = useNavigate()
+  const history = useSessionStore((s) => s.history)
+  const previous = lastSets(history, e.ex)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [removeSetOpen, setRemoveSetOpen] = useState(false)
   const { barWeight, plates } = useSettings()
   const [restOpen, setRestOpen] = useState(false)
   const [replaceOpen, setReplaceOpen] = useState(false)
@@ -52,6 +58,22 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
   const work = e.sets.find((s) => !isWarmup(s))?.weight
   const gear = ex && warmupGear(ex.eq, barWeight, plates)
   const ramp = gear && work ? warmupSets(work, gear) : []
+  const remove = () => {
+    const snapshot = useSessionStore.getState().active
+    removeExercise(i)
+    const after = useSessionStore.getState().active
+    toast(t("workout.exerciseRemoved"), { action: { label: t("common.undo"), onClick: () => {
+      // Never overwrite any work logged after deletion.
+      const current = useSessionStore.getState().active
+      if (!current || !snapshot || current.id !== snapshot.id) return
+      if (current === after) useSessionStore.setState({ active: snapshot })
+      else {
+        const exercises = [...current.exercises]
+        exercises.splice(Math.min(i, exercises.length), 0, snapshot.exercises[i])
+        useSessionStore.setState({ active: { ...current, exercises } })
+      }
+    } } })
+  }
   // Working sets are numbered from 1, warm-ups get a letter instead.
   let n = 0
 
@@ -84,6 +106,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
                 {" "}·{" "}
                 {e.progression === "up" ? <TrendingUp className="size-3.5" /> : <TrendingDown className="size-3.5" />}
                 {t(e.progression === "up" ? "workout.progressionUp" : "workout.progressionDeload")}
+                {previous?.[0]?.weight !== undefined && work !== undefined && <>: {previous[0].weight} → {t("units.kg", { n: work })}</>}
               </span>
             )}
             {restsAfter && (
@@ -128,12 +151,17 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
               {restsAfter ? <Link2 /> : <Unlink2 />} {t(restsAfter ? "programs.linkDown" : "programs.unlinkDown")}
             </MenuItem>
           )}
-          <MenuItem danger onClick={() => removeExercise(i)}>
+          <MenuItem danger onClick={() => e.sets.some((s) => s.done) ? setDeleteOpen(true) : remove()}>
             <Trash2 /> {t("common.delete")}
           </MenuItem>
         </Menu>
       </div>
 
+      {e.note && <p className="bg-page rounded-control px-3 py-2 text-sm whitespace-pre-wrap">{e.note}</p>}
+      <Sheet open={deleteOpen} onOpenChange={setDeleteOpen} title={t("common.delete")} footer={
+        <div className="flex gap-2"><Button onClick={() => setDeleteOpen(false)}>{t("common.cancel")}</Button><Button variant="danger" onClick={() => { setDeleteOpen(false); remove() }}>{t("common.delete")}</Button></div>
+      }><p>{t("workout.confirmRemoveExercise")}</p></Sheet>
+      <Sheet open={removeSetOpen} onOpenChange={setRemoveSetOpen} title={t("workout.removeSet")} footer={<div className="flex gap-2"><Button onClick={() => setRemoveSetOpen(false)}>{t("common.cancel")}</Button><Button variant="danger" onClick={() => { removeSet(i, e.sets.length - 1); setRemoveSetOpen(false) }}>{t("common.delete")}</Button></div>}><p>{t("workout.confirmRemoveSet")}</p></Sheet>
       {restOpen && restsAfter && <RestInput autoFocus value={e.rest} onChange={(s) => setRest(i, s)} onDone={() => setRestOpen(false)} />}
 
       <div className="bg-page rounded-control grid grid-cols-[3rem_1fr_1fr_2.75rem] items-center gap-x-2 gap-y-1.5 p-2 text-center">
@@ -145,6 +173,11 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
           <SetRow
             key={j}
             label={isWarmup(s) ? t("workout.warmupShort") : `${++n}${setType(s) === "drop" ? `·${t("workout.dropShort")}` : setType(s) === "failure" ? `·${t("workout.failureShort")}` : ""}`}
+            exerciseName={ex ? text(ex).name : t("exercise.unknown")}
+            number={j + 1}
+            timed={timed}
+            previous={isWarmup(s) ? undefined : previous?.[n - 1]}
+            onPlates={ex?.eq === "barbell" ? () => navigate("/more/calc?tab=plates&weight=" + (s.weight ?? 20)) : undefined}
             set={s}
             onChange={(patch) => updateSet(i, j, patch)}
             weight={s.weight}
@@ -166,13 +199,13 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
           />
         ))}
       </div>
-      <p className="text-muted px-1 text-center text-xs">{t("workout.setDetailsHint")}</p>
+
       <div className="flex justify-center gap-1">
-        <Button variant="ghost" size="sm" disabled={e.sets.length === 0} onClick={() => removeSet(i, e.sets.length - 1)} aria-label="−">
+        <Button variant="ghost" size="sm" disabled={e.sets.length === 0} onClick={() => e.sets.at(-1)?.done ? setRemoveSetOpen(true) : removeSet(i, e.sets.length - 1)} aria-label={t("workout.removeSet")}>
           <Minus className="size-4" />
         </Button>
         <span className="text-muted flex items-center px-1 text-[13px] font-medium">{t("workout.addSet")}</span>
-        <Button variant="ghost" size="sm" onClick={() => addSet(i)} aria-label="+">
+        <Button variant="ghost" size="sm" onClick={() => addSet(i)} aria-label={t("workout.addSet")}>
           <Plus className="size-4" />
         </Button>
         {(hasWarmup || ramp.length > 0) && (
@@ -199,6 +232,11 @@ function num(v: string) {
 
 function SetRow(props: {
   label: string
+  exerciseName: string
+  number: number
+  timed: boolean
+  previous?: SetLog
+  onPlates?: () => void
   set: SetLog
   onChange: (patch: Partial<SetLog>) => void
   weight?: number
@@ -208,24 +246,26 @@ function SetRow(props: {
   onReps: (v?: number) => void
   onToggle: () => void
 }) {
-  const { label, set, onChange, weight, reps, done, onWeight, onReps, onToggle } = props
+  const { label, exerciseName, number, timed, previous, onPlates, set, onChange, weight, reps, done, onWeight, onReps, onToggle } = props
   const { t } = useTranslation()
   const [detailsOpen, setDetailsOpen] = useState(false)
+  const context = t("workout.setContext", { name: exerciseName, n: number })
   const warmup = isWarmup(set)
   const field = cn("h-11 text-center text-[17px] font-semibold tabular-nums", (done || warmup) && "text-muted")
   return (
     <>
       <button type="button" onClick={() => setDetailsOpen(true)}
-        aria-label={`${t("workout.setDetails")}: ${label}, ${t(`setType.${setType(set)}`)}`}
+        aria-label={`${context}, ${t("workout.setDetails")}, ${t(`setType.${setType(set)}`)}`}
         className={cn("hover:bg-surface flex min-h-11 flex-col items-center justify-center rounded-lg text-sm font-semibold tabular-nums", done ? "text-accent" : "text-muted")}>
-        <span className="underline decoration-dotted underline-offset-4">{label}</span>
+        <span className="underline decoration-dotted underline-offset-4">{label} ⋯</span>
         {set.effort && <span className="mt-1 text-[10px] leading-none">{set.effort.scale.toUpperCase()} {set.effort.value}</span>}
       </button>
-      <Input inputMode="decimal" className={field} value={weight ?? ""} placeholder="—" onChange={(e) => onWeight(num(e.target.value))} />
-      <Input inputMode="numeric" className={field} value={reps ?? ""} placeholder="—" onChange={(e) => onReps(num(e.target.value))} />
+      <Input aria-label={`${context}, ${t("scheme.weight")}`} inputMode="decimal" className={field} value={weight ?? ""} placeholder="—" onChange={(e) => onWeight(num(e.target.value))} />
+      <Input aria-label={`${context}, ${t(timed ? "workout.seconds" : "scheme.reps")}`} inputMode="numeric" className={field} value={reps ?? ""} placeholder="—" onChange={(e) => onReps(num(e.target.value))} />
       <button
         type="button"
         onClick={onToggle}
+        aria-label={`${context}, ${t(done ? "workout.unmarkSet" : "workout.markSet")}`}
         aria-pressed={done}
         className={cn(
           "rounded-control flex size-11 items-center justify-center justify-self-center transition-colors",
@@ -234,7 +274,8 @@ function SetRow(props: {
       >
         <Check className="size-5" strokeWidth={done ? 3 : 2} />
       </button>
-      {detailsOpen && <SetDetailsSheet set={set} onChange={onChange} onClose={() => setDetailsOpen(false)} />}
+      {previous && <p className="col-span-4 px-1 text-left text-xs text-muted">{t("workout.previousSet", { weight: previous.weight ?? "—", reps: previous.reps ?? "—", unit: t(timed ? "workout.seconds" : "workout.reps") })}</p>}
+      {detailsOpen && <SetDetailsSheet set={set} onChange={onChange} onClose={() => setDetailsOpen(false)} onPlates={onPlates ? () => { setDetailsOpen(false); onPlates() } : undefined} />}
     </>
   )
 }

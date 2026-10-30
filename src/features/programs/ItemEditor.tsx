@@ -45,6 +45,7 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
         options={(["reps", "range", "time", "amrap", "max"] as const).map((k) => ({ value: k, label: t(`scheme.kind.${k}`) }))}
       />
 
+      {(reps.kind === "amrap" || reps.kind === "max") && <p className="text-muted text-xs">{t(`scheme.explain.${reps.kind}`)}</p>}
       <div className="flex flex-wrap gap-x-4 gap-y-3">
         <Stepper className="items-start" label={t("scheme.sets")} value={item.sets} min={1} max={30} onChange={(sets) => onChange({ ...item, sets })} />
         {reps.kind === "reps" && (
@@ -100,6 +101,7 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
         </Field>
       </div>
 
+      <details><summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">{t("scheme.advanced")}</summary>
       {(reps.kind === "reps" || reps.kind === "range") && (
         <div className="bg-page rounded-control space-y-3 p-3">
           <label className="flex cursor-pointer items-center justify-between gap-3">
@@ -130,6 +132,7 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
           )}
         </div>
       )}
+      </details>
     </div>
   )
 }

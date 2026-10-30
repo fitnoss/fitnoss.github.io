@@ -45,7 +45,7 @@ function luminance(hex: string) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
 }
 
-/** Text color on top of `hex`: white while it keeps 3:1 contrast (it looks better on mid tones), else black. */
+/** Text color on top of `hex`: white while it keeps 4.5:1 contrast, else black. */
 export function contrastText(hex: string) {
-  return 1.05 / (luminance(hex) + 0.05) >= 3 ? "#ffffff" : "#000000"
+  return 1.05 / (luminance(hex) + 0.05) >= 4.5 ? "#ffffff" : "#000000"
 }

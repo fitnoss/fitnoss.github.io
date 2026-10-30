@@ -1,15 +1,18 @@
-import { Suspense, useEffect, useRef, useSyncExternalStore } from "react"
+import { Suspense, useLayoutEffect, useRef, useSyncExternalStore } from "react"
 import { useTranslation } from "react-i18next"
-import { NavLink, Outlet, useLocation } from "react-router"
-import { ChartNoAxesColumn, Dumbbell, Ellipsis, ListChecks, Moon, Sun, Timer } from "lucide-react"
+import { NavLink, Outlet, useLocation, useNavigationType } from "react-router"
+import { ChartNoAxesColumn, Dumbbell, Ellipsis, ListChecks, Moon, Sun } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
 import { useSessionStore } from "@/entities/session/store"
 import { isDark, useSettings } from "@/shared/storage/settings"
 
+import { RestTimerBar } from "@/features/workout/RestTimerBar"
+
+const scrollPositions = new Map<string, number>()
+
 const TABS = [
-  { to: "/", icon: ListChecks, label: "nav.programs", end: true, also: ["/programs/", "/s/"] },
+  { to: "/", icon: ListChecks, label: "nav.home", end: true, also: ["/programs/", "/s/"] },
   { to: "/exercises", icon: Dumbbell, label: "nav.exercises", end: false, also: ["/ex/"] },
-  { to: "/workout", icon: Timer, label: "nav.workout", end: false, also: [] },
   { to: "/progress", icon: ChartNoAxesColumn, label: "nav.progress", end: false, also: [] },
   { to: "/more", icon: Ellipsis, label: "nav.more", end: false, also: ["/dev/"] },
 ]
@@ -49,13 +52,47 @@ function ThemeToggle() {
 
 export function Layout() {
   const { t } = useTranslation()
-  const { pathname } = useLocation()
+  const { pathname, search, key } = useLocation()
+  const navigationType = useNavigationType()
   const active = useSessionStore((s) => !!s.active)
   const main = useRef<HTMLElement>(null)
 
-  useEffect(() => {
-    main.current?.scrollTo(0, 0)
-  }, [pathname])
+  useLayoutEffect(() => {
+    const el = main.current
+    if (!el) return
+    const page = pathname + search
+    const target = navigationType === "POP" ? (scrollPositions.get(page) ?? 0) : 0
+    let restoring = true
+    const resize = new ResizeObserver(() => {
+      if (el.scrollHeight - el.clientHeight >= target) {
+        el.scrollTop = target
+        resize.disconnect()
+      }
+    })
+    el.scrollTop = target
+    const frame = requestAnimationFrame(() => {
+      el.scrollTop = target
+      restoring = false
+      if (target > el.scrollHeight - el.clientHeight && el.lastElementChild) resize.observe(el.lastElementChild)
+    })
+    const save = () => { if (!restoring) scrollPositions.set(page, el.scrollTop) }
+    const capture = () => { scrollPositions.set(page, el.scrollTop) }
+    const interact = () => { restoring = false; resize.disconnect() }
+    el.addEventListener("click", capture, true)
+    el.addEventListener("scroll", save, { passive: true })
+    el.addEventListener("pointerdown", interact)
+    el.addEventListener("keydown", interact)
+    el.addEventListener("wheel", interact, { passive: true })
+    return () => {
+      cancelAnimationFrame(frame)
+      resize.disconnect()
+      el.removeEventListener("click", capture, true)
+      el.removeEventListener("scroll", save)
+      el.removeEventListener("pointerdown", interact)
+      el.removeEventListener("keydown", interact)
+      el.removeEventListener("wheel", interact)
+    }
+  }, [pathname, search, key, navigationType])
 
   // App shell: a fixed full-screen frame where only <main> scrolls and the tab bar is a plain flex item.
   // A scrolling document in iOS home-screen apps leaves fixed bars floating off the screen edge and
@@ -66,10 +103,10 @@ export function Layout() {
         <main
           ref={main}
           id="page-scroll"
-          className="bg-page absolute inset-0 isolate overflow-x-hidden overflow-y-auto overscroll-y-none [scrollbar-gutter:stable]"
+          className="bg-page absolute inset-0 isolate overflow-x-hidden overflow-y-auto overscroll-y-none [scrollbar-gutter:stable] [overflow-anchor:none]"
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(34rem,70svh)] wash" />
-          <div className="mx-auto max-w-2xl">
+          <div className={cn("mx-auto max-w-2xl", active && "pb-32")}>
             <Suspense fallback={null}>
               <Outlet />
             </Suspense>
@@ -83,10 +120,11 @@ export function Layout() {
         <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-30 hidden size-[18px] md:block" style={corner("100% 0")} />
       </div>
 
+      <RestTimerBar />
       <nav
         className={cn(
           "bg-chrome z-40 shrink-0",
-          "grid h-[calc(3.75rem+env(safe-area-inset-bottom))] grid-cols-5 px-1.5 pt-1.5 pb-safe",
+          "grid h-[calc(3.75rem+env(safe-area-inset-bottom))] grid-cols-4 px-1.5 pt-1.5 pb-safe",
           "md:flex md:h-auto md:w-[6rem] md:flex-col md:gap-1 md:px-2 md:pt-3 md:pb-3",
         )}
       >
@@ -108,9 +146,6 @@ export function Layout() {
           >
             <span className="relative">
               <Icon className="size-[22px]" strokeWidth={1.9} />
-              {to === "/workout" && active && (
-                <span className="bg-danger ring-chrome absolute -top-px -right-0.5 size-[7px] rounded-full ring-[1.5px] [animation:pulse-dot_1.6s_infinite]" />
-              )}
             </span>
             <span className="max-w-full truncate px-0.5">{t(label)}</span>
           </NavLink>,

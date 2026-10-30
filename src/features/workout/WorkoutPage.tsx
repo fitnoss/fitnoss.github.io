@@ -1,80 +1,31 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link, useNavigate } from "react-router"
-import { Check, GalleryHorizontalEnd, LayoutList, Play, Plus, X } from "lucide-react"
+import { useNavigate } from "react-router"
+import { Check, GalleryHorizontalEnd, LayoutList, Plus, X } from "lucide-react"
 import { CongratsCat } from "@/shared/components/CongratsCat"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { SupersetGroup } from "@/shared/components/SupersetGroup"
 import { Button } from "@/shared/ui/button"
-import { Chip } from "@/shared/ui/chip"
 import { Menu, MenuItem } from "@/shared/ui/menu"
-import { Panel, Section } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
 import { cn } from "@/shared/lib/utils"
 import { useSettings } from "@/shared/storage/settings"
-import { useProgramStore } from "@/entities/program/store"
 import { groups } from "@/entities/program/types"
 import { useSessionStore, type Session } from "@/entities/session/store"
 import { ExercisePicker } from "@/features/programs/ExercisePicker"
-import { dayName, formatWeekdays } from "@/features/programs/format"
 import { CardsPager, CardsView, useCarousel } from "./CardsView"
 import { ExerciseCard } from "./ExerciseCard"
-import { RestTimerBar, primeAudio } from "./RestTimerBar"
-import { useStartDay } from "./useStartDay"
+import { Sheet } from "@/shared/ui/sheet"
 import { useWakeLock } from "./useWakeLock"
 
 export function WorkoutPage() {
   const active = useSessionStore((s) => s.active)
-  return active ? <ActiveWorkout session={active} /> : <StartWorkout />
-}
-
-function StartWorkout() {
-  const { t } = useTranslation()
-  const programs = useProgramStore((s) => s.programs)
-  const start = useSessionStore((s) => s.start)
-  const startDay = useStartDay()
-
-  return (
-    <>
-      <PageHeader title={t("workout.title")} />
-      <div className="space-y-8 px-4 pb-8">
-        <Button variant="primary" size="lg" className="h-14 w-full text-base" onClick={() => (primeAudio(), start({ title: t("workout.free") }))}>
-          <Play className="size-5 fill-current" /> {t("workout.startFree")}
-        </Button>
-        {programs.length > 0 ? (
-          <Section title={t("workout.fromProgram")}>
-            <div className="space-y-2">
-              {programs.map((p) => (
-                <Panel key={p.id} className="space-y-3 p-4">
-                  <div className="font-semibold">{p.name || t("programs.untitled")}</div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {p.days.map((d, i) => (
-                      <Chip
-                        key={i}
-                        className="bg-page disabled:opacity-40"
-                        disabled={!d.items.length}
-                        onClick={() => startDay(p, i)}
-                      >
-                        <Play className="size-3 fill-current" /> {dayName(t, d.name, i)}
-                        {d.weekdays?.length ? <span className="text-[13px] opacity-60">{formatWeekdays(d.weekdays)}</span> : null}
-                      </Chip>
-                    ))}
-                  </div>
-                </Panel>
-              ))}
-            </div>
-          </Section>
-        ) : (
-          <p className="text-muted text-center text-sm">
-            {t("workout.noPrograms")}{" "}
-            <Link to="/" state={{ newProgram: true }} className="text-fg font-medium underline underline-offset-4">
-              {t("workout.createProgram")}
-            </Link>
-          </p>
-        )}
-      </div>
-    </>
-  )
+  const navigate = useNavigate()
+  useEffect(() => {
+    // Redirect a direct visit to an idle workout; finishing has its own destination.
+    if (!useSessionStore.getState().active) navigate("/", { replace: true })
+  }, [navigate])
+  return active ? <ActiveWorkout session={active} /> : null
 }
 
 function useElapsed(since: number) {
@@ -93,6 +44,9 @@ function ActiveWorkout({ session }: { session: Session }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { finish, discard, addExercise } = useSessionStore()
+  const [finishOpen, setFinishOpen] = useState(false)
+  const [discardOpen, setDiscardOpen] = useState(false)
+  const [showHint, setShowHint] = useState(() => !localStorage.getItem("fitnoss:set-details-seen"))
   const [pickerOpen, setPickerOpen] = useState(false)
   const elapsed = useElapsed(session.startedAt)
   const view = useSettings((s) => s.workoutView)
@@ -103,6 +57,17 @@ function ActiveWorkout({ session }: { session: Session }) {
 
   const doneSets = session.exercises.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0)
   const totalSets = session.exercises.reduce((n, e) => n + e.sets.length, 0)
+
+  const save = () => {
+    const done = finish()
+    if (done && done.exercises.length) {
+      toast.success(t("workout.saved"), { icon: <CongratsCat /> })
+      navigate(`/progress/session/${done.id}`)
+    } else {
+      toast(t("workout.nothingSaved"))
+      navigate("/")
+    }
+  }
 
   return (
     <>
@@ -124,13 +89,7 @@ function ActiveWorkout({ session }: { session: Session }) {
               variant="primary"
               size="sm"
               className="h-9"
-              onClick={() => {
-                const done = finish()
-                if (done && done.exercises.length) {
-                  toast.success(t("workout.saved"), { icon: <CongratsCat /> })
-                  navigate(`/progress/session/${done.id}`)
-                } else toast(t("workout.nothingSaved"))
-              }}
+              onClick={() => doneSets < totalSets ? setFinishOpen(true) : save()}
             >
               <Check /> {t("workout.finish")}
             </Button>
@@ -144,7 +103,7 @@ function ActiveWorkout({ session }: { session: Session }) {
                 </MenuItem>
               ))}
               <div className="bg-line mx-2 my-1 h-px" />
-              <MenuItem danger onClick={() => confirm(t("workout.confirmDiscard")) && discard()}>
+              <MenuItem danger onClick={() => setDiscardOpen(true)}>
                 <X /> {t("workout.discard")}
               </MenuItem>
             </Menu>
@@ -159,6 +118,7 @@ function ActiveWorkout({ session }: { session: Session }) {
           </div>
         )}
       </PageHeader>
+      {showHint && <div className="mx-4 mt-3 flex items-center gap-2 rounded-xl bg-surface p-3"><p className="flex-1 text-xs text-muted">{t("workout.setDetailsHint")}</p><Button variant="ghost" size="icon" aria-label={t("common.close")} onClick={() => { localStorage.setItem("fitnoss:set-details-seen", "1"); setShowHint(false) }}><X className="size-4" /></Button></div>}
       {view === "cards" ? (
         <CardsView session={session} carousel={carousel} onAdd={() => setPickerOpen(true)} />
       ) : (
@@ -179,7 +139,13 @@ function ActiveWorkout({ session }: { session: Session }) {
           </button>
         </div>
       )}
-      <RestTimerBar />
+      <Sheet open={discardOpen} onOpenChange={setDiscardOpen} title={t("workout.discard")} footer={<div className="flex gap-2"><Button onClick={() => setDiscardOpen(false)}>{t("home.continue")}</Button><Button variant="danger" onClick={() => { discard(); navigate("/") }}>{t("workout.discard")}</Button></div>}><p>{t("workout.confirmDiscard")}</p></Sheet>
+      <Sheet open={finishOpen} onOpenChange={setFinishOpen} title={t("workout.finish")} footer={
+        <div className="flex flex-wrap gap-2">
+          <Button className="flex-1" onClick={() => setFinishOpen(false)}>{t("home.continue")}</Button>
+          <Button variant="primary" className="flex-1" onClick={save}>{t("workout.saveAndFinish")}</Button>
+        </div>
+      }><p>{t("workout.confirmFinish", { done: doneSets, total: totalSets })}</p></Sheet>
       <ExercisePicker
         open={pickerOpen}
         onOpenChange={setPickerOpen}

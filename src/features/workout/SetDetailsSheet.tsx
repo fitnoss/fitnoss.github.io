@@ -8,7 +8,8 @@ import { Field } from "@/shared/ui/field"
 import { Segmented } from "@/shared/ui/segmented"
 import { Sheet } from "@/shared/ui/sheet"
 
-export function SetDetailsSheet({ set, onChange, onClose }: {
+export function SetDetailsSheet({ set, onChange, onClose, onPlates }: {
+  onPlates?: () => void
   set: SetLog
   onChange: (patch: Partial<SetLog>) => void
   onClose: () => void
@@ -20,6 +21,7 @@ export function SetDetailsSheet({ set, onChange, onClose }: {
     <Sheet open onOpenChange={(open) => { if (!open) onClose() }} title={t("workout.setDetails")}
       bodyClassName="space-y-5"
       footer={<Button variant="primary" size="lg" className="w-full" onClick={onClose}>{t("common.done")}</Button>}>
+      {onPlates && <Button className="w-full" onClick={onPlates}>{t("calc.plates")} · {t("units.kg", { n: set.weight ?? 20 })}</Button>}
       <section>
         <h3 className="mb-2 text-sm font-semibold">{t("workout.setType")}</h3>
         <div className="flex flex-wrap gap-1.5">

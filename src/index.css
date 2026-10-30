@@ -40,7 +40,7 @@
   --chrome: #f4f4f5;
   --page: #ffffff;
   --fg: #1c1c1f;
-  --muted: #74747c;
+  --muted: #686870;
   --surface: #f4f4f5;
   --surface-hover: #ececee;
   --surface-press: #e4e4e7;
@@ -53,7 +53,7 @@
   --accent: #25262c;
   --accent-fg: #ffffff;
   --danger: #d61c2e;
-  --success: #16a34a;
+  --success: #15803d;
   --backdrop: rgb(255 255 255 / 0.5);
   --wash: rgb(0 0 0 / 0.06);
   --wash-soft: rgb(0 0 0 / 0.035);

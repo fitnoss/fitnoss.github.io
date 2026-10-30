@@ -20,6 +20,7 @@ export type SetLog = {
 
 export type SessionExercise = {
   ex: number
+  note?: string
   reps: string
   rest: number
   sets: SetLog[]
@@ -76,11 +77,11 @@ export function lastSets(history: Session[], ex: number): SetLog[] | undefined {
   }
 }
 
-function plannedExercise(history: Session[], it: Pick<ProgramItem, "ex" | "sets" | "reps" | "rest" | "weight" | "inc">): SessionExercise {
+function plannedExercise(history: Session[], it: Pick<ProgramItem, "ex" | "sets" | "reps" | "rest" | "weight" | "inc" | "note">): SessionExercise {
   const { ex, reps, rest } = it
   const auto = progression(history, it)
   if (auto) {
-    const e: SessionExercise = { ex, reps, rest, sets: auto.sets.map((s) => ({ ...s, done: false })) }
+    const e: SessionExercise = { ex, reps, rest, ...(it.note ? { note: it.note } : {}), sets: auto.sets.map((s) => ({ ...s, done: false })) }
     if (auto.change) e.progression = auto.change
     return e
   }
@@ -88,6 +89,7 @@ function plannedExercise(history: Session[], it: Pick<ProgramItem, "ex" | "sets"
   const target = targetReps(reps)
   return {
     ex,
+    ...(it.note ? { note: it.note } : {}),
     reps,
     rest,
     sets: Array.from({ length: it.sets }, (_, j) => {

@@ -1,5 +1,7 @@
 import { useDeferredValue, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { Chip } from "@/shared/ui/chip"
+import { Empty } from "@/shared/ui/panel"
 import { Button } from "@/shared/ui/button"
 import { Sheet } from "@/shared/ui/sheet"
 import { useExercises, useFavorites } from "@/entities/exercise/store"
@@ -20,6 +22,7 @@ export function ExercisePicker({ open, onOpenChange, onPick }: Props) {
   const favorites = useFavorites((s) => s.codes)
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS)
   const [selected, setSelected] = useState<number[]>([])
+  const [showSelected, setShowSelected] = useState(false)
   const index = useSearchIndex(list, text, en, lang)
   const deferred = useDeferredValue(filters)
   const items = useMemo(() => applyFilters(list, deferred, index, favorites), [list, deferred, index, favorites])
@@ -30,6 +33,7 @@ export function ExercisePicker({ open, onOpenChange, onPick }: Props) {
   const close = (pick: boolean) => {
     if (pick && selected.length) onPick(selected)
     setSelected([])
+    setShowSelected(false)
     onOpenChange(false)
   }
 
@@ -47,6 +51,11 @@ export function ExercisePicker({ open, onOpenChange, onPick }: Props) {
       }
     >
       <FilterBar filters={filters} onChange={setFilters} total={items.length} />
+      {selected.length > 0 && <div className="space-y-2 px-4 pb-2">
+        <Button size="sm" onClick={() => setShowSelected(!showSelected)} aria-expanded={showSelected}>{t("picker.selected", { count: selected.length })}</Button>
+        {showSelected && <div className="flex max-h-32 flex-wrap gap-1 overflow-y-auto">{selected.map((code) => <Chip key={code} onClick={() => setSelected((s) => s.filter((c) => c !== code))}>{text(list.find((ex) => ex.c === code)).name} ×</Chip>)}</div>}
+      </div>}
+      {items.length === 0 && <Empty title={t("catalog.empty")}><Button onClick={() => setFilters(EMPTY_FILTERS)}>{t("common.reset")}</Button></Empty>}
       <div ref={setScrollEl} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2">
         {scrollEl && (
           <ExerciseList

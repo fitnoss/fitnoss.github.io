@@ -12,6 +12,7 @@ import { useExercises } from "@/entities/exercise/store"
 import { useProgramStore } from "@/entities/program/store"
 import { weekdayOf, type Program } from "@/entities/program/types"
 import { useSessionStore } from "@/entities/session/store"
+import { primeAudio } from "@/features/workout/RestTimerBar"
 import { useStartDay } from "@/features/workout/useStartDay"
 import { NewProgramSheet } from "./NewProgramSheet"
 import { dayName, weekdayName } from "./format"
@@ -29,6 +30,8 @@ function slotsOn(programs: Program[], wd: number): Slot[] {
 export function ProgramsPage() {
   const { t } = useTranslation()
   const programs = useProgramStore((s) => s.programs)
+  const active = useSessionStore((s) => s.active)
+  const historyCount = useSessionStore((s) => s.history.length)
   const location = useLocation()
   const navigate = useNavigate()
   // Other screens link here with { newProgram: true } to open the sheet right away.
@@ -48,13 +51,19 @@ export function ProgramsPage() {
           </span>
         }
         actions={
-          <Button variant="primary" size="sm" className="h-9" onClick={() => setNewOpen(true)}>
+          programs.length > 0 && <Button variant="primary" size="sm" className="h-11" onClick={() => setNewOpen(true)}>
             <Plus /> {t("programs.new")}
           </Button>
         }
       />
       <div className="space-y-8 px-4 pb-8">
+        {historyCount >= 5 && !localStorage.getItem("fitnoss:last-export") && <Link to="/more/data" className="text-muted block text-sm underline underline-offset-4">{t("more.backupReminder")}</Link>}
         <Today programs={programs} />
+        {!active && <Button size="lg" className="h-14 w-full" onClick={() => {
+          primeAudio()
+          useSessionStore.getState().start({ title: t("workout.free") })
+          navigate("/workout")
+        }}><Play className="size-5" />{t("workout.startFree")}</Button>}
 
         {programs.length === 0 ? (
           <Panel className="pb-6">
@@ -63,7 +72,7 @@ export function ProgramsPage() {
             </Empty>
             <div className="flex justify-center">
               <Button variant="primary" onClick={() => setNewOpen(true)}>
-                <Plus /> {t("programs.create")}
+                <Plus /> {t("programs.choose")}
               </Button>
             </div>
           </Panel>

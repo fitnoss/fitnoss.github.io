@@ -53,3 +53,19 @@ describe("set logging lifecycle", () => {
     expect(store().active!.exercises[0].sets.at(-1)).toEqual({ weight: 60, reps: 5, done: false })
   })
 })
+
+
+describe("program note snapshots", () => {
+  it("keeps the note in active and completed sessions after the program is edited", () => {
+    const item = { ex: 1, sets: 1, reps: "8", rest: 90, note: "Pause at the bottom" }
+    store().start({ title: "Note", plan: { name: "", items: [item] } })
+    item.note = "Edited later"
+    expect(store().active!.exercises[0].note).toBe("Pause at the bottom")
+    store().toggleSet(0, 0)
+    expect(store().finish()!.exercises[0].note).toBe("Pause at the bottom")
+  })
+  it("preserves notes when auto-progression prepares the sets", () => {
+    store().start({ title: "Progression", plan: { name: "", items: [{ ex: 1, sets: 2, reps: "8", rest: 90, weight: 60, inc: 2.5, note: "Controlled tempo" }] } })
+    expect(store().active!.exercises[0].note).toBe("Controlled tempo")
+  })
+})

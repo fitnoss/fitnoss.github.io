@@ -54,6 +54,7 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
         </Button>
       </div>
       <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4">
+        <Chip active={filters.favorites} onClick={() => onChange({ ...filters, favorites: !filters.favorites })}><Star className="size-4" />{t("catalog.favorites")}</Chip>
         {PLACES.map((p) => (
           <Chip key={p} active={filters.places.includes(p)} onClick={() => onChange({ ...filters, places: toggle(filters.places, p) })}>
             {t(`place.${p}`)}
@@ -61,6 +62,14 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
         ))}
       </div>
 
+      {advanced > 0 && <div className="flex flex-wrap gap-1.5 px-4">
+        {(["muscles", "equipment", "levels", "categories"] as const).flatMap((group) => filters[group].map((value) => (
+          <Chip key={group + value} active onClick={() => onChange({ ...filters, [group]: filters[group].filter((x) => x !== value) })} aria-label={t("catalog.removeFilter", { name: t((group === "muscles" ? "muscle." : group === "levels" ? "level." : group === "categories" ? "category." : "equipment.") + key(value)) })}>
+            {t((group === "muscles" ? "muscle." : group === "levels" ? "level." : group === "categories" ? "category." : "equipment.") + key(value))}<X className="size-3" />
+          </Chip>
+        )))}
+        <Button variant="ghost" size="sm" onClick={() => onChange(EMPTY_FILTERS)}>{t("common.reset")}</Button>
+      </div>}
       <Sheet
         open={open}
         onOpenChange={setOpen}

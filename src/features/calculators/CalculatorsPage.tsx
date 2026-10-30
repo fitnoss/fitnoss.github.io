@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { PageHeader } from "@/shared/components/PageHeader"
@@ -32,8 +33,9 @@ const TABS = { orm: OneRepMax, plates: Plates, bmi: Bmi, kcal: Calories }
 
 export function CalculatorsPage() {
   const { t } = useTranslation()
-  const [tab, setTab] = useState<keyof typeof TABS>("orm")
-  const Tab = TABS[tab]
+  const [params] = useSearchParams()
+  const initial = params.get("tab")
+  const [tab, setTab] = useState<keyof typeof TABS>(initial && initial in TABS ? initial as keyof typeof TABS : "orm")
   return (
     <>
       <PageHeader title={t("calc.title")} back="/more">
@@ -46,7 +48,7 @@ export function CalculatorsPage() {
         </div>
       </PageHeader>
       <div className="px-4 pt-2 pb-8">
-        <Tab />
+        {Object.entries(TABS).map(([key, Component]) => <div key={key} hidden={tab !== key}><Component /></div>)}
       </div>
     </>
   )
@@ -97,7 +99,8 @@ const PLATE_COLORS: Record<number, string> = {
 function Plates() {
   const { t } = useTranslation()
   const { barWeight, plates, set } = useSettings()
-  const [target, setTarget] = useState("100")
+  const [params] = useSearchParams()
+  const [target, setTarget] = useState(params.get("weight") ?? "100")
   const res = platesPerSide(n(target), barWeight, plates)
   return (
     <div className="space-y-4">

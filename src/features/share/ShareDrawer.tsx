@@ -28,6 +28,7 @@ type Props = { program: ProgramData; open: boolean; onOpenChange: (o: boolean) =
 export function ShareDrawer({ program, open, onOpenChange }: Props) {
   const { t } = useTranslation()
   const { byCode, text } = useExercises()
+  const [manual, setManual] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const url = useMemo(() => (open ? shareUrl(program) : ""), [open, program])
   const plain = () => programToText(t, program, (c) => text(byCode.get(c)).name, url)
@@ -46,7 +47,7 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
               if (await copy(url)) {
                 setCopied(true)
                 setTimeout(() => setCopied(false), 1500)
-              }
+              } else { setManual(url); toast.error(t("share.copyFailed")) }
             }}
           >
             {copied ? <Check /> : <Copy />}
@@ -54,7 +55,9 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
           </Button>
           <Button
             onClick={async () => {
-              if (await copy(plain())) toast.success(t("share.textCopied"))
+              const value = plain()
+              if (await copy(value)) toast.success(t("share.textCopied"))
+              else { setManual(value); toast.error(t("share.copyFailed")) }
             }}
           >
             <FileText /> {t("share.copyText")}
@@ -71,6 +74,8 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
         </div>
       }
     >
+      <p className="text-muted text-sm">{t("share.copyHint")}</p>
+      {manual && <label className="block text-sm">{t("share.manualCopy")}<textarea readOnly value={manual} onFocus={(e) => e.target.select()} className="bg-surface mt-2 min-h-28 w-full rounded-xl p-3 text-sm" /></label>}
       <div className="mx-auto flex size-56 items-center justify-center overflow-hidden rounded-2xl bg-white p-1">
         {url && <QrCode value={url} className="size-full" />}
       </div>

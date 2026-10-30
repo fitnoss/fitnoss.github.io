@@ -48,6 +48,7 @@ export function ExercisePage() {
     <>
       <PageHeader
         title={tx.name}
+        wrapTitle
         back
         actions={
           <Button variant="ghost" size="icon" onClick={() => fav.toggle(ex.c)} aria-label={t("catalog.favorites")} aria-pressed={isFav}>
@@ -63,7 +64,7 @@ export function ExercisePage() {
             frame={frame === "anim" ? undefined : Number(frame)}
             interval={1300}
             size="l"
-            className="hairline rounded-panel aspect-[4/3] w-full"
+            className="hairline rounded-panel aspect-[16/9] w-full object-contain"
           />
           {ex.img > 1 && (
             <Segmented
@@ -81,7 +82,7 @@ export function ExercisePage() {
 
         <div className="space-y-3">
           <div>
-            <h2 className="text-[26px] leading-[1.15] font-bold tracking-tight text-balance">{tx.name}</h2>
+
             {lang !== "en" && en[ex.s]?.name && en[ex.s].name !== tx.name && <p className="text-muted mt-1 text-sm">{en[ex.s].name}</p>}
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -95,11 +96,12 @@ export function ExercisePage() {
         </div>
 
         <div className="grid grid-cols-3 gap-2">
-          <Button variant="primary" className={tile} onClick={() => setAddOpen(true)}>
+          <Button variant={activeWorkout ? "default" : "primary"} className={tile} onClick={() => setAddOpen(true)}>
             <ListPlus className="size-5" />
             {t("exercise.addToProgram")}
           </Button>
           <Button
+            variant={activeWorkout ? "primary" : "default"}
             className={tile}
             onClick={() => {
               if (!activeWorkout) useSessionStore.getState().start({ title: t("workout.free") })

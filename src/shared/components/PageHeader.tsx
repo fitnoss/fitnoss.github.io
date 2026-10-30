@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react"
 import { useNavigate } from "react-router"
+import { useTranslation } from "react-i18next"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { scroller } from "@/shared/lib/scroller"
@@ -7,6 +8,7 @@ import { cn } from "@/shared/lib/utils"
 
 type Props = {
   title: ReactNode
+  wrapTitle?: boolean
   /** Show a back button; a string is the fallback route when there is no history. */
   back?: boolean | string
   actions?: ReactNode
@@ -34,7 +36,8 @@ function useScrolled() {
  * frame of lag while the mobile viewport settles never shows content above the header. Top-level pages (no back button) get a
  * large title, nested pages a compact one next to the back arrow.
  */
-export function PageHeader({ title, back, actions, children, className }: Props) {
+export function PageHeader({ title, back, actions, children, className, wrapTitle }: Props) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const goBack = () => {
     if (window.history.state?.idx > 0) navigate(-1)
@@ -50,15 +53,16 @@ export function PageHeader({ title, back, actions, children, className }: Props)
         className,
       )}
     >
-      <div className={cn("flex items-center gap-1 px-2", back ? "h-14" : "h-16 pl-4 md:h-20")}>
+      <div className={cn("flex items-center gap-1 px-2", back ? (wrapTitle ? "min-h-14 py-2" : "h-14") : "h-16 pl-4 md:h-20")}>
         {back && (
-          <Button variant="ghost" size="icon" onClick={goBack} aria-label="Back">
+          <Button variant="ghost" size="icon" onClick={goBack} aria-label={t("common.back")}>
             <ArrowLeft className="size-[22px]" />
           </Button>
         )}
         <h1
           className={cn(
-            "min-w-0 flex-1 truncate font-semibold tracking-tight",
+            "min-w-0 flex-1 font-semibold tracking-tight",
+            wrapTitle ? "whitespace-normal" : "truncate",
             back ? "text-[17px]" : "text-[26px] leading-none font-bold md:text-[28px]",
           )}
         >

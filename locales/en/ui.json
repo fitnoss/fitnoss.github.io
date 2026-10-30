@@ -6,14 +6,22 @@
     "programs": "Programs",
     "workout": "Workout",
     "progress": "Progress",
-    "more": "More"
+    "more": "More",
+    "home": "Home"
   },
   "common": {
     "clear": "Clear",
     "delete": "Delete",
     "done": "Done",
     "open": "Open",
-    "reset": "Reset"
+    "reset": "Reset",
+    "back": "Back",
+    "close": "Close",
+    "menu": "Menu",
+    "cancel": "Cancel",
+    "undo": "Undo",
+    "confirmTitle": "Confirmation",
+    "confirm": "Confirm"
   },
   "units": {
     "kg": "{{n}} kg",
@@ -22,7 +30,7 @@
     "minSec": "{{m}} min {{s}} s"
   },
   "place": {
-    "home": "No equipment",
+    "home": "At home",
     "bars": "Bar & dips",
     "dumbbell": "Dumbbells",
     "kettlebell": "Kettlebell",
@@ -93,7 +101,8 @@
     "show_other": "Show {{count}} exercises",
     "count_one": "{{count}} exercise",
     "count_other": "{{count}} exercises",
-    "empty": "Nothing found. Try another search or fewer filters."
+    "empty": "Nothing found. Try another search or fewer filters.",
+    "removeFilter": "Remove filter: {{name}}"
   },
   "exercise": {
     "notFound": "Exercise not found",
@@ -158,7 +167,11 @@
     "supersetWith": "Superset with:",
     "newTitle": "New program",
     "fromScratch": "From scratch",
-    "fromScratchHint": "An empty program to fill yourself"
+    "fromScratchHint": "An empty program to fill yourself",
+    "edit": "Edit",
+    "autosaved": "Changes are saved automatically on this device",
+    "useTemplate": "Use program",
+    "choose": "Choose a program"
   },
   "dayPreset": {
     "upper": "Upper",
@@ -198,6 +211,11 @@
       "time": "Time",
       "amrap": "AMRAP",
       "max": "Max"
+    },
+    "advanced": "Advanced: progression",
+    "explain": {
+      "amrap": "AMRAP — as many quality reps as possible while maintaining form.",
+      "max": "Max — maximum reps in a set; log the actual result."
     }
   },
   "reps": {
@@ -209,7 +227,8 @@
     "add_one": "Add {{count}} exercise",
     "add_other": "Add {{count}} exercises",
     "added_one": "{{count}} exercise added",
-    "added_other": "{{count}} exercises added"
+    "added_other": "{{count}} exercises added",
+    "selected": "Selected: {{count}} · show / hide"
   },
   "share": {
     "title": "Share program",
@@ -222,7 +241,10 @@
     "save": "Save to my programs",
     "saved": "Program saved",
     "broken": "This link is broken",
-    "brokenHint": "It may have been cut off by a messenger. Ask for the link again or use the QR code."
+    "brokenHint": "It may have been cut off by a messenger. Ask for the link again or use the QR code.",
+    "copyFailed": "Copy failed. Select the content and copy it manually.",
+    "manualCopy": "Copy manually",
+    "copyHint": "The link contains the program. The recipient saves their own copy."
   },
   "setType": {
     "work": "Working",
@@ -254,7 +276,7 @@
     "noRest": "No rest",
     "title": "Workout",
     "free": "Free workout",
-    "startFree": "Start empty workout",
+    "startFree": "Start a free workout",
     "fromProgram": "From a program",
     "noPrograms": "No programs yet.",
     "createProgram": "Create one",
@@ -285,7 +307,17 @@
     "warmup": "Warm-up",
     "removeWarmup": "Remove warm-up",
     "warmupShort": "W",
-    "record": "New record: {{weight}} kg × {{reps}}"
+    "record": "New record: {{weight}} kg × {{reps}}",
+    "saveAndFinish": "Save and finish",
+    "confirmFinish": "{{done}} of {{total}} sets completed. Save completed sets and finish? Remaining sets will not be saved.",
+    "exerciseRemoved": "Exercise removed",
+    "confirmRemoveExercise": "This exercise has completed sets. Delete the exercise and its results?",
+    "removeSet": "Remove last set",
+    "setContext": "{{name}}, set {{n}}",
+    "markSet": "Mark completed",
+    "unmarkSet": "Mark incomplete",
+    "previousSet": "Last time: {{weight}} × {{reps}} {{unit}}",
+    "confirmRemoveSet": "This set is completed. Delete its result?"
   },
   "journal": {
     "title": "Progress",
@@ -303,7 +335,9 @@
     "setsLabel": "Sets",
     "volume": "Volume",
     "saveAsProgram": "Save as program",
-    "savedAsProgram": "Program created"
+    "savedAsProgram": "Program created",
+    "myExercises": "My exercises",
+    "periodCompare": "Last 28 days: {{recent}} workouts; {{change}} compared with the previous 28 days."
   },
   "progress": {
     "e1rm": "1RM est.",
@@ -312,7 +346,13 @@
     "reps": "Max reps",
     "best": "Best",
     "empty": "No logged sets for this exercise yet.",
-    "openExercise": "Open exercise"
+    "openExercise": "Open exercise",
+    "sample_one": "{{count}} workout",
+    "sample_few": "{{count}} workouts",
+    "sample_many": "{{count}} workouts",
+    "sample_other": "{{count}} workouts",
+    "change": "Change since last workout",
+    "oneEntry": "One workout so far. Log another result to compare."
   },
   "calc": {
     "title": "Calculators",
@@ -387,7 +427,19 @@
     "offline": "Offline",
     "offlineHint": "Exercise data is available offline already. Download all photos (~100 MB) to browse everything without internet.",
     "offlineDownload": "Download all photos",
-    "offlineDone": "All photos are available offline"
+    "offlineDone": "All photos are available offline",
+    "settings": "Settings",
+    "backupContents": "Includes programs, completed workouts and favorites. Settings and the active workout are excluded.",
+    "lastExport": "Last export: {{date}}",
+    "neverExported": "No backup exported yet",
+    "merge": "Merge",
+    "mergeHint": "New records will be added. Existing records with the same ID are kept unchanged; favorites are merged.",
+    "importPreview": "New programs: {{programs}}, workouts: {{sessions}}. Already present: {{existing}}. Favorites in file: {{favorites}}.",
+    "offlinePartial": "{{downloaded}} of {{total}} files available; {{failed}} failed. Retry the download.",
+    "offlineFailed": "Could not download photos. Check your connection and retry.",
+    "offlineRetry": "Retry missing files",
+    "offlineStatus": "Last check: {{downloaded}} of {{total}} files available, {{failed}} failed",
+    "backupReminder": "Back up your workouts"
   },
   "about": {
     "title": "About",

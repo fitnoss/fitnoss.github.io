@@ -1,3 +1,6 @@
+import { useState } from "react"
+import { Button } from "@/shared/ui/button"
+import { key } from "@/entities/exercise/types"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router"
 import { ChevronRight, Plus } from "lucide-react"
@@ -6,7 +9,7 @@ import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { useExercises } from "@/entities/exercise/store"
 import { useProgramStore } from "@/entities/program/store"
 import { TEMPLATES } from "./templates"
-import { formatWeekdays } from "./format"
+import { dayName, formatScheme, formatWeekdays } from "./format"
 
 const THUMBS = 6
 
@@ -18,6 +21,7 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
   const navigate = useNavigate()
   const create = useProgramStore((s) => s.create)
   const { byCode, text } = useExercises()
+  const [preview, setPreview] = useState<(typeof TEMPLATES)[number] | null>(null)
   const lang = i18n.resolvedLanguage === "ru" ? "ru" : "en"
 
   const go = (id: string) => {
@@ -26,11 +30,16 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title={t("programs.newTitle")} bodyClassName="space-y-5">
+    <Sheet open={open} onOpenChange={(o) => { setPreview(null); onOpenChange(o) }} title={preview ? preview.name[lang] : t("programs.newTitle")} bodyClassName="space-y-5" footer={preview && <div className="flex gap-2"><Button onClick={() => setPreview(null)}>{t("common.back")}</Button><Button variant="primary" className="flex-1" onClick={() => { const tpl = preview; setPreview(null); go(create({ name: tpl.name[lang], days: structuredClone(tpl.days) }).id) }}>{t("programs.useTemplate")}</Button></div>}>
+      {preview ? <div className="space-y-5">
+        <p className="text-muted text-sm">{preview.description[lang]}</p>
+        <p className="text-sm">{t("exercise.equipment")}: {[...new Set(preview.days.flatMap((d) => d.items.map((it) => byCode.get(it.ex)?.eq)).filter(Boolean))].map((eq) => t("equipment." + key(eq!))).join(", ")}</p>
+        {preview.days.map((d, i) => <section key={i} className="space-y-2"><h3 className="font-semibold">{dayName(t, d.name, i)} · {formatWeekdays(d.weekdays ?? [])}</h3>{d.items.map((it, j) => <div key={j} className="border-b py-2"><div className="text-sm">{text(byCode.get(it.ex)).name}</div><div className="text-muted text-xs">{formatScheme(t, it)}</div></div>)}</section>)}
+      </div> : <>
       <button
         type="button"
         className="bg-inverse text-inverse-fg flex w-full items-center gap-3 rounded-2xl p-4 text-left transition-opacity active:opacity-80"
-        onClick={() => go(create().id)}
+        onClick={() => { const p = create(); go(p.id) }}
       >
         <span className="bg-inverse-fg/15 flex size-10 shrink-0 items-center justify-center rounded-xl">
           <Plus className="size-5" />
@@ -62,7 +71,7 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
                 <button
                   type="button"
                   className="block text-left after:absolute after:inset-0 after:rounded-2xl"
-                  onClick={() => go(create({ name: tpl.name[lang], days: structuredClone(tpl.days) }).id)}
+                  onClick={() => setPreview(tpl)}
                 >
                   <span className="block font-semibold">{tpl.name[lang]}</span>
                   <span className="text-muted mt-0.5 block text-sm">{tpl.description[lang]}</span>
@@ -90,6 +99,7 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
           )
         })}
       </div>
+      </> }
     </Sheet>
   )
 }

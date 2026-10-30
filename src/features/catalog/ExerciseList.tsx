@@ -30,7 +30,7 @@ export function ExerciseRow({ ex, text, selected, onClick, trailing }: RowProps)
       style={{ height: ROW - 4 }}
     >
       <div className="relative shrink-0">
-        <ExerciseImage ex={ex} alt={text.name} className="hairline size-16 rounded-[10px]" />
+        <ExerciseImage ex={ex} alt="" className="hairline size-16 rounded-[10px]" />
         {selected && (
           <div className="bg-accent/85 text-accent-fg absolute inset-0 flex items-center justify-center rounded-[10px]">
             <Check className="size-7" strokeWidth={3} />
