@@ -3,12 +3,14 @@ import { useTranslation } from "react-i18next"
 import { Link, useParams } from "react-router"
 import { ArrowUpRight, ChartNoAxesColumn } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
+import { LoggedSet } from "@/shared/components/LoggedSet"
 import { Empty, Panel } from "@/shared/ui/panel"
 import { Segmented } from "@/shared/ui/segmented"
 import { LineChart } from "@/shared/ui/line-chart"
 import { useExercises } from "@/entities/exercise/store"
 import { useSessionStore } from "@/entities/session/store"
-import { e1rm } from "@/entities/session/stats"
+import { exerciseMetrics } from "@/entities/session/stats"
+import { isCountedSet } from "@/entities/session/sets"
 
 type Metric = "e1rm" | "weight" | "volume" | "reps"
 
@@ -25,16 +27,16 @@ export function ExerciseProgressPage() {
   const points = useMemo(
     () =>
       history
-        .filter((s) => s.exercises.some((e) => e.ex === ex))
+        .filter((s) => s.exercises.some((e) => e.ex === ex && e.sets.some(isCountedSet)))
         .map((s) => {
           const sets = s.exercises.filter((e) => e.ex === ex).flatMap((e) => e.sets)
+          const metrics = exerciseMetrics(sets)
           return {
             at: s.startedAt,
             date: fmt.format(s.startedAt),
-            e1rm: Math.round(Math.max(...sets.map((x) => e1rm(x.weight ?? 0, x.reps ?? 0)))),
-            weight: Math.max(...sets.map((x) => x.weight ?? 0)),
-            volume: Math.round(sets.reduce((a, x) => a + (x.weight ?? 0) * (x.reps ?? 0), 0)),
-            reps: Math.max(...sets.map((x) => x.reps ?? 0)),
+            ...metrics,
+            e1rm: Math.round(metrics.e1rm),
+            volume: Math.round(metrics.volume),
             sets,
           }
         })
@@ -80,10 +82,7 @@ export function ExerciseProgressPage() {
                   <div className="text-muted w-16 shrink-0 text-[13px]">{p.date}</div>
                   <div className="flex flex-1 flex-wrap gap-1.5">
                     {p.sets.map((x, j) => (
-                      <span key={j} className="bg-page hairline rounded-md px-2 py-0.5 text-[13px] font-medium tabular-nums">
-                        {x.weight ? `${x.weight}×` : ""}
-                        {x.reps ?? "—"}
-                      </span>
+                      <LoggedSet key={j} set={x} />
                     ))}
                   </div>
                 </div>

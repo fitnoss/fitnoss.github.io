@@ -8,7 +8,8 @@ import { Segmented } from "@/shared/ui/segmented"
 import { cn } from "@/shared/lib/utils"
 import { useExercises } from "@/entities/exercise/store"
 import { useSessionStore, type Session } from "@/entities/session/store"
-import { e1rm, sessionVolume } from "@/entities/session/stats"
+import { e1rm, sessionVolume, sessionSetCount } from "@/entities/session/stats"
+import { isCountedSet } from "@/entities/session/sets"
 
 const DAY = 86_400_000
 
@@ -52,6 +53,7 @@ export function JournalPage() {
     for (const s of history) {
       for (const e of s.exercises) {
         for (const set of e.sets) {
+          if (!isCountedSet(set)) continue
           const v = e1rm(set.weight ?? 0, set.reps ?? 0)
           if (v > (best.get(e.ex)?.e1rm ?? 0)) best.set(e.ex, { e1rm: v, weight: set.weight!, reps: set.reps!, at: s.startedAt })
         }
@@ -145,7 +147,7 @@ function Stat({ value, label }: { value: React.ReactNode; label: string }) {
 
 function SessionRow({ s, date }: { s: Session; date: string }) {
   const { t } = useTranslation()
-  const sets = s.exercises.reduce((n, e) => n + e.sets.length, 0)
+  const sets = sessionSetCount(s)
   const minutes = s.endedAt ? Math.round((s.endedAt - s.startedAt) / 60000) : 0
   const volume = sessionVolume(s)
   return (

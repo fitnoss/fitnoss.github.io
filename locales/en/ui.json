@@ -224,7 +224,28 @@
     "broken": "This link is broken",
     "brokenHint": "It may have been cut off by a messenger. Ask for the link again or use the QR code."
   },
+  "setType": {
+    "work": "Working",
+    "warmup": "Warm-up",
+    "drop": "Drop set",
+    "failure": "To failure"
+  },
+  "setTypeHint": {
+    "work": "Counts towards volume, records and auto-progression.",
+    "warmup": "Saved in history. Does not count towards volume, records or auto-progression; no rest timer.",
+    "drop": "Counts towards volume and records. Excluded from auto-progression.",
+    "failure": "Counts towards volume, records and auto-progression. Effort is logged separately."
+  },
   "workout": {
+    "setDetails": "Set details",
+    "setDetailsHint": "Tap a set number to change its type or log RPE / RIR.",
+    "setType": "Set type",
+    "effort": "Effort (optional)",
+    "noEffort": "Not recorded",
+    "rpeHint": "Perceived effort: 1–10, in steps of 0.5.",
+    "rirHint": "Reps left in reserve: 0–10. Zero means no reps left.",
+    "dropShort": "D",
+    "failureShort": "F",
     "replaceExercise": "Replace exercise",
     "replaceHint": "For the remaining sets in this workout. Completed sets stay with the original exercise. Weight comes from the selected exercise’s history; otherwise, enter it again.",
     "availableEquipment": "Available equipment",

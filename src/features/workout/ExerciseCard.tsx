@@ -15,11 +15,13 @@ import { useSettings } from "@/shared/storage/settings"
 import { useExercises } from "@/entities/exercise/store"
 import { parseReps } from "@/entities/program/types"
 import { beatsRecord } from "@/entities/session/stats"
-import { useSessionStore, type SessionExercise } from "@/entities/session/store"
+import { useSessionStore, type SessionExercise, type SetLog } from "@/entities/session/store"
+import { isWarmup, setType } from "@/entities/session/sets"
 import { warmupGear, warmupSets } from "@/entities/session/warmup"
 import { formatDuration, formatRepsLabel } from "@/features/programs/format"
 import { primeAudio } from "./RestTimerBar"
 import { ReplaceExerciseSheet } from "./ReplaceExerciseSheet"
+import { SetDetailsSheet } from "./SetDetailsSheet"
 
 type Props = {
   e: SessionExercise
@@ -46,8 +48,8 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
   const reps = parseReps(e.reps)
   const timed = reps.kind === "time"
   const allDone = e.sets.length > 0 && e.sets.every((s) => s.done)
-  const hasWarmup = e.sets.some((s) => s.warmup)
-  const work = e.sets.find((s) => !s.warmup)?.weight
+  const hasWarmup = e.sets.some(isWarmup)
+  const work = e.sets.find((s) => !isWarmup(s))?.weight
   const gear = ex && warmupGear(ex.eq, barWeight, plates)
   const ramp = gear && work ? warmupSets(work, gear) : []
   // Working sets are numbered from 1, warm-ups get a letter instead.
@@ -101,7 +103,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
           </div>
         </div>
         <Menu size="icon-sm">
-          {ex && e.sets.some((s) => !s.done && !s.warmup) && (
+          {ex && e.sets.some((s) => !s.done && !isWarmup(s)) && (
             <MenuItem onClick={() => setReplaceOpen(true)}>
               <ArrowLeftRight /> {t("workout.replaceExercise")}
             </MenuItem>
@@ -134,7 +136,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
 
       {restOpen && restsAfter && <RestInput autoFocus value={e.rest} onChange={(s) => setRest(i, s)} onDone={() => setRestOpen(false)} />}
 
-      <div className="bg-page rounded-control grid grid-cols-[2rem_1fr_1fr_2.75rem] items-center gap-x-2 gap-y-1.5 p-2 text-center">
+      <div className="bg-page rounded-control grid grid-cols-[3rem_1fr_1fr_2.75rem] items-center gap-x-2 gap-y-1.5 p-2 text-center">
         <span className="text-muted text-[11px] font-medium">#</span>
         <span className="text-muted text-[11px] font-medium">{t("workout.kg")}</span>
         <span className="text-muted text-[11px] font-medium">{timed ? t("workout.seconds") : t("workout.reps")}</span>
@@ -142,8 +144,9 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
         {e.sets.map((s, j) => (
           <SetRow
             key={j}
-            label={s.warmup ? t("workout.warmupShort") : String(++n)}
-            warmup={s.warmup}
+            label={isWarmup(s) ? t("workout.warmupShort") : `${++n}${setType(s) === "drop" ? `·${t("workout.dropShort")}` : setType(s) === "failure" ? `·${t("workout.failureShort")}` : ""}`}
+            set={s}
+            onChange={(patch) => updateSet(i, j, patch)}
             weight={s.weight}
             reps={s.reps ?? (timed ? reps.s : undefined)}
             done={s.done}
@@ -163,6 +166,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
           />
         ))}
       </div>
+      <p className="text-muted px-1 text-center text-xs">{t("workout.setDetailsHint")}</p>
       <div className="flex justify-center gap-1">
         <Button variant="ghost" size="sm" disabled={e.sets.length === 0} onClick={() => removeSet(i, e.sets.length - 1)} aria-label="−">
           <Minus className="size-4" />
@@ -195,7 +199,8 @@ function num(v: string) {
 
 function SetRow(props: {
   label: string
-  warmup?: boolean
+  set: SetLog
+  onChange: (patch: Partial<SetLog>) => void
   weight?: number
   reps?: number
   done: boolean
@@ -203,11 +208,19 @@ function SetRow(props: {
   onReps: (v?: number) => void
   onToggle: () => void
 }) {
-  const { label, warmup, weight, reps, done, onWeight, onReps, onToggle } = props
+  const { label, set, onChange, weight, reps, done, onWeight, onReps, onToggle } = props
+  const { t } = useTranslation()
+  const [detailsOpen, setDetailsOpen] = useState(false)
+  const warmup = isWarmup(set)
   const field = cn("h-11 text-center text-[17px] font-semibold tabular-nums", (done || warmup) && "text-muted")
   return (
     <>
-      <span className={cn("text-sm font-semibold tabular-nums", done ? "text-accent" : "text-muted")}>{label}</span>
+      <button type="button" onClick={() => setDetailsOpen(true)}
+        aria-label={`${t("workout.setDetails")}: ${label}, ${t(`setType.${setType(set)}`)}`}
+        className={cn("hover:bg-surface flex min-h-11 flex-col items-center justify-center rounded-lg text-sm font-semibold tabular-nums", done ? "text-accent" : "text-muted")}>
+        <span className="underline decoration-dotted underline-offset-4">{label}</span>
+        {set.effort && <span className="mt-1 text-[10px] leading-none">{set.effort.scale.toUpperCase()} {set.effort.value}</span>}
+      </button>
       <Input inputMode="decimal" className={field} value={weight ?? ""} placeholder="—" onChange={(e) => onWeight(num(e.target.value))} />
       <Input inputMode="numeric" className={field} value={reps ?? ""} placeholder="—" onChange={(e) => onReps(num(e.target.value))} />
       <button
@@ -221,6 +234,7 @@ function SetRow(props: {
       >
         <Check className="size-5" strokeWidth={done ? 3 : 2} />
       </button>
+      {detailsOpen && <SetDetailsSheet set={set} onChange={onChange} onClose={() => setDetailsOpen(false)} />}
     </>
   )
 }

@@ -31,6 +31,16 @@ describe("replacement candidates", () => {
 })
 
 describe("replacing remaining sets", () => {
+  it("ignores typed warmups, preserves drop/failure types and clears effort on replacement", () => {
+    const original = sessionExercise({ sets: [
+      { done: false, type: "warmup", weight: 20, reps: 5 },
+      { done: false, type: "failure", weight: 100, reps: 8, effort: { scale: "rir", value: 0 } },
+      { done: false, type: "drop", weight: 70, reps: 8 },
+    ] })
+    const [next] = replaceRemaining(original, 2)
+    expect(next.sets.map((s) => s.type)).toEqual(["failure", "drop"])
+    expect(next.sets.every((s) => s.effort === undefined && s.weight === undefined && !s.done)).toBe(true)
+  })
   it("preserves targets and rest, drops old weight, warmups and progression", () => {
     const original = sessionExercise()
     original.sets.unshift({ weight: 20, reps: 5, done: false, warmup: true })

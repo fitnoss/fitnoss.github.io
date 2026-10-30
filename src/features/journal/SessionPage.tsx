@@ -3,13 +3,16 @@ import { Link, useNavigate, useParams } from "react-router"
 import { ListPlus, Trash2 } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
+import { LoggedSet } from "@/shared/components/LoggedSet"
 import { Button } from "@/shared/ui/button"
 import { Panel } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
 import { useExercises } from "@/entities/exercise/store"
 import { useProgramStore } from "@/entities/program/store"
 import { useSessionStore } from "@/entities/session/store"
-import { sessionVolume } from "@/entities/session/stats"
+import { sessionVolume, sessionSetCount } from "@/entities/session/stats"
+import { isCountedSet } from "@/entities/session/sets"
+import { parseReps } from "@/entities/program/types"
 
 export function SessionPage() {
   const { id = "" } = useParams()
@@ -25,7 +28,7 @@ export function SessionPage() {
   }
 
   const minutes = s.endedAt ? Math.round((s.endedAt - s.startedAt) / 60000) : 0
-  const sets = s.exercises.reduce((n, e) => n + e.sets.length, 0)
+  const sets = sessionSetCount(s)
   const volume = sessionVolume(s)
 
   return (
@@ -74,10 +77,7 @@ export function SessionPage() {
               </Link>
               <div className="flex flex-wrap gap-1.5">
                 {e.sets.map((x, j) => (
-                  <span key={j} className="bg-page hairline rounded-lg px-2.5 py-1 text-[13px] font-medium tabular-nums">
-                    {x.weight ? `${x.weight} × ` : ""}
-                    {x.reps ?? "—"}
-                  </span>
+                  <LoggedSet key={j} set={x} timed={parseReps(e.reps).kind === "time"} />
                 ))}
               </div>
             </Panel>
@@ -86,10 +86,11 @@ export function SessionPage() {
         <Button
           className="w-full"
           size="lg"
+          disabled={!s.exercises.some((e) => e.sets.some(isCountedSet))}
           onClick={() => {
             const p = createProgram({
               name: s.title,
-              days: [{ name: "", items: s.exercises.map((e) => ({ ex: e.ex, sets: e.sets.length, reps: e.reps, rest: e.rest })) }],
+              days: [{ name: "", items: s.exercises.filter((e) => e.sets.some(isCountedSet)).map((e) => ({ ex: e.ex, sets: e.sets.filter(isCountedSet).length, reps: e.reps, rest: e.rest })) }],
             })
             toast.success(t("journal.savedAsProgram"))
             navigate(`/programs/${p.id}`)

@@ -1,5 +1,6 @@
 import { parseReps, type ProgramItem } from "@/entities/program/types"
 import type { Session, SetLog } from "./store"
+import { isMainSet } from "./sets"
 
 /** Failed workouts in a row at the same weight before it drops. */
 export const DELOAD_AFTER = 3
@@ -18,8 +19,8 @@ type Outcome = { weight: number; ok: boolean; sets: SetLog[] }
 /** Past workouts with this exercise, newest first: the working weight and whether every set hit `top`. */
 function* outcomes(history: Session[], it: ProgramItem, top: number): Generator<Outcome> {
   for (const s of history) {
-    const sets = s.exercises.find((e) => e.ex === it.ex && e.sets.some((x) => x.done))?.sets.filter((x) => x.done)
-    if (!sets) continue
+    const sets = s.exercises.filter((e) => e.ex === it.ex).flatMap((e) => e.sets).filter((x) => x.done && isMainSet(x))
+    if (!sets.length) continue
     const weight = Math.max(...sets.map((x) => x.weight ?? 0))
     const ok = sets.length >= it.sets && sets.every((x) => (x.reps ?? 0) >= top && (x.weight ?? 0) >= weight)
     yield { weight, ok, sets }

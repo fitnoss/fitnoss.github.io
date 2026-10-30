@@ -11,6 +11,16 @@ const item = (patch: Partial<ProgramItem> = {}): ProgramItem => ({ ex: 1, sets: 
 const weights = (h: Session[], it = item()) => progression(h, it)?.sets.map((s) => s.weight)
 
 describe("linear progression", () => {
+  it("ignores warmups and drop sets when assessing progression", () => {
+    const h = history([
+      { done: true, type: "warmup", weight: 20, reps: 5 },
+      ...sets([60, 5], [60, 5], [60, 5]),
+      { done: true, type: "drop", weight: 30, reps: 3 },
+    ])
+    expect(progression(h, item())?.change).toBe("up")
+    expect(weights(h)).toEqual([62.5, 62.5, 62.5])
+    expect(weights(history([{ done: true, type: "warmup", weight: 200, reps: 5 }]), item({ weight: 50 }))).toEqual([50, 50, 50])
+  })
   it("starts from the program weight", () => {
     expect(progression([], item({ weight: 60 }))).toEqual({ sets: [0, 1, 2].map(() => ({ weight: 60, reps: 5 })) })
   })

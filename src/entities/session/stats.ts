@@ -1,4 +1,5 @@
-import type { Session } from "./store"
+import type { Session, SetLog } from "./store"
+import { isCountedSet } from "./sets"
 
 /** Epley estimated one-rep max. */
 export function e1rm(weight: number, reps: number) {
@@ -14,13 +15,27 @@ export function beatsRecord(history: Session[], active: Session, i: number, j: n
   const { ex } = active.exercises[i]
   const set = active.exercises[i].sets[j]
   const score = e1rm(set.weight ?? 0, set.reps ?? 0)
-  if (!score || set.warmup) return false
-  const logged = history.flatMap((s) => s.exercises.filter((e) => e.ex === ex).flatMap((e) => e.sets))
+  if (!score || !isCountedSet(set)) return false
+  const logged = history.flatMap((s) => s.exercises.filter((e) => e.ex === ex).flatMap((e) => e.sets)).filter(isCountedSet)
   if (!logged.length) return false
-  const today = active.exercises.flatMap((e, k) => (e.ex === ex ? e.sets.filter((x, m) => x.done && !x.warmup && !(k === i && m === j)) : []))
+  const today = active.exercises.flatMap((e, k) => (e.ex === ex ? e.sets.filter((x, m) => isCountedSet(x) && !(k === i && m === j)) : []))
   return [...logged, ...today].every((x) => e1rm(x.weight ?? 0, x.reps ?? 0) < score)
 }
 
 export function sessionVolume(s: Session) {
-  return s.exercises.reduce((sum, e) => sum + e.sets.reduce((a, x) => a + (x.weight ?? 0) * (x.reps ?? 0), 0), 0)
+  return s.exercises.reduce((sum, e) => sum + exerciseMetrics(e.sets).volume, 0)
+}
+
+export function sessionSetCount(s: Session) {
+  return s.exercises.reduce((n, e) => n + e.sets.filter(isCountedSet).length, 0)
+}
+
+export function exerciseMetrics(sets: SetLog[]) {
+  const counted = sets.filter(isCountedSet)
+  return {
+    e1rm: Math.max(0, ...counted.map((s) => e1rm(s.weight ?? 0, s.reps ?? 0))),
+    weight: Math.max(0, ...counted.map((s) => s.weight ?? 0)),
+    reps: Math.max(0, ...counted.map((s) => s.reps ?? 0)),
+    volume: counted.reduce((n, s) => n + (s.weight ?? 0) * (s.reps ?? 0), 0),
+  }
 }

@@ -1,6 +1,7 @@
 import type { Exercise } from "@/entities/exercise/types"
 import { parseReps, targetReps } from "@/entities/program/types"
 import type { SessionExercise, SetLog } from "./store"
+import { isWarmup } from "./sets"
 
 /** Empty equipment means nothing is available, rather than clearing the filter. */
 export function replacementCandidates(list: Exercise[], source: Exercise, equipment: string[]) {
@@ -12,7 +13,7 @@ export function replacementCandidates(list: Exercise[], source: Exercise, equipm
 
 /** Keep completed work under its original code; never carry its weight to another exercise. */
 export function replaceRemaining(e: SessionExercise, ex: number, previous?: SetLog[]): SessionExercise[] {
-  const remaining = e.sets.filter((s) => !s.done && !s.warmup)
+  const remaining = e.sets.filter((s) => !s.done && !isWarmup(s))
   if (ex === e.ex || !remaining.length) return [e]
   const done = e.sets.filter((s) => s.done)
   const parsed = parseReps(e.reps)
@@ -20,9 +21,9 @@ export function replaceRemaining(e: SessionExercise, ex: number, previous?: SetL
   const replacement: SessionExercise = {
     ex, reps: e.reps, rest: e.rest,
     ...(e.superset ? { superset: true } : {}),
-    sets: remaining.map((_, j) => {
+    sets: remaining.map((s, j) => {
       const p = previous?.[Math.min(j, previous.length - 1)]
-      return { reps: target ?? p?.reps, weight: p?.weight, done: false }
+      return { reps: target ?? p?.reps, weight: p?.weight, done: false, ...(s.type ? { type: s.type } : {}) }
     }),
   }
   return done.length ? [{ ...e, sets: done }, replacement] : [replacement]
