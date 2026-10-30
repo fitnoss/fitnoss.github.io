@@ -8,7 +8,8 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Keep the status bar outside the app viewport to avoid iOS standalone overlay/viewport glitches. -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>fitnoss</title>
     <script>
       try {
