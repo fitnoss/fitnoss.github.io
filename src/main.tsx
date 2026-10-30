@@ -12,7 +12,9 @@ const hash = location.hash.slice(1)
 if (/^[A-Za-z0-9_-]{4,}$/.test(hash)) history.replaceState(null, "", `#/s/${hash}`)
 
 // Windows has emoji but draws flags as two letters; there it gets Twemoji's flags from our own copy.
-polyfillCountryFlagEmojis("Twemoji Country Flags", flagsFont)
+if (/Windows NT/.test(navigator.userAgent)) {
+  polyfillCountryFlagEmojis("Twemoji Country Flags", flagsFont)
+}
 
 applyTheme(useSettings.getState().theme)
 applyAccent(useSettings.getState().accent)
