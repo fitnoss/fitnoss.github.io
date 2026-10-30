@@ -1,5 +1,13 @@
-# fitnoss
 
+**WIP / В стадии разработки**
+
+*The project is not yet complete; links and functionality are subject to change. Please be aware that the design and features may evolve, any programs you create could be lost, and backward compatibility is not currently guaranteed.*
+
+*Проект ещё не готов, ссылки и функционал могут изменяться. Если вы нашли данный проект, то учтите, что дизайн и функционал может меняться, ваши программы могут быть потеряны, а обратная совместимость пока не обеспечивается.*
+
+<details>
+  <summary>AI readme</summary>
+  
 Каталог упражнений, конструктор программ и дневник тренировок. Сайт полностью статический: живёт на GitHub Pages, без бэкенда и базы данных, работает офлайн.
 
 **https://fitnoss.github.io**
@@ -39,3 +47,5 @@ Push в `main` → GitHub Actions ([deploy.yml](.github/workflows/deploy.yml)) �
 ## Лицензия
 
 MIT. Данные упражнений: [free-exercise-db](https://github.com/yuhonas/free-exercise-db) (Unlicense), подробности в [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+  
+</details>
