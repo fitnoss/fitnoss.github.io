@@ -28,7 +28,8 @@ npm run new-exercise -- archer-pull-up
 |---|---|---|
 | `category` | да | `strength`, `stretching`, `plyometrics`, `powerlifting`, `olympic weightlifting`, `strongman`, `cardio` |
 | `level` | да | `beginner`, `intermediate`, `expert` |
-| `equipment` | да | `body`, `dumbbell`, `barbell`, `kettlebell`, `bands`, `cable`, `machine`, `ezbar`, `medball`, `fitball`, `foamroll`, `other` |
+| `equipment` | да | `body`, `dumbbell`, `barbell`, `kettlebell`, `bands`, `cable`, `machine`, `ezbar`, `medball`, `fitball`, `foamroll`, `pullupbar`, `parallelbars`, `rings`, `suspension`, `bench`, `plate`, `other` |
+| `equipmentExtra` | нет | дополнительные обязательные предметы из того же списка; например, `["bands"]` для подтягиваний на турнике с резинкой |
 | `primary` | да | мышцы: `abdominals`, `abductors`, `adductors`, `biceps`, `calves`, `chest`, `forearms`, `glutes`, `hamstrings`, `lats`, `lower back`, `middle back`, `neck`, `quadriceps`, `shoulders`, `traps`, `triceps` |
 | `secondary` | нет | те же мышцы |
 | `mechanic` | нет | `compound`, `isolation` |
@@ -50,7 +51,7 @@ npm run new-exercise -- archer-pull-up
 Упражнения из [free-exercise-db](https://github.com/yuhonas/free-exercise-db) правятся в `data/overrides.json` по их исходному id:
 
 ```json
-{ "Pullups": { "places": ["bars", "gym"] }, "Some_Exercise": { "hide": true } }
+{ "Pullups": { "equipment": "pullupbar", "places": ["bars", "gym"] }, "Some_Exercise": { "hide": true } }
 ```
 
 Видео к ним — в `data/videos.json` по slug (см. CONTRIBUTING.md → «Видео»). Переводы — в `locales/<язык>/exercises.json`.

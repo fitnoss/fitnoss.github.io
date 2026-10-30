@@ -38,6 +38,12 @@ export function Sheet({ open, onOpenChange, title, description, actions, footer,
       aria-labelledby={title ? titleId : undefined}
       aria-describedby={description ? descriptionId : undefined}
       className={cn("sheet", className)}
+      onCancel={(event) => {
+        if (event.target !== event.currentTarget) return
+        // Keep this controlled: an editor may need to confirm discarding its draft.
+        event.preventDefault()
+        onOpenChange(false)
+      }}
       // React bubbles `close` from nested dialogs (the filters sheet inside the picker); ignore those.
       onClose={(e) => e.target === e.currentTarget && onOpenChange(false)}
       // A click on the dialog itself (not its content) is a click on the backdrop.

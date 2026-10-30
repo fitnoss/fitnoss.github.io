@@ -56,7 +56,7 @@ export function CardsPager({ session, carousel }: { session: Session; carousel: 
             onClick={() => carousel.go(i)}
             aria-label={ex ? text(ex).name : String(i + 1)}
             aria-current={i === carousel.index}
-            className="flex h-5 flex-1 items-center"
+            className="flex min-h-11 flex-1 items-center"
           >
             <span
               className={cn(

@@ -1,4 +1,7 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { ArrowLeft, ArrowRight } from "lucide-react"
+import { Button } from "./button"
 
 type Point = { label: string; value: number }
 
@@ -17,7 +20,8 @@ function niceTicks(min: number, max: number) {
 }
 
 /** Small dependency-free line chart; tap a point to read its value. */
-export function LineChart({ data, unit = "" }: { data: Point[]; unit?: string }) {
+export function LineChart({ data, unit = "", label }: { data: Point[]; unit?: string; label?: string }) {
+  const { t } = useTranslation()
   const [active, setActive] = useState(data.length - 1)
   const values = data.map((d) => d.value)
   const lo = Math.min(...values)
@@ -33,15 +37,25 @@ export function LineChart({ data, unit = "" }: { data: Point[]; unit?: string })
   const i = data.indexOf(cur)
 
   return (
-    <div>
-      <div className="mb-1 flex items-baseline justify-between px-1">
+    <div role="group" aria-label={label} onKeyDown={(event) => {
+      const next = event.key === "ArrowLeft" ? Math.max(0, i - 1) : event.key === "ArrowRight" ? Math.min(data.length - 1, i + 1)
+        : event.key === "Home" ? 0 : event.key === "End" ? data.length - 1 : undefined
+      if (next !== undefined) { event.preventDefault(); setActive(next) }
+    }}>
+      <div className="mb-1 flex items-center justify-between gap-2 px-1">
+        <Button size="icon" variant="ghost" className="aria-disabled:opacity-40" aria-label={t("progress.previousPoint")}
+          aria-disabled={i === 0} onClick={() => setActive(Math.max(0, i - 1))}><ArrowLeft className="size-4" /></Button>
+        <div aria-live="polite" className="flex flex-1 flex-wrap items-baseline justify-between gap-2">
         <span className="text-muted text-xs">{cur.label}</span>
         <span className="text-lg font-semibold tabular-nums">
           {cur.value}
           {unit && <span className="text-muted ml-1 text-xs font-normal">{unit}</span>}
         </span>
+        </div>
+        <Button size="icon" variant="ghost" className="aria-disabled:opacity-40" aria-label={t("progress.nextPoint")}
+          aria-disabled={i === data.length - 1} onClick={() => setActive(Math.min(data.length - 1, i + 1))}><ArrowRight className="size-4" /></Button>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full touch-none overflow-visible text-[10px]" role="img">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full touch-none overflow-visible text-[10px]" aria-hidden="true">
         <defs>
           <linearGradient id="lc-fill" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0" stopColor="var(--accent)" stopOpacity="0.22" />

@@ -11,7 +11,7 @@ import { Section } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
 import { cn } from "@/shared/lib/utils"
 import { useExercises, useFavorites } from "@/entities/exercise/store"
-import { key } from "@/entities/exercise/types"
+import { exerciseEquipment, key } from "@/entities/exercise/types"
 import { useSessionStore } from "@/entities/session/store"
 import { VideoPlayer, YoutubeSearchButton } from "@/features/video/VideoPlayer"
 import { AddToProgramDrawer } from "@/features/programs/AddToProgramDrawer"
@@ -119,7 +119,7 @@ export function ExercisePage() {
           </Link>
         </div>
 
-        <Section title={t("exercise.muscles")} hint={`${t("exercise.equipment")}: ${t(`equipment.${ex.eq}`)}`}>
+        <Section title={t("exercise.muscles")} hint={`${t("exercise.equipment")}: ${exerciseEquipment(ex).map((item) => t(`equipment.${item}`)).join(", ")}`}>
           <div className="flex flex-wrap gap-1.5">
             {ex.pm.map((m) => (
               <Tag key={m} strong>

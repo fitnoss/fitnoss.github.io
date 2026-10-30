@@ -11,6 +11,7 @@ export type Exercise = {
   mech: string | null
   force: string | null
   eq: string
+  eqExtra?: string[]
   pm: string[]
   sm: string[]
   pl: Place[]
@@ -29,8 +30,14 @@ export const MUSCLES = [
 ]
 
 export const EQUIPMENT = [
-  "body", "dumbbell", "barbell", "kettlebell", "bands", "cable", "machine", "ezbar", "medball", "fitball", "foamroll", "other",
+  "body", "dumbbell", "barbell", "kettlebell", "bands", "cable", "machine", "ezbar", "medball", "fitball", "foamroll",
+  "pullupbar", "parallelbars", "rings", "suspension", "bench", "plate", "other",
 ]
+
+/** Required equipment, including secondary items such as a band used on a pull-up bar. */
+export function exerciseEquipment(exercise: Pick<Exercise, "eq" | "eqExtra">) {
+  return [...new Set([exercise.eq, ...(exercise.eqExtra ?? [])])]
+}
 
 export const CATEGORIES = ["strength", "stretching", "plyometrics", "powerlifting", "olympic weightlifting", "strongman", "cardio"]
 

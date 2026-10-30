@@ -1,1 +1,286 @@
-{}
+{
+  "Pullups": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Chin-Up": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Bodyweight_Mid_Row": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Gironda_Sternum_Chins": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Gorilla_Chin_Crunch": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Hanging_Leg_Raise": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Hanging_Pike": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Mixed_Grip_Chin": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "One_Handed_Hang": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Rocky_Pull-Ups_Pulldowns": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Scapular_Pull-Up": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Side_To_Side_Chins": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Wide-Grip_Rear_Pull-Up": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Inverted_Row": {
+    "equipment": "pullupbar",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Dips_-_Chest_Version": {
+    "equipment": "parallelbars",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Dips_-_Triceps_Version": {
+    "equipment": "parallelbars",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Parallel_Bar_Dip": {
+    "equipment": "parallelbars",
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Ring_Dips": {
+    "equipment": "rings",
+    "places": [
+      "gym"
+    ]
+  },
+  "Muscle_Up": {
+    "equipment": "rings",
+    "places": [
+      "gym"
+    ]
+  },
+  "Kipping_Muscle_Up": {
+    "equipment": "rings",
+    "places": [
+      "gym"
+    ]
+  },
+  "Inverted_Row_with_Straps": {
+    "equipment": "suspension",
+    "places": [
+      "gym"
+    ]
+  },
+  "Suspended_Fallout": {
+    "equipment": "suspension",
+    "places": [
+      "gym"
+    ]
+  },
+  "Suspended_Push-Up": {
+    "equipment": "suspension",
+    "places": [
+      "gym"
+    ]
+  },
+  "Suspended_Reverse_Crunch": {
+    "equipment": "suspension",
+    "places": [
+      "gym"
+    ]
+  },
+  "Suspended_Row": {
+    "equipment": "suspension",
+    "places": [
+      "gym"
+    ]
+  },
+  "Suspended_Split_Squat": {
+    "equipment": "suspension",
+    "places": [
+      "gym"
+    ]
+  },
+  "Band_Assisted_Pull-Up": {
+    "equipment": "pullupbar",
+    "equipmentExtra": [
+      "bands"
+    ],
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Weighted_Pull_Ups": {
+    "equipment": "pullupbar",
+    "equipmentExtra": [
+      "plate",
+      "other"
+    ],
+    "places": [
+      "gym"
+    ]
+  },
+  "One_Arm_Chin-Up": {
+    "equipment": "pullupbar",
+    "equipmentExtra": [
+      "other"
+    ],
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "V-Bar_Pullup": {
+    "equipment": "pullupbar",
+    "equipmentExtra": [
+      "other"
+    ],
+    "places": [
+      "bars",
+      "gym"
+    ]
+  },
+  "Bench_Dips": {
+    "equipment": "bench",
+    "places": [
+      "home",
+      "gym"
+    ]
+  },
+  "Weighted_Bench_Dip": {
+    "equipment": "bench",
+    "equipmentExtra": [
+      "dumbbell"
+    ],
+    "places": [
+      "gym"
+    ]
+  },
+  "Knee_Hip_Raise_On_Parallel_Bars": {
+    "equipment": "machine",
+    "places": [
+      "gym"
+    ]
+  },
+  "Standing_Biceps_Stretch": {
+    "equipment": "body",
+    "places": [
+      "home",
+      "gym"
+    ]
+  },
+  "Front_Plate_Raise": {
+    "equipment": "plate",
+    "places": [
+      "gym"
+    ]
+  },
+  "Lying_Face_Down_Plate_Neck_Resistance": {
+    "equipment": "plate",
+    "places": [
+      "gym"
+    ]
+  },
+  "Lying_Face_Up_Plate_Neck_Resistance": {
+    "equipment": "plate",
+    "places": [
+      "gym"
+    ]
+  },
+  "Plate_Pinch": {
+    "equipment": "plate",
+    "places": [
+      "gym"
+    ]
+  },
+  "Plate_Twist": {
+    "equipment": "plate",
+    "places": [
+      "gym"
+    ]
+  },
+  "Reverse_Plate_Curls": {
+    "equipment": "plate",
+    "places": [
+      "gym"
+    ]
+  },
+  "Standing_Olympic_Plate_Hand_Squeeze": {
+    "equipment": "plate",
+    "places": [
+      "gym"
+    ]
+  }
+}

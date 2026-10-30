@@ -11,7 +11,7 @@ import { SharePage } from "@/features/share/SharePage"
 import { WorkoutPage } from "@/features/workout/WorkoutPage"
 import { JournalPage } from "@/features/journal/JournalPage"
 import { SessionPage } from "@/features/journal/SessionPage"
-import { MorePage, SettingsPage } from "@/features/settings/MorePage"
+import { MorePage } from "@/features/settings/MorePage"
 import { AboutPage } from "@/features/settings/AboutPage"
 import { UpdatePrompt } from "@/features/settings/UpdatePrompt"
 
@@ -40,9 +40,6 @@ export function App() {
           <Route path="progress/session/:id" element={<SessionPage />} />
           <Route path="progress/ex/:code" element={<ExerciseProgressPage />} />
           <Route path="more" element={<MorePage />} />
-          <Route path="more/settings" element={<SettingsPage />} />
-          <Route path="more/data" element={<SettingsPage section="data" />} />
-          <Route path="more/offline" element={<SettingsPage section="offline" />} />
           <Route path="more/calc" element={<CalculatorsPage />} />
           <Route path="more/about" element={<AboutPage />} />
           {VideoReviewPage && <Route path="dev/videos" element={<VideoReviewPage />} />}

@@ -59,7 +59,7 @@ export function Toaster() {
           {t.action && (
             <button
               type="button"
-              className="bg-inverse-fg/15 hover:bg-inverse-fg/25 h-8 rounded-full px-3 font-semibold"
+              className="bg-inverse-fg/15 hover:bg-inverse-fg/25 h-11 rounded-full px-3 font-semibold"
               onClick={(e) => {
                 e.stopPropagation()
                 t.action!.onClick()

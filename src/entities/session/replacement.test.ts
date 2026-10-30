@@ -28,6 +28,11 @@ describe("replacement candidates", () => {
     expect(replacementCandidates(list, source, [])).toEqual([])
     expect(replacementCandidates(list, { ...source, pm: [] }, ["barbell"])).toEqual([])
   })
+  it("requires the additional band for assisted pull-ups rather than assuming a bar is enough", () => {
+    const assisted = exercise(2, { eq: "pullupbar", eqExtra: ["bands"] })
+    expect(replacementCandidates([assisted], source, ["pullupbar"])).toEqual([])
+    expect(replacementCandidates([assisted], source, ["pullupbar", "bands"])).toEqual([assisted])
+  })
 })
 
 describe("replacing remaining sets", () => {

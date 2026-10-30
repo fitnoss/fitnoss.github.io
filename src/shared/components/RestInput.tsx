@@ -31,7 +31,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
     <div className={cn("flex items-center gap-1.5", className)}>
       <Chip
         active={value === 0}
-        className="h-10"
+        className="h-11"
         onClick={() => {
           onChange(0)
           onDone?.()
@@ -39,7 +39,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
       >
         {t("workout.noRest")}
       </Chip>
-      <label className="bg-surface hairline rounded-control hover:bg-surface-hover focus-within:bg-page flex h-10 w-[5.5rem] items-center gap-1 pr-3 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]">
+      <label className="bg-surface hairline rounded-control hover:bg-surface-hover focus-within:bg-page flex h-11 w-[5.5rem] items-center gap-1 pr-3 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]">
         <input
           inputMode="numeric"
           placeholder="90"

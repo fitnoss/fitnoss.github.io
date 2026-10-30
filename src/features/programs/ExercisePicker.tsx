@@ -8,6 +8,8 @@ import { useExercises, useFavorites } from "@/entities/exercise/store"
 import { ExerciseList } from "@/features/catalog/ExerciseList"
 import { FilterBar } from "@/features/catalog/FilterBar"
 import { EMPTY_FILTERS, applyFilters, useSearchIndex, type Filters } from "@/features/catalog/filters"
+import type { Exercise } from "@/entities/exercise/types"
+import { ExerciseTechniqueSheet } from "@/features/catalog/ExerciseTechniqueSheet"
 
 type Props = {
   open: boolean
@@ -23,6 +25,8 @@ export function ExercisePicker({ open, onOpenChange, onPick }: Props) {
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS)
   const [selected, setSelected] = useState<number[]>([])
   const [showSelected, setShowSelected] = useState(false)
+  const [preview, setPreview] = useState<Exercise | null>(null)
+  const toggle = (code: number) => setSelected((current) => current.includes(code) ? current.filter((item) => item !== code) : [...current, code])
   const index = useSearchIndex(list, text, en, lang)
   const deferred = useDeferredValue(filters)
   const items = useMemo(() => applyFilters(list, deferred, index, favorites), [list, deferred, index, favorites])
@@ -34,6 +38,7 @@ export function ExercisePicker({ open, onOpenChange, onPick }: Props) {
     if (pick && selected.length) onPick(selected)
     setSelected([])
     setShowSelected(false)
+    setPreview(null)
     onOpenChange(false)
   }
 
@@ -63,10 +68,13 @@ export function ExercisePicker({ open, onOpenChange, onPick }: Props) {
             text={text}
             scrollRef={scrollRef}
             isSelected={(ex) => selected.includes(ex.c)}
-            onSelect={(ex) => setSelected((s) => (s.includes(ex.c) ? s.filter((c) => c !== ex.c) : [...s, ex.c]))}
+            onSelect={(ex) => toggle(ex.c)}
+            onPreview={setPreview}
           />
         )}
       </div>
+      {preview && <ExerciseTechniqueSheet exercise={preview} onClose={() => setPreview(null)}
+        selected={selected.includes(preview.c)} onToggle={() => toggle(preview.c)} />}
     </Sheet>
   )
 }

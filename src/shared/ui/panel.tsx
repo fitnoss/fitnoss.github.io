@@ -13,15 +13,17 @@ export function Section({
   action,
   children,
   className,
+  id,
 }: {
   title: ReactNode
   hint?: ReactNode
   action?: ReactNode
   children: ReactNode
   className?: string
+  id?: string
 }) {
   return (
-    <section className={cn("space-y-2.5", className)}>
+    <section id={id} className={cn("space-y-2.5", className)}>
       <div className="flex items-end justify-between gap-3">
         <h2 className="text-[17px] font-semibold tracking-tight">{title}</h2>
         {action}

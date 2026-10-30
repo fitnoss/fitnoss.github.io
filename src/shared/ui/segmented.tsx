@@ -7,12 +7,13 @@ type Props<T extends string> = {
   options: readonly { value: T; label: ReactNode }[]
   size?: "sm" | "md"
   className?: string
+  label?: string
 }
 
 /** One-of-N switch: a row of options in a tray, the chosen one inverted. */
-export function Segmented<T extends string>({ value, onChange, options, size = "md", className }: Props<T>) {
+export function Segmented<T extends string>({ value, onChange, options, size = "md", className, label }: Props<T>) {
   return (
-    <div role="radiogroup" className={cn("bg-surface hairline rounded-control no-scrollbar flex gap-0.5 overflow-x-auto p-[3px]", className)}>
+    <div role="radiogroup" aria-label={label} className={cn("bg-surface hairline rounded-control no-scrollbar flex gap-0.5 overflow-x-auto p-[3px]", className)}>
       {options.map((o) => (
         <button
           key={o.value}
@@ -31,7 +32,7 @@ export function Segmented<T extends string>({ value, onChange, options, size = "
           onClick={() => onChange(o.value)}
           className={cn(
             "flex-1 shrink-0 rounded-[8px] font-medium whitespace-nowrap transition-colors",
-            size === "sm" ? "h-8 px-1.5 text-[12.5px]" : "h-9 px-3 text-sm",
+            size === "sm" ? "min-h-11 px-1.5 text-[12.5px]" : "min-h-11 px-3 text-sm",
             o.value === value ? "bg-inverse text-inverse-fg" : "text-muted hover:text-fg",
           )}
         >

@@ -1,7 +1,8 @@
 import { useRef, type ReactNode, type RefObject } from "react"
 import { useTranslation } from "react-i18next"
 import { useVirtualizer } from "@tanstack/react-virtual"
-import { Check } from "lucide-react"
+import { Check, Info } from "lucide-react"
+import { Button } from "@/shared/ui/button"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { scroller } from "@/shared/lib/scroller"
 import { cn } from "@/shared/lib/utils"
@@ -15,19 +16,21 @@ type RowProps = {
   selected?: boolean
   onClick: () => void
   trailing?: ReactNode
+  onPreview?: () => void
 }
 
-export function ExerciseRow({ ex, text, selected, onClick, trailing }: RowProps) {
+export function ExerciseRow({ ex, text, selected, onClick, trailing, onPreview }: RowProps) {
   const { t } = useTranslation()
   return (
+    <div className="flex items-center" style={{ height: ROW - 4 }}>
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={selected}
       className={cn(
-        "rounded-control hover:bg-surface active:bg-surface-hover flex w-full items-center gap-3 px-2 text-left transition-colors",
+        "rounded-control hover:bg-surface active:bg-surface-hover flex h-full min-w-0 flex-1 items-center gap-3 px-2 text-left transition-colors",
         selected && "bg-surface",
       )}
-      style={{ height: ROW - 4 }}
     >
       <div className="relative shrink-0">
         <ExerciseImage ex={ex} alt="" className="hairline size-16 rounded-[10px]" />
@@ -45,6 +48,9 @@ export function ExerciseRow({ ex, text, selected, onClick, trailing }: RowProps)
       </div>
       {trailing}
     </button>
+    {onPreview && <Button variant="ghost" size="icon" onClick={onPreview}
+      aria-label={`${t("exercise.technique")}: ${text.name}`}><Info className="size-5" /></Button>}
+    </div>
   )
 }
 
@@ -53,6 +59,7 @@ type ListProps = {
   text: (ex: Exercise) => ExerciseText
   onSelect: (ex: Exercise) => void
   isSelected?: (ex: Exercise) => boolean
+  onPreview?: (ex: Exercise) => void
   /** Scroll container; omitted means the page scroller. */
   scrollRef?: RefObject<HTMLElement | null>
 }
@@ -62,7 +69,7 @@ export function ExerciseList(props: ListProps) {
 }
 
 /** The list further down the page: rows are offset by everything above it in the page scroller. */
-function PageList({ items, text, onSelect, isSelected }: ListProps) {
+function PageList({ items, text, onSelect, isSelected, onPreview }: ListProps) {
   const ref = useRef<HTMLDivElement>(null)
   const v = useVirtualizer({
     count: items.length,
@@ -81,7 +88,8 @@ function PageList({ items, text, onSelect, isSelected }: ListProps) {
             className="absolute inset-x-2"
             style={{ transform: `translateY(${row.start - v.options.scrollMargin}px)` }}
           >
-            <ExerciseRow ex={ex} text={text(ex)} selected={isSelected?.(ex)} onClick={() => onSelect(ex)} />
+            <ExerciseRow ex={ex} text={text(ex)} selected={isSelected?.(ex)} onClick={() => onSelect(ex)}
+              onPreview={onPreview ? () => onPreview(ex) : undefined} />
           </div>
         )
       })}
@@ -89,7 +97,7 @@ function PageList({ items, text, onSelect, isSelected }: ListProps) {
   )
 }
 
-function ElementList({ items, text, onSelect, isSelected, scrollRef }: ListProps & { scrollRef: RefObject<HTMLElement | null> }) {
+function ElementList({ items, text, onSelect, isSelected, scrollRef, onPreview }: ListProps & { scrollRef: RefObject<HTMLElement | null> }) {
   const v = useVirtualizer({
     count: items.length,
     estimateSize: () => ROW,
@@ -102,7 +110,8 @@ function ElementList({ items, text, onSelect, isSelected, scrollRef }: ListProps
         const ex = items[row.index]
         return (
           <div key={ex.c} className="absolute inset-x-0" style={{ transform: `translateY(${row.start}px)` }}>
-            <ExerciseRow ex={ex} text={text(ex)} selected={isSelected?.(ex)} onClick={() => onSelect(ex)} />
+            <ExerciseRow ex={ex} text={text(ex)} selected={isSelected?.(ex)} onClick={() => onSelect(ex)}
+              onPreview={onPreview ? () => onPreview(ex) : undefined} />
           </div>
         )
       })}

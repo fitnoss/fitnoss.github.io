@@ -2,10 +2,11 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { uid } from "@/shared/lib/id"
 import { useSettings } from "@/shared/storage/settings"
-import { DEFAULT_SCHEME, moveItem, removeItem, restAfter, targetReps, withLink, type ProgramDay, type ProgramItem } from "@/entities/program/types"
+import { DEFAULT_SCHEME, moveItem, parseReps, removeItem, restAfter, targetReps, withLink, type ProgramDay, type ProgramItem } from "@/entities/program/types"
 import { progression } from "./progression"
 import { replaceRemaining } from "./replacement"
 import { isMainSet, isWarmup, updateSetLog, type Effort, type SetType } from "./sets"
+import { syncUnfinishedPlan } from "./history"
 
 export type SetLog = {
   reps?: number
@@ -37,6 +38,9 @@ export type Session = {
   day?: number
   startedAt: number
   endedAt?: number
+  pausedMs?: number
+  /** Full plan retained when the workout was finished with pending sets. */
+  unfinishedPlan?: SessionExercise[]
   exercises: SessionExercise[]
 }
 
@@ -64,15 +68,21 @@ type State = {
   adjustRest: (delta: number) => void
   stopRest: () => void
   finish: () => Session | undefined
+  /** Refuses to overwrite an active session. Removes the saved copy only after restoring it. */
+  resume: (id: string) => boolean
+  /** Optimistic update: editing an out-of-date snapshot must never overwrite newer data. */
+  editHistory: (original: Session, edited: Session) => boolean
   discard: () => void
   removeFromHistory: (id: string) => void
   importHistory: (sessions: Session[]) => void
 }
 
 /** Last logged sets for an exercise, used to prefill the next workout. */
-export function lastSets(history: Session[], ex: number): SetLog[] | undefined {
+export function lastSets(history: Session[], ex: number, target?: string): SetLog[] | undefined {
   for (const s of history) {
-    const sets = s.exercises.filter((e) => e.ex === ex).flatMap((e) => e.sets).filter((x) => x.done && isMainSet(x))
+    const sets = s.exercises.filter((e) => e.ex === ex && (target === undefined ||
+      (parseReps(e.reps).kind === "time") === (parseReps(target).kind === "time")))
+      .flatMap((e) => e.sets).filter((x) => x.done && isMainSet(x))
     if (sets.length) return sets
   }
 }
@@ -85,8 +95,9 @@ function plannedExercise(history: Session[], it: Pick<ProgramItem, "ex" | "sets"
     if (auto.change) e.progression = auto.change
     return e
   }
-  const prev = lastSets(history, ex)
-  const target = targetReps(reps)
+  const prev = lastSets(history, ex, reps)
+  const parsed = parseReps(reps)
+  const target = parsed.kind === "time" ? parsed.s : targetReps(reps)
   return {
     ex,
     ...(it.note ? { note: it.note } : {}),
@@ -132,7 +143,7 @@ export const useSessionStore = create<State>()(
         removeExercise: (i) => edit((s) => ({ ...s, exercises: removeItem(s.exercises, i) })),
         replaceExercise: (i, ex) => edit((s) => ({
           ...s,
-          exercises: s.exercises.flatMap((e, k) => k === i ? replaceRemaining(e, ex, lastSets(get().history, ex)) : [e]),
+          exercises: s.exercises.flatMap((e, k) => k === i ? replaceRemaining(e, ex, lastSets(get().history, ex, e.reps)) : [e]),
         })),
         moveExercise: (i, dir) => edit((s) => ({ ...s, exercises: moveItem(s.exercises, i, dir) })),
         setRest: (i, rest) => editEx(i, (e) => ({ ...e, rest })),
@@ -173,6 +184,7 @@ export const useSessionStore = create<State>()(
           const done: Session = {
             ...s,
             endedAt: Date.now(),
+            unfinishedPlan: s.exercises.some((e) => e.sets.some((x) => !x.done)) ? s.exercises : undefined,
             exercises: s.exercises
               .map((e) => ({ ...e, sets: e.sets.filter((x) => x.done) }))
               .filter((e) => e.sets.length > 0),
@@ -183,6 +195,33 @@ export const useSessionStore = create<State>()(
             history: done.exercises.length ? [done, ...st.history] : st.history,
           }))
           return done
+        },
+        resume: (id) => {
+          const { active, history } = get()
+          const saved = history.find((session) => session.id === id)
+          if (active || !saved) return false
+          const { endedAt, unfinishedPlan, ...session } = saved
+          set({
+            active: {
+              ...session,
+              pausedMs: (saved.pausedMs ?? 0) + Math.max(0, Date.now() - (endedAt ?? Date.now())),
+              exercises: unfinishedPlan ?? saved.exercises,
+            },
+            history: history.filter((session) => session.id !== id),
+            rest: undefined,
+          })
+          return true
+        },
+        editHistory: (original, edited) => {
+          if (!get().history.includes(original)) return false
+          const updated: Session = {
+            ...original,
+            title: edited.title,
+            exercises: edited.exercises,
+            unfinishedPlan: original.unfinishedPlan ? syncUnfinishedPlan(original.unfinishedPlan, edited.exercises) : undefined,
+          }
+          set((state) => ({ history: state.history.map((session) => session === original ? updated : session) }))
+          return true
         },
         discard: () => set({ active: undefined, rest: undefined }),
         removeFromHistory: (id) => set((st) => ({ history: st.history.filter((s) => s.id !== id) })),

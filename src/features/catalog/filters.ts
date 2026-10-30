@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { useSearchParams } from "react-router"
 import MiniSearch from "minisearch"
-import type { Exercise, ExerciseText, Level, Place } from "@/entities/exercise/types"
+import { exerciseEquipment, type Exercise, type ExerciseText, type Level, type Place } from "@/entities/exercise/types"
 
 export type Filters = {
   q: string
@@ -90,7 +90,7 @@ export function applyFilters(list: Exercise[], f: Filters, index: MiniSearch, fa
   const pass = (ex: Exercise) =>
     (!f.places.length || f.places.some((p) => ex.pl.includes(p))) &&
     (!f.muscles.length || f.muscles.some((m) => ex.pm.includes(m))) &&
-    (!f.equipment.length || f.equipment.includes(ex.eq)) &&
+    (!f.equipment.length || exerciseEquipment(ex).some((equipment) => f.equipment.includes(equipment))) &&
     (!f.levels.length || f.levels.includes(ex.lvl)) &&
     (!f.categories.length || f.categories.includes(ex.cat)) &&
     (!f.favorites || favorites.includes(ex.c))

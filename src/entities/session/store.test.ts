@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.hoisted(() => {
   const data = new Map<string, string>()
@@ -12,10 +12,12 @@ vi.hoisted(() => {
 vi.mock("@/shared/storage/settings", () => ({ useSettings: { getState: () => ({ defaultRest: 90 }) } }))
 
 import { lastSets, useSessionStore } from "./store"
+import { sessionDuration } from "./history"
 
 const store = () => useSessionStore.getState()
 const start = () => store().start({ title: "Test", plan: { name: "", items: [{ ex: 1, sets: 2, reps: "5", rest: 90, weight: 60 }] } })
 beforeEach(() => useSessionStore.setState({ history: [], active: undefined, rest: undefined }))
+afterEach(() => vi.restoreAllMocks())
 
 describe("set logging lifecycle", () => {
   it("persists completed warmups, types and effort through finish and rehydration", async () => {
@@ -67,5 +69,81 @@ describe("program note snapshots", () => {
   it("preserves notes when auto-progression prepares the sets", () => {
     store().start({ title: "Progression", plan: { name: "", items: [{ ex: 1, sets: 2, reps: "8", rest: 90, weight: 60, inc: 2.5, note: "Controlled tempo" }] } })
     expect(store().active!.exercises[0].note).toBe("Controlled tempo")
+  })
+  it("logs the visible seconds target and keeps repetition history separate from duration history", () => {
+    start()
+    store().updateSet(0, 0, { done: true, reps: 8 })
+    store().finish()
+    store().start({ title: "Hold", plan: { name: "", items: [{ ex: 1, sets: 1, reps: "30s", rest: 60 }] } })
+    expect(store().active!.exercises[0].sets[0].reps).toBe(30)
+    store().updateSet(0, 0, { done: true })
+    store().finish()
+    expect(lastSets(store().history, 1, "30s")![0].reps).toBe(30)
+    expect(lastSets(store().history, 1, "8")![0].reps).toBe(8)
+  })
+})
+
+describe("correcting and resuming saved workouts", () => {
+  it("persists the pending plan and restores it without counting the pause as exercise time", async () => {
+    const now = vi.spyOn(Date, "now").mockReturnValue(1000)
+    start()
+    store().updateSet(0, 0, { done: true, effort: { scale: "rpe", value: 8 } })
+    now.mockReturnValue(61000)
+    const saved = store().finish()!
+    expect(saved.exercises[0].sets).toHaveLength(1)
+    expect(saved.unfinishedPlan![0].sets).toHaveLength(2)
+    await useSessionStore.persist.rehydrate()
+    now.mockReturnValue(121000)
+    expect(store().resume(saved.id)).toBe(true)
+    expect(store().history).toEqual([])
+    expect(store().active!.exercises[0].sets.map((set) => set.done)).toEqual([true, false])
+    expect(store().active!.exercises[0].sets[0].effort).toEqual({ scale: "rpe", value: 8 })
+    expect(sessionDuration(store().active!, 121000)).toBe(60000)
+    store().updateSet(0, 1, { done: true })
+    now.mockReturnValue(151000)
+    const finished = store().finish()!
+    expect(finished.unfinishedPlan).toBeUndefined()
+    expect(sessionDuration(finished)).toBe(90000)
+    expect(store().history).toHaveLength(1)
+    expect(finished.id).toBe(saved.id)
+  })
+
+  it("never replaces another active workout or removes the saved record when resume fails", () => {
+    start()
+    store().updateSet(0, 0, { done: true })
+    const saved = store().finish()!
+    start()
+    const active = store().active
+    expect(store().resume(saved.id)).toBe(false)
+    expect(store().active).toBe(active)
+    expect(store().history).toEqual([saved])
+    expect(store().resume("missing")).toBe(false)
+  })
+
+  it("keeps corrections through resume, leaves pending targets intact and rejects stale edits", () => {
+    start()
+    store().updateSet(0, 0, { done: true })
+    const saved = store().finish()!
+    const edited = structuredClone(saved)
+    edited.title = "Corrected"
+    edited.exercises[0].note = "Pause"
+    edited.exercises[0].sets[0] = { done: true, weight: 75, reps: 7, type: "failure", effort: { scale: "rir", value: 0 } }
+    expect(store().editHistory(saved, edited)).toBe(true)
+    expect(store().editHistory(saved, { ...edited, title: "Stale" })).toBe(false)
+    expect(store().history[0].title).toBe("Corrected")
+    expect(store().resume(saved.id)).toBe(true)
+    const exercise = store().active!.exercises[0]
+    expect(exercise.note).toBe("Pause")
+    expect(exercise.sets[0]).toEqual(edited.exercises[0].sets[0])
+    expect(exercise.sets[1]).toEqual({ done: false, weight: 60, reps: 5 })
+  })
+
+  it("reopens old completed records without inventing missing plan data", () => {
+    start()
+    store().updateSet(0, 0, { done: true })
+    const saved = store().finish()!
+    delete saved.unfinishedPlan
+    expect(store().resume(saved.id)).toBe(true)
+    expect(store().active!.exercises).toEqual(saved.exercises)
   })
 })

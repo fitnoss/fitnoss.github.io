@@ -28,13 +28,13 @@ export function WorkoutPage() {
   return active ? <ActiveWorkout session={active} /> : null
 }
 
-function useElapsed(since: number) {
+function useElapsed(since: number, pausedMs = 0) {
   const [now, setNow] = useState(Date.now())
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000)
     return () => clearInterval(id)
   }, [])
-  const s = Math.max(0, Math.floor((now - since) / 1000))
+  const s = Math.max(0, Math.floor((now - since - pausedMs) / 1000))
   const h = Math.floor(s / 3600)
   const m = String(Math.floor((s % 3600) / 60)).padStart(h ? 2 : 1, "0")
   return `${h ? `${h}:` : ""}${m}:${String(s % 60).padStart(2, "0")}`
@@ -48,7 +48,7 @@ function ActiveWorkout({ session }: { session: Session }) {
   const [discardOpen, setDiscardOpen] = useState(false)
   const [showHint, setShowHint] = useState(() => !localStorage.getItem("fitnoss:set-details-seen"))
   const [pickerOpen, setPickerOpen] = useState(false)
-  const elapsed = useElapsed(session.startedAt)
+  const elapsed = useElapsed(session.startedAt, session.pausedMs)
   const view = useSettings((s) => s.workoutView)
   const hasRest = useSessionStore((s) => !!s.rest)
   const setSettings = useSettings((s) => s.set)
@@ -88,7 +88,7 @@ function ActiveWorkout({ session }: { session: Session }) {
             <Button
               variant="primary"
               size="sm"
-              className="h-9"
+              className="h-11"
               onClick={() => doneSets < totalSets ? setFinishOpen(true) : save()}
             >
               <Check /> {t("workout.finish")}
@@ -145,7 +145,7 @@ function ActiveWorkout({ session }: { session: Session }) {
           <Button className="flex-1" onClick={() => setFinishOpen(false)}>{t("home.continue")}</Button>
           <Button variant="primary" className="flex-1" onClick={save}>{t("workout.saveAndFinish")}</Button>
         </div>
-      }><p>{t("workout.confirmFinish", { done: doneSets, total: totalSets })}</p></Sheet>
+      }><p>{t(doneSets ? "workout.confirmFinish" : "workout.confirmFinishEmpty", { done: doneSets, total: totalSets })}</p></Sheet>
       <ExercisePicker
         open={pickerOpen}
         onOpenChange={setPickerOpen}

@@ -10,6 +10,8 @@ import { useExercises } from "@/entities/exercise/store"
 import { useSessionStore, type Session } from "@/entities/session/store"
 import { e1rm, sessionVolume, sessionSetCount } from "@/entities/session/stats"
 import { isCountedSet } from "@/entities/session/sets"
+import { sessionDuration } from "@/entities/session/history"
+import { parseReps } from "@/entities/program/types"
 
 const DAY = 86_400_000
 
@@ -52,6 +54,7 @@ export function JournalPage() {
     const best = new Map<number, { e1rm: number; weight: number; reps: number; at: number }>()
     for (const s of history) {
       for (const e of s.exercises) {
+        if (parseReps(e.reps).kind === "time") continue
         for (const set of e.sets) {
           if (!isCountedSet(set)) continue
           const v = e1rm(set.weight ?? 0, set.reps ?? 0)
@@ -64,10 +67,10 @@ export function JournalPage() {
 
   const [query, setQuery] = useState("")
   const mine = useMemo(() => {
-    const found = new Map<number, { at: number; weight?: number; reps?: number }>()
+    const found = new Map<number, { at: number; weight?: number; reps?: number; timed: boolean }>()
     for (const s of history) for (const e of s.exercises) {
-      const last = e.sets.findLast((x) => x.done)
-      if (last && !found.has(e.ex)) found.set(e.ex, { at: s.startedAt, weight: last.weight, reps: last.reps })
+      const last = e.sets.findLast(isCountedSet)
+      if (last && !found.has(e.ex)) found.set(e.ex, { at: s.startedAt, weight: last.weight, reps: last.reps, timed: parseReps(e.reps).kind === "time" })
     }
     return [...found.entries()]
   }, [history])
@@ -92,7 +95,7 @@ export function JournalPage() {
               label={t("journal.weekStreak")}
             />
           </div>
-          <p className="text-muted text-sm">{t("journal.periodCompare", { recent, change: recent - prior > 0 ? `+${recent - prior}` : recent - prior })}</p>
+          <p className="text-muted text-sm">{t("journal.periodCompare", { recent: t("progress.sample", { count: recent }), change: recent - prior > 0 ? `+${recent - prior}` : recent - prior })}</p>
           <div className="grid grid-cols-7 gap-1.5">
             {stats.week.map(({ d, on }) => (
               <div key={d} className="flex flex-col items-center gap-1.5">
@@ -115,7 +118,7 @@ export function JournalPage() {
           />
           {tab === "exercises" ? <div className="space-y-3">
             <input type="search" aria-label={t("catalog.search")} placeholder={t("catalog.search")} value={query} onChange={(e) => setQuery(e.target.value)} className="bg-surface hairline h-11 w-full rounded-xl px-3" />
-            <Panel className="divide-y overflow-hidden">{mine.filter(([code]) => text(byCode.get(code)).name.toLowerCase().includes(query.toLowerCase())).map(([code, result]) => <Link key={code} to={"/progress/ex/" + code} className="hover:bg-surface-hover flex items-center gap-3 p-4"><div className="min-w-0 flex-1"><div className="text-sm font-medium">{text(byCode.get(code)).name}</div><div className="text-muted text-xs">{result.weight !== undefined ? t("units.kg", { n: result.weight }) + " × " : ""}{result.reps ?? "—"} · {fmtDate.format(result.at)}</div></div><ChevronRight className="size-4" /></Link>)}</Panel>
+            <Panel className="divide-y overflow-hidden">{mine.filter(([code]) => text(byCode.get(code)).name.toLowerCase().includes(query.toLowerCase())).map(([code, result]) => <Link key={code} to={"/progress/ex/" + code} className="hover:bg-surface-hover flex items-center gap-3 p-4"><div className="min-w-0 flex-1"><div className="text-sm font-medium">{text(byCode.get(code)).name}</div><div className="text-muted text-xs">{result.weight !== undefined ? t("units.kg", { n: result.weight }) + " × " : ""}{result.reps ?? "—"} {t(result.timed ? "workout.seconds" : "workout.reps")} · {fmtDate.format(result.at)}</div></div><ChevronRight className="size-4" /></Link>)}</Panel>
             {mine.length === 0 && <Empty title={t("journal.empty")} />}
           </div> : tab === "history" ? (
             history.length === 0 ? (
@@ -165,7 +168,7 @@ function Stat({ value, label }: { value: React.ReactNode; label: string }) {
 function SessionRow({ s, date }: { s: Session; date: string }) {
   const { t } = useTranslation()
   const sets = sessionSetCount(s)
-  const minutes = s.endedAt ? Math.round((s.endedAt - s.startedAt) / 60000) : 0
+  const minutes = Math.round(sessionDuration(s) / 60000)
   const volume = sessionVolume(s)
   return (
     <Link to={`/progress/session/${s.id}`} className="hover:bg-surface-hover flex items-center gap-3 px-4 py-3">

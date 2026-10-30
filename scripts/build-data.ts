@@ -68,7 +68,7 @@ export const MUSCLES = [
   "abdominals", "abductors", "adductors", "biceps", "calves", "chest", "forearms", "glutes", "hamstrings", "lats",
   "lower back", "middle back", "neck", "quadriceps", "shoulders", "traps", "triceps",
 ]
-export const EQUIPMENT = ["body", "dumbbell", "barbell", "kettlebell", "bands", "cable", "machine", "ezbar", "medball", "fitball", "foamroll", "other"]
+export const EQUIPMENT = ["body", "dumbbell", "barbell", "kettlebell", "bands", "cable", "machine", "ezbar", "medball", "fitball", "foamroll", "pullupbar", "parallelbars", "rings", "suspension", "bench", "plate", "other"]
 export const PLACES = ["home", "bars", "dumbbell", "kettlebell", "bands", "gym"] as const
 export type Place = (typeof PLACES)[number]
 
@@ -111,6 +111,7 @@ export type LocalExercise = {
   mechanic?: "compound" | "isolation" | null
   force?: "push" | "pull" | "static" | null
   equipment: string
+  equipmentExtra?: string[]
   primary: string[]
   secondary?: string[]
   places?: Place[]
@@ -126,6 +127,7 @@ type Core = {
   mech: string | null
   force: string | null
   eq: string
+  eqExtra?: string[]
   pm: string[]
   sm: string[]
   pl: Place[]
@@ -139,7 +141,7 @@ const IMAGE_RE = /\.(jpe?g|png|webp|gif|avif)$/i
 export function derivePlaces(name: string, eq: string): Place[] {
   const places = new Set<Place>()
   const bars = BARS_RE.test(name) && !NOT_BARS_RE.test(name)
-  if (bars) places.add("bars")
+  if (bars || eq === "pullupbar" || eq === "parallelbars") places.add("bars")
   if (!bars && eq === "body") places.add("home")
   if (eq === "dumbbell") places.add("dumbbell")
   if (eq === "kettlebell") places.add("kettlebell")
@@ -166,6 +168,7 @@ export function validateLocal(slug: string, ex: LocalExercise): string[] {
   oneOf("category", ex.category, CATEGORIES)
   oneOf("level", ex.level, LEVELS)
   oneOf("equipment", ex.equipment, EQUIPMENT)
+  for (const equipment of ex.equipmentExtra ?? []) oneOf("equipmentExtra", equipment, EQUIPMENT)
   if (ex.mechanic != null) oneOf("mechanic", ex.mechanic, ["compound", "isolation"])
   if (ex.force != null) oneOf("force", ex.force, ["push", "pull", "static"])
   if (!ex.primary?.length) errors.push(`primary: at least one muscle is required`)
@@ -245,7 +248,13 @@ async function main() {
   const sourceById = new Map(source.map((s) => [s.id, s]))
   const local = await loadLocal()
   const localById = new Map(local.map((l) => [LOCAL + l.slug, l]))
-  const overrides = await readJson<Record<string, { places?: Place[]; hide?: boolean }>>(OVERRIDES, {})
+  const overrides = await readJson<Record<string, { places?: Place[]; equipment?: string; equipmentExtra?: string[]; hide?: boolean }>>(OVERRIDES, {})
+  for (const [id, override] of Object.entries(overrides)) {
+    if (!sourceById.has(id)) throw new Error(`Unknown override ID: ${id}`)
+    for (const equipment of [override.equipment, ...(override.equipmentExtra ?? [])].filter(Boolean)) {
+      if (!EQUIPMENT.includes(equipment!)) throw new Error(`Unknown equipment for ${id}: ${equipment}`)
+    }
+  }
   const videos = await readJson<Record<string, Video>>(VIDEOS, {})
   const languages = await readJson<{ code: string }[]>(path.join(LOCALES, "index.json"), [{ code: "en" }])
 
@@ -300,7 +309,7 @@ async function main() {
     if (s) {
       const o = overrides[id] ?? {}
       if (o.hide) return
-      const eq = s.equipment ? SOURCE_EQUIP[s.equipment] : "body"
+      const eq = o.equipment ?? (s.equipment ? SOURCE_EQUIP[s.equipment] : "body")
       s.images.forEach((img, n) =>
         images.push({ from: () => fetchCached(`${RAW}/exercises/${img}`, path.join(CACHE, "img", img)), out: `${c}-${n}.webp`, reuse: true }),
       )
@@ -312,6 +321,7 @@ async function main() {
         mech: s.mechanic,
         force: s.force,
         eq,
+        ...(o.equipmentExtra?.length ? { eqExtra: o.equipmentExtra } : {}),
         pm: s.primaryMuscles,
         sm: s.secondaryMuscles,
         pl: o.places ?? derivePlaces(s.name, eq),
@@ -334,6 +344,7 @@ async function main() {
         mech: ex.mechanic ?? null,
         force: ex.force ?? null,
         eq: ex.equipment,
+        ...(ex.equipmentExtra?.length ? { eqExtra: ex.equipmentExtra } : {}),
         pm: ex.primary,
         sm: ex.secondary ?? [],
         pl: ex.places ?? derivePlaces(ex.i18n.en.name, ex.equipment),

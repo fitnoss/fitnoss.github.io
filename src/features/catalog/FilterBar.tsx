@@ -25,6 +25,7 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
         <label className="bg-surface hairline rounded-control focus-within:bg-page relative flex h-11 flex-1 items-center focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]">
           <Search className="text-muted pointer-events-none absolute left-3.5 size-[18px]" />
           <input
+            aria-label={t("catalog.search")}
             value={filters.q}
             onChange={(e) => onChange({ ...filters, q: e.target.value })}
             placeholder={t("catalog.search")}
@@ -35,7 +36,7 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
           {filters.q && (
             <button
               type="button"
-              className="text-muted hover:text-fg absolute right-1.5 flex size-8 items-center justify-center rounded-lg"
+              className="text-muted hover:text-fg absolute right-0 flex size-11 items-center justify-center rounded-lg"
               onClick={() => onChange({ ...filters, q: "" })}
               aria-label={t("common.clear")}
             >

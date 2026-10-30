@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { Field, Input } from "@/shared/ui/field"
+import { NumberInput } from "@/shared/ui/number-input"
 import { Segmented } from "@/shared/ui/segmented"
 import { RestInput } from "@/shared/components/RestInput"
 import { Stepper } from "@/shared/components/Stepper"
@@ -81,14 +82,11 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
 
       <div className="grid grid-cols-[6.5rem_1fr] gap-2">
         <Field label={t("scheme.weight")}>
-          <Input
+          <NumberInput
             inputMode="decimal"
             placeholder="—"
-            value={item.weight ?? ""}
-            onChange={(e) => {
-              const w = parseFloat(e.target.value.replace(",", "."))
-              onChange({ ...item, weight: Number.isFinite(w) && w > 0 ? w : undefined })
-            }}
+            value={item.weight}
+            onValueChange={(weight) => onChange({ ...item, weight })}
           />
         </Field>
         <Field label={t("scheme.note")}>

@@ -3,7 +3,7 @@
   "level": "beginner",
   "mechanic": "isolation",
   "force": "static",
-  "equipment": "other",
+  "equipment": "pullupbar",
   "primary": ["forearms"],
   "secondary": ["lats", "shoulders"],
   "places": ["bars"],

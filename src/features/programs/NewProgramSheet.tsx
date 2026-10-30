@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Button } from "@/shared/ui/button"
-import { key } from "@/entities/exercise/types"
+import { exerciseEquipment, key } from "@/entities/exercise/types"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router"
 import { ChevronRight, Plus } from "lucide-react"
@@ -33,7 +33,10 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
     <Sheet open={open} onOpenChange={(o) => { setPreview(null); onOpenChange(o) }} title={preview ? preview.name[lang] : t("programs.newTitle")} bodyClassName="space-y-5" footer={preview && <div className="flex gap-2"><Button onClick={() => setPreview(null)}>{t("common.back")}</Button><Button variant="primary" className="flex-1" onClick={() => { const tpl = preview; setPreview(null); go(create({ name: tpl.name[lang], days: structuredClone(tpl.days) }).id) }}>{t("programs.useTemplate")}</Button></div>}>
       {preview ? <div className="space-y-5">
         <p className="text-muted text-sm">{preview.description[lang]}</p>
-        <p className="text-sm">{t("exercise.equipment")}: {[...new Set(preview.days.flatMap((d) => d.items.map((it) => byCode.get(it.ex)?.eq)).filter(Boolean))].map((eq) => t("equipment." + key(eq!))).join(", ")}</p>
+        <p className="text-sm">{t("exercise.equipment")}: {[...new Set(preview.days.flatMap((d) => d.items.flatMap((it) => {
+          const exercise = byCode.get(it.ex)
+          return exercise ? exerciseEquipment(exercise) : []
+        })))].map((eq) => t("equipment." + key(eq))).join(", ")}</p>
         {preview.days.map((d, i) => <section key={i} className="space-y-2"><h3 className="font-semibold">{dayName(t, d.name, i)} · {formatWeekdays(d.weekdays ?? [])}</h3>{d.items.map((it, j) => <div key={j} className="border-b py-2"><div className="text-sm">{text(byCode.get(it.ex)).name}</div><div className="text-muted text-xs">{formatScheme(t, it)}</div></div>)}</section>)}
       </div> : <>
       <button

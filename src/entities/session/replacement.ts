@@ -1,4 +1,4 @@
-import type { Exercise } from "@/entities/exercise/types"
+import { exerciseEquipment, type Exercise } from "@/entities/exercise/types"
 import { parseReps, targetReps } from "@/entities/program/types"
 import type { SessionExercise, SetLog } from "./store"
 import { isWarmup } from "./sets"
@@ -7,7 +7,7 @@ import { isWarmup } from "./sets"
 export function replacementCandidates(list: Exercise[], source: Exercise, equipment: string[]) {
   return list.filter((ex) =>
     ex.c !== source.c && ex.cat === source.cat &&
-    ex.pm.some((m) => source.pm.includes(m)) && equipment.includes(ex.eq),
+    ex.pm.some((m) => source.pm.includes(m)) && exerciseEquipment(ex).every((item) => equipment.includes(item)),
   )
 }
 

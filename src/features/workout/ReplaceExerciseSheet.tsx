@@ -1,7 +1,7 @@
 import { useDeferredValue, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useExercises } from "@/entities/exercise/store"
-import { EQUIPMENT, key, type Exercise } from "@/entities/exercise/types"
+import { EQUIPMENT, exerciseEquipment, key, type Exercise } from "@/entities/exercise/types"
 import { replacementCandidates } from "@/entities/session/replacement"
 import { ExerciseList } from "@/features/catalog/ExerciseList"
 import { applyFilters, EMPTY_FILTERS, useSearchIndex } from "@/features/catalog/filters"
@@ -16,7 +16,7 @@ export function ReplaceExerciseSheet({ source, onClose, onPick }: {
 }) {
   const { t } = useTranslation()
   const { list, text, en, lang } = useExercises()
-  const [equipment, setEquipment] = useState([source.eq])
+  const [equipment, setEquipment] = useState(exerciseEquipment(source))
   const [query, setQuery] = useState("")
   const q = useDeferredValue(query)
   const index = useSearchIndex(list, text, en, lang)

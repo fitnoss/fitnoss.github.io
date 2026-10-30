@@ -1,8 +1,9 @@
 import { useExerciseStore, useFavorites } from "@/entities/exercise/store"
 import { imageUrl } from "@/entities/exercise/types"
 import { useProgramStore } from "@/entities/program/store"
-import type { Program } from "@/entities/program/types"
-import { useSessionStore, type Session } from "@/entities/session/store"
+import type { Program, ProgramItem } from "@/entities/program/types"
+import { useSessionStore, type Session, type SessionExercise, type SetLog } from "@/entities/session/store"
+import { SET_TYPES, validEffort } from "@/entities/session/sets"
 
 export type Backup = {
   app: "fitnoss"
@@ -38,18 +39,40 @@ export function exportBackup() {
 export async function readBackup(file: File): Promise<Backup> {
   const data = JSON.parse(await file.text()) as Backup
   if (data?.app !== "fitnoss" || data.version !== 1 || !Array.isArray(data.programs) || !Array.isArray(data.history) ||
-      !data.programs.every((p) =>
-        typeof p?.id === "string" && typeof p.name === "string" &&
+      !data.programs.every((p) => typeof p?.id === "string" && typeof p.name === "string" &&
         Array.isArray(p.days) && p.days.length > 0 && p.days.every((d) =>
-          typeof d?.name === "string" && Array.isArray(d.items) && d.items.every((it) =>
-            Number.isFinite(it?.ex) && Number.isFinite(it.sets) && typeof it.reps === "string" && Number.isFinite(it.rest)))) ||
-      !data.history.every((s) =>
-        typeof s?.id === "string" && typeof s.title === "string" && Number.isFinite(s.startedAt) &&
-        Array.isArray(s.exercises) && s.exercises.every((e) =>
-          Number.isFinite(e?.ex) && typeof e.reps === "string" && Number.isFinite(e.rest) &&
-          Array.isArray(e.sets) && e.sets.every((x) => typeof x?.done === "boolean"))) ||
+          typeof d?.name === "string" && Array.isArray(d.items) && d.items.every(validItem))) ||
+      !data.history.every(validSession) ||
       (data.favorites !== undefined && (!Array.isArray(data.favorites) || !data.favorites.every(Number.isFinite)))) throw new Error("not a fitnoss backup")
   return data
+}
+
+const nonnegative = (value: number) => Number.isFinite(value) && value >= 0
+const optionalNumber = (value?: number) => value === undefined || nonnegative(value)
+const optionalText = (value?: string) => value === undefined || typeof value === "string"
+const code = (value: number) => Number.isInteger(value) && value >= 0
+
+function validItem(item: ProgramItem) {
+  return code(item?.ex) && Number.isInteger(item.sets) && item.sets > 0 && typeof item.reps === "string" &&
+    nonnegative(item.rest) && optionalNumber(item.weight) && optionalNumber(item.inc) && optionalText(item.note)
+}
+
+function validSet(set: SetLog) {
+  return typeof set?.done === "boolean" && optionalNumber(set.weight) && optionalNumber(set.reps) &&
+    (set.type === undefined || SET_TYPES.includes(set.type)) &&
+    (set.effort === undefined || !!validEffort(set.effort))
+}
+
+function validExercise(exercise: SessionExercise) {
+  return code(exercise?.ex) && typeof exercise.reps === "string" && nonnegative(exercise.rest) &&
+    optionalText(exercise.note) && Array.isArray(exercise.sets) && exercise.sets.every(validSet)
+}
+
+function validSession(session: Session) {
+  return typeof session?.id === "string" && typeof session.title === "string" && nonnegative(session.startedAt) &&
+    optionalNumber(session.endedAt) && optionalNumber(session.pausedMs) &&
+    Array.isArray(session.exercises) && session.exercises.every(validExercise) &&
+    (session.unfinishedPlan === undefined || (Array.isArray(session.unfinishedPlan) && session.unfinishedPlan.every(validExercise)))
 }
 
 export function backupSummary(data: Backup) {

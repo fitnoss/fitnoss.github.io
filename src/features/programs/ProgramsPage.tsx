@@ -57,7 +57,7 @@ export function ProgramsPage() {
         }
       />
       <div className="space-y-8 px-4 pb-8">
-        {historyCount >= 5 && !localStorage.getItem("fitnoss:last-export") && <Link to="/more/data" className="text-muted block text-sm underline underline-offset-4">{t("more.backupReminder")}</Link>}
+        {historyCount >= 5 && !localStorage.getItem("fitnoss:last-export") && <Link to="/more?section=data" className="text-muted block text-sm underline underline-offset-4">{t("more.backupReminder")}</Link>}
         <Today programs={programs} />
         {!active && <Button size="lg" className="h-14 w-full" onClick={() => {
           primeAudio()

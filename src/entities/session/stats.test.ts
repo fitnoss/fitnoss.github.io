@@ -21,6 +21,13 @@ describe("set statistics", () => {
   it("returns finite zero metrics for warmup-only workouts", () => {
     expect(exerciseMetrics([{ done: true, type: "warmup", weight: 100, reps: 10 }])).toEqual({ e1rm: 0, weight: 0, reps: 0, volume: 0 })
   })
+  it("does not report seconds held as repetitions lifted or as a one-rep max record", () => {
+    const timed = session({ done: true, weight: 20, reps: 60 })
+    timed.exercises[0].reps = "60s"
+    expect(sessionVolume(timed)).toBe(0)
+    expect(beatsRecord([session(work)], timed, 0, 0)).toBe(false)
+    expect(beatsRecord([timed], session({ ...work, weight: 65 }), 0, 0)).toBe(false)
+  })
   it("ignores warmups in record comparisons and never celebrates a warmup or unfinished set", () => {
     const history = [session(work, { ...work, type: "warmup", weight: 200 })]
     const active = session({ ...work, weight: 65 })

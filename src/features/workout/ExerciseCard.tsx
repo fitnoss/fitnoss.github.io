@@ -4,9 +4,10 @@ import { Link, useNavigate } from "react-router"
 import { ArrowDown, ArrowLeftRight, ArrowUp, Check, Clock, Flame, Link2, Minus, Plus, Trash2, TrendingDown, TrendingUp, Unlink2, X } from "lucide-react"
 import { CongratsCat } from "@/shared/components/CongratsCat"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
+import { ExerciseNote } from "@/shared/components/ExerciseNote"
 import { RestInput } from "@/shared/components/RestInput"
 import { Button } from "@/shared/ui/button"
-import { Input } from "@/shared/ui/field"
+import { NumberInput } from "@/shared/ui/number-input"
 import { Menu, MenuItem } from "@/shared/ui/menu"
 import { Panel } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
@@ -44,7 +45,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
   const { updateSet, toggleSet, addSet, removeSet, removeExercise, replaceExercise, moveExercise, setRest, toggleSuperset, setWarmup } = useSessionStore()
   const navigate = useNavigate()
   const history = useSessionStore((s) => s.history)
-  const previous = lastSets(history, e.ex)
+  const previous = lastSets(history, e.ex, e.reps)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [removeSetOpen, setRemoveSetOpen] = useState(false)
   const { barWeight, plates } = useSettings()
@@ -157,7 +158,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
         </Menu>
       </div>
 
-      {e.note && <p className="bg-page rounded-control px-3 py-2 text-sm whitespace-pre-wrap">{e.note}</p>}
+      <ExerciseNote note={e.note} />
       <Sheet open={deleteOpen} onOpenChange={setDeleteOpen} title={t("common.delete")} footer={
         <div className="flex gap-2"><Button onClick={() => setDeleteOpen(false)}>{t("common.cancel")}</Button><Button variant="danger" onClick={() => { setDeleteOpen(false); remove() }}>{t("common.delete")}</Button></div>
       }><p>{t("workout.confirmRemoveExercise")}</p></Sheet>
@@ -225,11 +226,6 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
   )
 }
 
-function num(v: string) {
-  const n = parseFloat(v.replace(",", "."))
-  return Number.isFinite(n) && n >= 0 ? n : undefined
-}
-
 function SetRow(props: {
   label: string
   exerciseName: string
@@ -260,8 +256,8 @@ function SetRow(props: {
         <span className="underline decoration-dotted underline-offset-4">{label} ⋯</span>
         {set.effort && <span className="mt-1 text-[10px] leading-none">{set.effort.scale.toUpperCase()} {set.effort.value}</span>}
       </button>
-      <Input aria-label={`${context}, ${t("scheme.weight")}`} inputMode="decimal" className={field} value={weight ?? ""} placeholder="—" onChange={(e) => onWeight(num(e.target.value))} />
-      <Input aria-label={`${context}, ${t(timed ? "workout.seconds" : "scheme.reps")}`} inputMode="numeric" className={field} value={reps ?? ""} placeholder="—" onChange={(e) => onReps(num(e.target.value))} />
+      <NumberInput aria-label={`${context}, ${t("scheme.weight")}`} className={field} value={weight} placeholder="—" onValueChange={onWeight} />
+      <NumberInput aria-label={`${context}, ${t(timed ? "workout.seconds" : "scheme.reps")}`} inputMode="numeric" className={field} value={reps} placeholder="—" onValueChange={onReps} />
       <button
         type="button"
         onClick={onToggle}

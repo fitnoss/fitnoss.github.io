@@ -1,6 +1,6 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router"
+import { Link, useSearchParams } from "react-router"
 import { Calculator, ChevronRight, CloudDownload, Download, Info, Upload, Video } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { RestInput } from "@/shared/components/RestInput"
@@ -42,9 +42,16 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
   )
 }
 
-export function SettingsPage({ section = "settings" }: { section?: "settings" | "data" | "offline" }) {
+export function MorePage() {
   const { t, i18n } = useTranslation()
   const settings = useSettings()
+  const [params] = useSearchParams()
+  const section = params.get("section")
+  useEffect(() => {
+    if (section !== "data" && section !== "offline") return
+    const frame = requestAnimationFrame(() => document.getElementById(`settings-${section}`)?.scrollIntoView({ block: "start" }))
+    return () => cancelAnimationFrame(frame)
+  }, [section])
   const { ready } = useExercises()
   const fileRef = useRef<HTMLInputElement>(null)
   const [dl, setDl] = useState<{ done: number; total: number } | null>(null)
@@ -57,11 +64,14 @@ export function SettingsPage({ section = "settings" }: { section?: "settings" | 
 
   return (
     <>
-      <PageHeader title={t(section === "settings" ? "more.settings" : `more.${section}`)} back="/more" />
+      <PageHeader title={t("more.title")} />
       <div className="space-y-8 px-4 pb-10">
+        <Panel className="divide-y overflow-hidden">
+          <Row icon={Calculator} to="/more/calc">{t("calc.title")}</Row>
+          <Row icon={Info} to="/more/about">{t("about.title")}</Row>
+          {import.meta.env.DEV && <Row icon={Video} to="/dev/videos">Video review (dev)</Row>}
+        </Panel>
 
-
-        {section === "settings" && <>
         <Section
           title={t("more.language")}
           hint={
@@ -76,6 +86,7 @@ export function SettingsPage({ section = "settings" }: { section?: "settings" | 
           }
         >
           <Segmented
+            label={t("more.language")}
             value={i18n.resolvedLanguage ?? "en"}
             onChange={setLanguage}
             options={languages.map((l) => ({
@@ -99,6 +110,7 @@ export function SettingsPage({ section = "settings" }: { section?: "settings" | 
 
         <Section title={t("more.theme")}>
           <Segmented
+            label={t("more.theme")}
             value={settings.theme}
             onChange={(v: Theme) => settings.setTheme(v)}
             options={(["system", "light", "dark"] as const).map((th) => ({ value: th, label: t(`more.themes.${th}`) }))}
@@ -117,8 +129,7 @@ export function SettingsPage({ section = "settings" }: { section?: "settings" | 
           </Panel>
         </Section>
 
-        </>}
-        {section === "data" && <Section title={t("more.data")} hint={t("more.dataHint")}>
+        <Section id="settings-data" className="scroll-mt-20" title={t("more.data")} hint={t("more.dataHint")}>
           <div className="grid grid-cols-2 gap-2">
             <Button onClick={() => { exportBackup(); setLastExport(localStorage.getItem(LAST_EXPORT)) }}>
               <Download /> {t("more.export")}
@@ -145,9 +156,9 @@ export function SettingsPage({ section = "settings" }: { section?: "settings" | 
               }
             }}
           />
-        </Section>}
+        </Section>
 
-        {section === "offline" && <Section title={t("more.offline")} hint={t("more.offlineHint")}>
+        <Section id="settings-offline" className="scroll-mt-20" title={t("more.offline")} hint={t("more.offlineHint")}>
           {offlineResult && <p role="status" className="text-sm">{t("more.offlineStatus", offlineResult)} · {new Date(offlineResult.at).toLocaleDateString(i18n.language)}</p>}
           {dl ? (
             <Panel className="space-y-2 p-4">
@@ -176,7 +187,7 @@ export function SettingsPage({ section = "settings" }: { section?: "settings" | 
               <CloudDownload /> {t(offlineResult?.failed ? "more.offlineRetry" : "more.offlineDownload")}
             </Button>
           )}
-        </Section>}
+        </Section>
       </div>
       <Sheet open={!!pendingBackup} onOpenChange={(o) => !o && setPendingBackup(null)} title={t("more.import")} footer={
         <div className="flex gap-2"><Button onClick={() => setPendingBackup(null)}>{t("common.cancel")}</Button><Button variant="primary" onClick={() => {
@@ -188,16 +199,4 @@ export function SettingsPage({ section = "settings" }: { section?: "settings" | 
       }>{pendingBackup && <div className="space-y-3"><p>{t("more.mergeHint")}</p><p>{t("more.importPreview", backupSummary(pendingBackup))}</p><p className="text-muted text-sm">{t("more.backupContents")}</p></div>}</Sheet>
     </>
   )
-}
-
-export function MorePage() {
-  const { t } = useTranslation()
-  return <><PageHeader title={t("more.title")} /><div className="px-4 pb-8"><Panel className="divide-y overflow-hidden">
-    <Row icon={Info} to="/more/settings">{t("more.settings")}</Row>
-    <Row icon={Calculator} to="/more/calc">{t("calc.title")}</Row>
-    <Row icon={Download} to="/more/data">{t("more.data")}</Row>
-    <Row icon={CloudDownload} to="/more/offline">{t("more.offline")}</Row>
-    <Row icon={Info} to="/more/about">{t("about.title")}</Row>
-    {import.meta.env.DEV && <Row icon={Video} to="/dev/videos">Video review (dev)</Row>}
-  </Panel></div></>
 }

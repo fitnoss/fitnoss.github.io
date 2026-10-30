@@ -21,7 +21,10 @@
     "cancel": "Cancel",
     "undo": "Undo",
     "confirmTitle": "Confirmation",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "save": "Save",
+    "decrease": "Decrease: {{label}}",
+    "increase": "Increase: {{label}}"
   },
   "units": {
     "kg": "{{n}} kg",
@@ -68,7 +71,13 @@
     "medball": "Medicine ball",
     "fitball": "Exercise ball",
     "foamroll": "Foam roller",
-    "other": "Other"
+    "other": "Other",
+    "pullupbar": "Pull-up bar",
+    "parallelbars": "Parallel bars",
+    "rings": "Rings",
+    "suspension": "Suspension straps",
+    "bench": "Bench / support",
+    "plate": "Weight plate"
   },
   "category": {
     "strength": "Strength",
@@ -228,7 +237,9 @@
     "add_other": "Add {{count}} exercises",
     "added_one": "{{count}} exercise added",
     "added_other": "{{count}} exercises added",
-    "selected": "Selected: {{count}} · show / hide"
+    "selected": "Selected: {{count}} · show / hide",
+    "select": "Select exercise",
+    "unselect": "Remove from selection"
   },
   "share": {
     "title": "Share program",
@@ -244,7 +255,8 @@
     "brokenHint": "It may have been cut off by a messenger. Ask for the link again or use the QR code.",
     "copyFailed": "Copy failed. Select the content and copy it manually.",
     "manualCopy": "Copy manually",
-    "copyHint": "The link contains the program. The recipient saves their own copy."
+    "copyHint": "The link contains the program. The recipient saves their own copy.",
+    "shareFailed": "Could not share. Copy the text manually."
   },
   "setType": {
     "work": "Working",
@@ -309,7 +321,7 @@
     "warmupShort": "W",
     "record": "New record: {{weight}} kg × {{reps}}",
     "saveAndFinish": "Save and finish",
-    "confirmFinish": "{{done}} of {{total}} sets completed. Save completed sets and finish? Remaining sets will not be saved.",
+    "confirmFinish": "{{done}} of {{total}} sets completed. Save completed sets and finish? You can resume the remaining plan from the history record.",
     "exerciseRemoved": "Exercise removed",
     "confirmRemoveExercise": "This exercise has completed sets. Delete the exercise and its results?",
     "removeSet": "Remove last set",
@@ -317,7 +329,8 @@
     "markSet": "Mark completed",
     "unmarkSet": "Mark incomplete",
     "previousSet": "Last time: {{weight}} × {{reps}} {{unit}}",
-    "confirmRemoveSet": "This set is completed. Delete its result?"
+    "confirmRemoveSet": "This set is completed. Delete its result?",
+    "confirmFinishEmpty": "None of {{total}} sets completed. Finish without a history record? The current plan will be removed."
   },
   "journal": {
     "title": "Progress",
@@ -337,7 +350,17 @@
     "saveAsProgram": "Save as program",
     "savedAsProgram": "Program created",
     "myExercises": "My exercises",
-    "periodCompare": "Last 28 days: {{recent}} workouts; {{change}} compared with the previous 28 days."
+    "periodCompare": "Last 28 days: {{recent}}; {{change}} compared with the previous 28 days.",
+    "editSession": "Edit results",
+    "editSessionHint": "Edit results, set type, RPE / RIR or notes. The workout date and remaining plan are preserved.",
+    "discardEdits": "Close without saving your changes?",
+    "editConflict": "This workout changed while editing. Close and reopen the editor.",
+    "editsSaved": "Changes saved",
+    "sessionTitle": "Workout title",
+    "resumeSession": "Resume plan",
+    "reopenSession": "Reopen workout",
+    "confirmResume": "Reopen this workout? Completed sets are preserved. Until you finish again, the record will be available in the active workout.",
+    "resumeUnavailable": "Finish or discard the current workout first."
   },
   "progress": {
     "e1rm": "1RM est.",
@@ -352,7 +375,23 @@
     "sample_many": "{{count}} workouts",
     "sample_other": "{{count}} workouts",
     "change": "Change since last workout",
-    "oneEntry": "One workout so far. Log another result to compare."
+    "oneEntry": "One workout so far. Log another result to compare.",
+    "period": "Period",
+    "metric": "Metric",
+    "duration": "Duration",
+    "periods": {
+      "28": "28 days",
+      "84": "12 weeks",
+      "all": "All time"
+    },
+    "noPeriodResults": "No results in this period",
+    "previousPeriod_one": "Previous {{days}} days: {{count}} workout",
+    "previousPeriod_few": "Previous {{days}} days: {{count}} workouts",
+    "previousPeriod_many": "Previous {{days}} days: {{count}} workouts",
+    "previousPeriod_other": "Previous {{days}} days: {{count}} workouts",
+    "bestChange": "best result change",
+    "previousPoint": "Previous result",
+    "nextPoint": "Next result"
   },
   "calc": {
     "title": "Calculators",

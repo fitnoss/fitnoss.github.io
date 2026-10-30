@@ -44,6 +44,20 @@ describe("backup merge", () => {
     await expect(readBackup(new File([JSON.stringify(broken)], "broken.json"))).rejects.toThrow()
     expect(useSessionStore.getState().history).toEqual([])
   })
+  it("round-trips a resumable session and rejects an invalid pending plan", async () => {
+    useSessionStore.getState().start({ title: "Partial", plan: { name: "", items: [{ ex: 1, sets: 2, reps: "8", rest: 60, note: "Pause" }] } })
+    useSessionStore.getState().updateSet(0, 0, { done: true, weight: 60 })
+    const saved = useSessionStore.getState().finish()!
+    const data = { ...backup(), history: [saved] }
+    const parsed = await readBackup(new File([JSON.stringify(data)], "resume.json"))
+    useSessionStore.setState({ history: [] })
+    mergeBackup(parsed)
+    expect(useSessionStore.getState().resume(saved.id)).toBe(true)
+    expect(useSessionStore.getState().active!.exercises[0].sets.map((set) => set.done)).toEqual([true, false])
+    expect(useSessionStore.getState().active!.exercises[0].note).toBe("Pause")
+    const invalid = { ...data, history: [{ ...saved, unfinishedPlan: [{ ...saved.unfinishedPlan![0], sets: null }] }] }
+    await expect(readBackup(new File([JSON.stringify(invalid)], "bad-plan.json"))).rejects.toThrow()
+  })
 })
 
 describe("offline image queue", () => {
