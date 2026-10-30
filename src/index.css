@@ -156,6 +156,20 @@ html.dark[data-accent] {
   }
 }
 
+/* Match the standalone status-bar backdrop and header with one solid page color.
+ * The wash remains visible in the content, while the tab bar keeps its chrome color. */
+@media (display-mode: standalone) {
+  html,
+  body {
+    background-color: var(--page);
+  }
+  .page-header::before {
+    background-color: var(--page);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 /*
  * Filled controls get a soft top-lit sheen instead of a flat fill. Unlayered, so it adds to the
  * Tailwind color utilities; the overlay is neutral, so it works on any custom accent too.

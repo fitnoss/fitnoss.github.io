@@ -44,7 +44,7 @@ export function PageHeader({ title, back, actions, children, className }: Props)
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 transform-gpu pt-safe",
+        "page-header sticky top-0 z-30 transform-gpu pt-safe",
         "before:absolute before:-top-24 before:bottom-0 before:left-1/2 before:-z-10 before:-ml-[50vw] before:w-screen before:transition-colors before:duration-200",
         scrolled ? "before:bg-page/80 before:backdrop-blur-xl" : "before:bg-transparent",
         className,

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="description" content="fitnoss — каталог упражнений, конструктор программ и дневник тренировок. Работает офлайн." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
@@ -16,6 +16,8 @@
         var t = localStorage.getItem("fitnoss:theme") || "system";
         if (t === "dark" || (t === "system" && matchMedia("(prefers-color-scheme: dark)").matches))
           document.documentElement.classList.add("dark");
+        document.querySelector('meta[name="theme-color"]').setAttribute("content",
+          document.documentElement.classList.contains("dark") ? "#000000" : "#ffffff");
         // Custom accent before first paint; the text color on it is recomputed once the app loads.
         var a = localStorage.getItem("fitnoss:accent");
         if (a) {
