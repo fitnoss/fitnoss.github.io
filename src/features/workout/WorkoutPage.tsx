@@ -10,6 +10,7 @@ import { Chip } from "@/shared/ui/chip"
 import { Menu, MenuItem } from "@/shared/ui/menu"
 import { Panel, Section } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
+import { cn } from "@/shared/lib/utils"
 import { useSettings } from "@/shared/storage/settings"
 import { useProgramStore } from "@/entities/program/store"
 import { groups } from "@/entities/program/types"
@@ -95,6 +96,7 @@ function ActiveWorkout({ session }: { session: Session }) {
   const [pickerOpen, setPickerOpen] = useState(false)
   const elapsed = useElapsed(session.startedAt)
   const view = useSettings((s) => s.workoutView)
+  const hasRest = useSessionStore((s) => !!s.rest)
   const setSettings = useSettings((s) => s.set)
   const carousel = useCarousel(session.exercises)
   useWakeLock(true)
@@ -160,7 +162,7 @@ function ActiveWorkout({ session }: { session: Session }) {
       {view === "cards" ? (
         <CardsView session={session} carousel={carousel} onAdd={() => setPickerOpen(true)} />
       ) : (
-        <div className="space-y-2 px-4 pt-3 pb-36">
+        <div className={cn("space-y-2 px-4 pt-3", hasRest ? "pb-24" : "pb-8")}>
           {groups(session.exercises).map((g) => {
             const cards = g.map((i) => {
               const e = session.exercises[i]

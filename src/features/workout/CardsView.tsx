@@ -79,6 +79,7 @@ export function CardsView({ session, carousel, onAdd }: { session: Session; caro
   const { t } = useTranslation()
   const { byCode, text } = useExercises()
   const exercises = session.exercises
+  const hasRest = useSessionStore((s) => !!s.rest)
   const labels = itemLabels(exercises)
   const grouped = groups(exercises)
 
@@ -115,13 +116,13 @@ export function CardsView({ session, carousel, onAdd }: { session: Session; caro
     </button>
   )
 
-  if (!exercises.length) return <div className="px-4 pt-3 pb-36">{addButton}</div>
+  if (!exercises.length) return <div className={cn("px-4 pt-3", hasRest ? "pb-24" : "pb-8")}>{addButton}</div>
 
   return (
     <div
       ref={carousel.ref}
       onScroll={carousel.onScroll}
-      className="no-scrollbar flex snap-x snap-mandatory items-start overflow-x-auto overscroll-x-contain pt-2 pb-36"
+      className={cn("no-scrollbar flex snap-x snap-mandatory items-start overflow-x-auto overscroll-x-contain pt-2", hasRest ? "pb-24" : "pb-8")}
     >
       {exercises.map((e, i) => {
         const next = exercises[i + 1]

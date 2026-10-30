@@ -30,7 +30,8 @@ function useScrolled() {
 /**
  * Sticky page header, see-through at the top so the wash shows, frosted once content scrolls under it.
  * The frosted backdrop is a full-viewport-wide strip behind the centered column (the page clips it
- * horizontally), so on wide screens it doesn't read as a box. Top-level pages (no back button) get a
+ * horizontally), so on wide screens it doesn't read as a box. It also bleeds upward off-screen, so a
+ * frame of lag while the mobile viewport settles never shows content above the header. Top-level pages (no back button) get a
  * large title, nested pages a compact one next to the back arrow.
  */
 export function PageHeader({ title, back, actions, children, className }: Props) {
@@ -43,8 +44,8 @@ export function PageHeader({ title, back, actions, children, className }: Props)
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 pt-safe",
-        "before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:-ml-[50vw] before:w-screen before:transition-colors before:duration-200",
+        "sticky top-0 z-30 transform-gpu pt-safe",
+        "before:absolute before:-top-24 before:bottom-0 before:left-1/2 before:-z-10 before:-ml-[50vw] before:w-screen before:transition-colors before:duration-200",
         scrolled ? "before:bg-page/80 before:backdrop-blur-xl" : "before:bg-transparent",
         className,
       )}
