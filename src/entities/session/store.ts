@@ -4,6 +4,7 @@ import { uid } from "@/shared/lib/id"
 import { useSettings } from "@/shared/storage/settings"
 import { DEFAULT_SCHEME, moveItem, removeItem, restAfter, targetReps, withLink, type ProgramDay, type ProgramItem } from "@/entities/program/types"
 import { progression } from "./progression"
+import { replaceRemaining } from "./replacement"
 
 export type SetLog = {
   reps?: number
@@ -43,6 +44,7 @@ type State = {
   start: (opts: { title: string; programId?: string; day?: number; plan?: ProgramDay }) => void
   addExercise: (ex: number) => void
   removeExercise: (i: number) => void
+  replaceExercise: (i: number, ex: number) => void
   moveExercise: (i: number, dir: -1 | 1) => void
   setRest: (i: number, seconds: number) => void
   /** Links exercise i to the previous one as a superset, or unlinks it. */
@@ -122,6 +124,10 @@ export const useSessionStore = create<State>()(
             ],
           })),
         removeExercise: (i) => edit((s) => ({ ...s, exercises: removeItem(s.exercises, i) })),
+        replaceExercise: (i, ex) => edit((s) => ({
+          ...s,
+          exercises: s.exercises.flatMap((e, k) => k === i ? replaceRemaining(e, ex, lastSets(get().history, ex)) : [e]),
+        })),
         moveExercise: (i, dir) => edit((s) => ({ ...s, exercises: moveItem(s.exercises, i, dir) })),
         setRest: (i, rest) => editEx(i, (e) => ({ ...e, rest })),
         toggleSuperset: (i) => i > 0 && editEx(i, (e) => withLink(e, e.superset ? undefined : true)),

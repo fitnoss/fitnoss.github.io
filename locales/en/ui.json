@@ -225,6 +225,10 @@
     "brokenHint": "It may have been cut off by a messenger. Ask for the link again or use the QR code."
   },
   "workout": {
+    "replaceExercise": "Replace exercise",
+    "replaceHint": "For the remaining sets in this workout. Completed sets stay with the original exercise. Weight comes from the selected exercise’s history; otherwise, enter it again.",
+    "availableEquipment": "Available equipment",
+    "noReplacement": "No matching alternatives. Select other available equipment or change your search.",
     "changeRest": "Change rest",
     "noRest": "No rest",
     "title": "Workout",

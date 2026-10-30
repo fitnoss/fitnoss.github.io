@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router"
-import { ArrowDown, ArrowUp, Check, Clock, Flame, Link2, Minus, Plus, Trash2, TrendingDown, TrendingUp, Unlink2, X } from "lucide-react"
+import { ArrowDown, ArrowLeftRight, ArrowUp, Check, Clock, Flame, Link2, Minus, Plus, Trash2, TrendingDown, TrendingUp, Unlink2, X } from "lucide-react"
 import { CongratsCat } from "@/shared/components/CongratsCat"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { RestInput } from "@/shared/components/RestInput"
@@ -19,6 +19,7 @@ import { useSessionStore, type SessionExercise } from "@/entities/session/store"
 import { warmupGear, warmupSets } from "@/entities/session/warmup"
 import { formatDuration, formatRepsLabel } from "@/features/programs/format"
 import { primeAudio } from "./RestTimerBar"
+import { ReplaceExerciseSheet } from "./ReplaceExerciseSheet"
 
 type Props = {
   e: SessionExercise
@@ -37,9 +38,10 @@ type Props = {
 export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSetDone }: Props) {
   const { t } = useTranslation()
   const { byCode, text } = useExercises()
-  const { updateSet, toggleSet, addSet, removeSet, removeExercise, moveExercise, setRest, toggleSuperset, setWarmup } = useSessionStore()
+  const { updateSet, toggleSet, addSet, removeSet, removeExercise, replaceExercise, moveExercise, setRest, toggleSuperset, setWarmup } = useSessionStore()
   const { barWeight, plates } = useSettings()
   const [restOpen, setRestOpen] = useState(false)
+  const [replaceOpen, setReplaceOpen] = useState(false)
   const ex = byCode.get(e.ex)
   const reps = parseReps(e.reps)
   const timed = reps.kind === "time"
@@ -99,6 +101,11 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
           </div>
         </div>
         <Menu size="icon-sm">
+          {ex && e.sets.some((s) => !s.done && !s.warmup) && (
+            <MenuItem onClick={() => setReplaceOpen(true)}>
+              <ArrowLeftRight /> {t("workout.replaceExercise")}
+            </MenuItem>
+          )}
           {i > 0 && (
             <MenuItem onClick={() => moveExercise(i, -1)}>
               <ArrowUp /> {t("workout.moveUp")}
@@ -171,6 +178,12 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
           </Button>
         )}
       </div>
+      {replaceOpen && ex && (
+        <ReplaceExerciseSheet source={ex} onClose={() => setReplaceOpen(false)} onPick={(code) => {
+          setReplaceOpen(false)
+          replaceExercise(i, code)
+        }} />
+      )}
     </Panel>
   )
 }
