@@ -108,7 +108,7 @@ export default function VideoReviewPage() {
                     <div className="flex gap-1">
                       <Input
                         placeholder="start s"
-                        className="h-8 text-xs"
+                        className="h-8 text-base"
                         inputMode="numeric"
                         defaultValue={picked ? (merged[ex.s]?.start ?? "") : ""}
                         onBlur={(e) =>

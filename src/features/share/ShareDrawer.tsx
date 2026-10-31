@@ -83,7 +83,7 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
     >
       <p className="text-muted text-sm">{t("share.copyHint")}</p>
       {message && <p role={manual ? "alert" : "status"} className={manual ? "text-danger text-sm" : "text-muted text-sm"}>{message}</p>}
-      {manual && <label className="block text-sm">{t("share.manualCopy")}<textarea readOnly value={manual} onFocus={(e) => e.target.select()} className="bg-surface mt-2 min-h-28 w-full rounded-xl p-3 text-sm" /></label>}
+      {manual && <label className="block text-sm">{t("share.manualCopy")}<textarea readOnly value={manual} onFocus={(e) => e.target.select()} className="bg-surface mt-2 min-h-28 w-full rounded-xl p-3 text-base" /></label>}
       <div className="mx-auto flex size-56 items-center justify-center overflow-hidden rounded-2xl bg-white p-1">
         {url && <QrCode value={url} className="size-full" />}
       </div>

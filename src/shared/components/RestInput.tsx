@@ -40,7 +40,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
         {t("workout.noRest")}
       </Chip>
       <label className={cn(
-        "bg-surface rounded-control hover:bg-surface-hover focus-within:bg-page flex h-11 w-[5.5rem] items-center gap-1 px-3.5 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]",
+        "bg-surface rounded-control hover:bg-surface-hover focus-within:bg-page flex h-11 w-[6.5rem] items-center gap-1 px-3.5 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]",
         value > 0 ? "shadow-[inset_0_0_0_1.5px_var(--fg)]" : "hairline",
       )}>
         <input
@@ -49,7 +49,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
           autoFocus={autoFocus}
           value={text}
           aria-label={t("workout.rest")}
-          className="placeholder:text-muted/60 h-5 min-w-0 flex-1 bg-transparent p-0 text-left text-sm leading-5 font-medium tabular-nums outline-none"
+          className="placeholder:text-muted/60 h-5 min-w-0 flex-1 bg-transparent p-0 text-left text-base leading-5 font-medium tabular-nums outline-none"
           onChange={(e) => {
             const digits = e.target.value.replace(/\D/g, "").replace(/^0+/, "").slice(0, String(max).length)
             const n = Math.min(max, Number(digits) || 0)

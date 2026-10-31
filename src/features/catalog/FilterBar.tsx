@@ -29,7 +29,7 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
             value={filters.q}
             onChange={(e) => onChange({ ...filters, q: e.target.value })}
             placeholder={t("catalog.search")}
-            className="size-full min-w-0 bg-transparent pr-10 pl-10 text-base outline-none md:text-[15px]"
+            className="size-full min-w-0 bg-transparent pr-10 pl-10 text-base outline-none"
             type="search"
             enterKeyHint="search"
           />

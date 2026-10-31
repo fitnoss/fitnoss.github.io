@@ -1,11 +1,12 @@
 import type { ComponentProps, ReactNode } from "react"
 import { cn } from "@/shared/lib/utils"
 
+// Keep text fields at least 16px to prevent iOS from zooming the viewport on focus.
 export function Input({ className, ...props }: ComponentProps<"input">) {
   return (
     <input
       className={cn(
-        "bg-surface hairline rounded-control h-11 w-full min-w-0 px-3 text-base outline-none transition-colors md:text-[15px]",
+        "bg-surface hairline rounded-control h-11 w-full min-w-0 px-3 text-base outline-none transition-colors",
         "hover:bg-surface-hover focus:bg-page focus:shadow-[inset_0_0_0_1.5px_var(--fg)]",
         className,
       )}

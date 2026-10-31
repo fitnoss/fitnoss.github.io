@@ -100,7 +100,7 @@ export function JournalPage() {
 
         <div className="space-y-3">
           {tab === "exercises" ? <div className="space-y-3">
-            <input type="search" aria-label={t("catalog.search")} placeholder={t("catalog.search")} value={query} onChange={(e) => setQuery(e.target.value)} className="bg-surface hairline h-11 w-full rounded-xl px-3" />
+            <input type="search" aria-label={t("catalog.search")} placeholder={t("catalog.search")} value={query} onChange={(e) => setQuery(e.target.value)} className="bg-surface hairline h-11 w-full rounded-xl px-3 text-base" />
             <PaginatedList key={`exercises-${query}`} items={mine.filter(([code]) => text(byCode.get(code)).name.toLowerCase().includes(query.toLowerCase()))}>
               {([code, result]) => <Link key={code} to={"/progress/ex/" + code} className="hover:bg-surface-hover flex items-center gap-3 p-4"><div className="min-w-0 flex-1"><div className="text-sm font-medium">{text(byCode.get(code)).name}</div><div className="text-muted text-xs">{result.weight !== undefined ? t("units.kg", { n: result.weight }) + " × " : ""}{result.reps ?? "—"} {t(result.timed ? "workout.seconds" : "workout.reps")} · {fmtDate.format(result.at)}</div></div><ChevronRight className="size-4" /></Link>}
             </PaginatedList>
