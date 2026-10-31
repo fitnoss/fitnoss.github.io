@@ -111,13 +111,7 @@ function ActiveWorkout({ session }: { session: Session }) {
           </>
         }
       >
-        {view === "cards" ? (
-          <CardsPager session={session} carousel={carousel} />
-        ) : (
-          <div className="bg-surface h-0.5">
-            <div className="bg-accent h-full transition-[width] duration-300" style={{ width: `${totalSets ? (doneSets / totalSets) * 100 : 0}%` }} />
-          </div>
-        )}
+        {view === "cards" && <CardsPager session={session} carousel={carousel} />}
       </PageHeader>
       {showHint && <div className="mx-4 mt-3 flex items-center gap-2 rounded-xl bg-surface p-3"><p className="flex-1 text-xs text-muted">{t("workout.setDetailsHint")}</p><Button variant="ghost" size="icon" aria-label={t("common.close")} onClick={() => { localStorage.setItem("fitnoss:set-details-seen", "1"); setShowHint(false) }}><X className="size-4" /></Button></div>}
       {view === "cards" ? (
