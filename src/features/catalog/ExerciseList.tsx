@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react"
+import { memo, useCallback, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react"
 import { useTranslation } from "react-i18next"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import { Check, Info } from "lucide-react"
@@ -12,20 +12,20 @@ const ROW = 80
 
 type RowProps = {
   ex: Exercise
-  text: ExerciseName
+  name: string
   selected?: boolean
-  onClick: () => void
+  onSelect: (ex: Exercise) => void
   trailing?: ReactNode
-  onPreview?: () => void
+  onPreview?: (ex: Exercise) => void
 }
 
-export function ExerciseRow({ ex, text, selected, onClick, trailing, onPreview }: RowProps) {
+export const ExerciseRow = memo(function ExerciseRow({ ex, name, selected, onSelect, trailing, onPreview }: RowProps) {
   const { t } = useTranslation()
   return (
     <div className="flex items-center" style={{ height: ROW - 4 }}>
     <button
       type="button"
-      onClick={onClick}
+      onClick={() => onSelect(ex)}
       aria-pressed={selected}
       className={cn(
         "rounded-control hover:bg-surface active:bg-surface-hover flex h-full min-w-0 flex-1 items-center gap-3 px-2 text-left transition-colors",
@@ -41,18 +41,18 @@ export function ExerciseRow({ ex, text, selected, onClick, trailing, onPreview }
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="line-clamp-2 text-[15px] leading-snug font-medium">{text.name}</div>
+        <div className="line-clamp-2 text-[15px] leading-snug font-medium">{name}</div>
         <div className="text-muted mt-0.5 truncate text-[13px]">
           {ex.pm.map((m) => t(`muscle.${key(m)}`)).join(", ")} · {t(`equipment.${ex.eq}`)}
         </div>
       </div>
       {trailing}
     </button>
-    {onPreview && <Button variant="ghost" size="icon" onClick={onPreview}
-      aria-label={`${t("exercise.technique")}: ${text.name}`}><Info className="size-5" /></Button>}
+    {onPreview && <Button variant="ghost" size="icon" onClick={() => onPreview(ex)}
+      aria-label={`${t("exercise.technique")}: ${name}`}><Info className="size-5" /></Button>}
     </div>
   )
-}
+})
 
 type ListProps = {
   items: Exercise[]
@@ -73,8 +73,10 @@ export function ExerciseList(props: ListProps) {
 /** The list further down the page: rows are offset by everything above it in the page scroller. */
 function PageList({ items, text, onSelect, isSelected, onPreview }: ListProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const getItemKey = useCallback((index: number) => items[index].c, [items])
   const v = useVirtualizer({
     count: items.length,
+    getItemKey,
     estimateSize: () => ROW,
     overscan: 6,
     getScrollElement: scroller,
@@ -90,8 +92,7 @@ function PageList({ items, text, onSelect, isSelected, onPreview }: ListProps) {
             className="absolute inset-x-2"
             style={{ transform: `translateY(${row.start - v.options.scrollMargin}px)` }}
           >
-            <ExerciseRow ex={ex} text={text(ex)} selected={isSelected?.(ex)} onClick={() => onSelect(ex)}
-              onPreview={onPreview ? () => onPreview(ex) : undefined} />
+            <ExerciseRow ex={ex} name={text(ex).name} selected={isSelected?.(ex)} onSelect={onSelect} onPreview={onPreview} />
           </div>
         )
       })}
@@ -100,6 +101,7 @@ function PageList({ items, text, onSelect, isSelected, onPreview }: ListProps) {
 }
 
 function ElementList({ items, text, onSelect, isSelected, scrollRef, onPreview, header }: ListProps & { scrollRef: RefObject<HTMLElement | null> }) {
+  const getItemKey = useCallback((index: number) => items[index].c, [items])
   const headerRef = useRef<HTMLDivElement>(null)
   const [scrollMargin, setScrollMargin] = useState(0)
   useLayoutEffect(() => {
@@ -113,6 +115,7 @@ function ElementList({ items, text, onSelect, isSelected, scrollRef, onPreview, 
   }, [])
   const v = useVirtualizer({
     count: items.length,
+    getItemKey,
     estimateSize: () => ROW,
     overscan: 6,
     getScrollElement: () => scrollRef.current,
@@ -126,8 +129,7 @@ function ElementList({ items, text, onSelect, isSelected, scrollRef, onPreview, 
           const ex = items[row.index]
           return (
             <div key={ex.c} className="absolute inset-x-0" style={{ transform: `translateY(${row.start - scrollMargin}px)` }}>
-              <ExerciseRow ex={ex} text={text(ex)} selected={isSelected?.(ex)} onClick={() => onSelect(ex)}
-                onPreview={onPreview ? () => onPreview(ex) : undefined} />
+              <ExerciseRow ex={ex} name={text(ex).name} selected={isSelected?.(ex)} onSelect={onSelect} onPreview={onPreview} />
             </div>
           )
         })}

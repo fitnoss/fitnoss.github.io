@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from "react"
+import { memo, useCallback, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { MUSCLES, key, type Exercise } from "@/entities/exercise/types"
 import type { Session } from "@/entities/session/store"
@@ -13,6 +13,7 @@ export const WeeklyMuscleMap = memo(function WeeklyMuscleMap({ history, exercise
   const now = Date.now()
   const { start, end } = calendarWeek(now)
   const volume = useMemo(() => weeklyMuscleVolume(history, exercises, Date.now()), [history, exercises, start])
+  const colorFor = useCallback((muscle: string) => muscleColor(volume[muscle]?.primary ?? 0), [volume])
   const date = new Intl.DateTimeFormat(i18n.language, { day: "numeric", month: "short" })
   const hasSets = Object.values(volume).some((v) => v.primary || v.secondary)
   return (
@@ -21,7 +22,7 @@ export const WeeklyMuscleMap = memo(function WeeklyMuscleMap({ history, exercise
         <h2 className="font-semibold">{t("muscleMap.title")}</h2>
         <p className="text-muted text-xs">{date.format(start)} – {date.format(end - 1)}</p>
       </div>
-      <MuscleMap colorFor={(muscle) => muscleColor(volume[muscle]?.primary ?? 0)} selected={selected} onSelect={setSelected} />
+      <MuscleMap colorFor={colorFor} selected={selected} onSelect={setSelected} />
       <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs text-muted" aria-label={t("muscleMap.legend")}>
         {[0, 1, 5, 10].map((sets, i) => (
           <span key={sets} className="flex items-center gap-1.5">

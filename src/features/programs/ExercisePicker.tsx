@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from "react"
+import { useCallback, useDeferredValue, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Chip } from "@/shared/ui/chip"
 import { Empty } from "@/shared/ui/panel"
@@ -30,7 +30,8 @@ function OpenExercisePicker({ onOpenChange, onPick }: Omit<Props, "open">) {
   const [selected, setSelected] = useState<number[]>([])
   const [showSelected, setShowSelected] = useState(false)
   const [preview, setPreview] = useState<Exercise | null>(null)
-  const toggle = (code: number) => setSelected((current) => current.includes(code) ? current.filter((item) => item !== code) : [...current, code])
+  const toggle = useCallback((code: number) => setSelected((current) => current.includes(code) ? current.filter((item) => item !== code) : [...current, code]), [])
+  const select = useCallback((ex: Exercise) => toggle(ex.c), [toggle])
   const index = useSearchIndex(list, text, en, lang)
   const deferred = useDeferredValue(filters)
   const items = useMemo(() => applyFilters(list, deferred, index, favorites), [list, deferred, index, favorites])
@@ -72,7 +73,7 @@ function OpenExercisePicker({ onOpenChange, onPick }: Omit<Props, "open">) {
             text={text}
             scrollRef={scrollRef}
             isSelected={(ex) => selected.includes(ex.c)}
-            onSelect={(ex) => toggle(ex.c)}
+            onSelect={select}
             onPreview={setPreview}
           />
         )}

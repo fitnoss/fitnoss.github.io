@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo } from "react"
+import { useCallback, useDeferredValue, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import { SearchX } from "lucide-react"
@@ -6,6 +6,7 @@ import { PageHeader } from "@/shared/components/PageHeader"
 import { Button } from "@/shared/ui/button"
 import { Empty } from "@/shared/ui/panel"
 import { useExercises, useFavorites } from "@/entities/exercise/store"
+import type { Exercise } from "@/entities/exercise/types"
 import { ExerciseList } from "./ExerciseList"
 import { FilterBar } from "./FilterBar"
 import { EMPTY_FILTERS, applyFilters, useSearchIndex, useUrlFilters } from "./filters"
@@ -13,6 +14,7 @@ import { EMPTY_FILTERS, applyFilters, useSearchIndex, useUrlFilters } from "./fi
 export function CatalogPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const select = useCallback((ex: Exercise) => navigate(`/ex/${ex.s}`), [navigate])
   const { list, ready, text, en, lang } = useExercises()
   const favorites = useFavorites((s) => s.codes)
   const [filters, setFilters] = useUrlFilters()
@@ -43,7 +45,7 @@ export function CatalogPage() {
       ) : items.length === 0 ? (
         <Empty icon={<SearchX />} title={t("catalog.empty")}><Button onClick={() => setFilters(EMPTY_FILTERS)}>{t("common.reset")}</Button></Empty>
       ) : (
-        <ExerciseList items={items} text={text} onSelect={(ex) => navigate(`/ex/${ex.s}`)} />
+        <ExerciseList items={items} text={text} onSelect={select} />
       )}
     </>
   )

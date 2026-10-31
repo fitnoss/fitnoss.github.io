@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { useTranslation } from "react-i18next"
 import { key } from "@/entities/exercise/types"
 import { front, back } from "./muscle-map-data"
@@ -8,7 +9,7 @@ export function muscleColor(sets: number) {
     : `color-mix(in oklab, var(--accent) ${sets < 5 ? 40 : sets < 10 ? 70 : 100}%, var(--surface))`
 }
 
-export function MuscleMap({ colorFor, selected, onSelect }: {
+export const MuscleMap = memo(function MuscleMap({ colorFor, selected, onSelect }: {
   colorFor: (muscle: string) => string
   selected?: string
   onSelect?: (muscle: string) => void
@@ -39,4 +40,4 @@ export function MuscleMap({ colorFor, selected, onSelect }: {
       ))}
     </div>
   )
-}
+})

@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from "react"
+import { useCallback, useDeferredValue, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useExercises } from "@/entities/exercise/store"
 import { EQUIPMENT, exerciseEquipment, key, type Exercise } from "@/entities/exercise/types"
@@ -15,6 +15,7 @@ export function ReplaceExerciseSheet({ source, onClose, onPick }: {
   onPick: (code: number) => void
 }) {
   const { t } = useTranslation()
+  const select = useCallback((ex: Exercise) => onPick(ex.c), [onPick])
   const { list, text, en, lang } = useExercises()
   const [equipment, setEquipment] = useState(exerciseEquipment(source))
   const [query, setQuery] = useState("")
@@ -36,7 +37,7 @@ export function ReplaceExerciseSheet({ source, onClose, onPick }: {
       bodyClassName="px-2 pb-0"
       bodyRef={setScrollEl}
     >
-      {scrollEl && <ExerciseList items={items} text={text} scrollRef={scrollRef} onSelect={(ex) => onPick(ex.c)} header={
+      {scrollEl && <ExerciseList items={items} text={text} scrollRef={scrollRef} onSelect={select} header={
         <div className="space-y-3 px-2 pb-3">
           <p className="text-muted text-sm">{text(source).name} · {source.pm.map((m) => t(`muscle.${key(m)}`)).join(", ")}</p>
           <fieldset>

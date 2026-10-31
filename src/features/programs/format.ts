@@ -33,11 +33,23 @@ export function formatScheme(t: TFunction, it: Pick<ProgramItem, "sets" | "reps"
   return parts.join(" · ")
 }
 
+const weekdayLabels = new Map<string, string[]>()
+
 /** Weekday in the UI language, 0 = Monday: "Пн" / "Mon", "понедельник" / "Monday", "П" / "M". */
 export function weekdayName(wd: number, style: "narrow" | "short" | "long" = "short") {
-  // 1 Jan 2024 was a Monday.
-  const name = new Intl.DateTimeFormat(i18n.resolvedLanguage ?? "en", { weekday: style }).format(new Date(2024, 0, 1 + wd))
-  return style === "long" ? name : name.charAt(0).toUpperCase() + name.slice(1)
+  const lang = i18n.resolvedLanguage ?? "en"
+  const cacheKey = `${lang}:${style}`
+  let labels = weekdayLabels.get(cacheKey)
+  if (!labels) {
+    const formatter = new Intl.DateTimeFormat(lang, { weekday: style })
+    // 1 Jan 2024 was a Monday. Cache the seven labels as well as avoiding repeated formatters.
+    labels = Array.from({ length: 7 }, (_, day) => {
+      const name = formatter.format(new Date(2024, 0, 1 + day))
+      return style === "long" ? name : name.charAt(0).toUpperCase() + name.slice(1)
+    })
+    weekdayLabels.set(cacheKey, labels)
+  }
+  return labels[wd]
 }
 
 export function formatWeekdays(weekdays: number[] | undefined) {

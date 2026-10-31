@@ -1,3 +1,4 @@
+import { memo, useCallback, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { key, type Exercise } from "@/entities/exercise/types"
 import { MuscleMap, muscleColor } from "@/shared/components/MuscleMap"
@@ -6,14 +7,15 @@ const PRIMARY = "#3b82f6"
 const SECONDARY = "#f59e0b"
 
 /** Same catalogue muscle roles drive both the silhouettes and the text legend. */
-export function ExerciseMuscles({ exercise }: { exercise: Pick<Exercise, "pm" | "sm"> }) {
+export const ExerciseMuscles = memo(function ExerciseMuscles({ exercise }: { exercise: Pick<Exercise, "pm" | "sm"> }) {
   const { t } = useTranslation()
-  const primary = [...new Set(exercise.pm)]
-  const secondary = [...new Set(exercise.sm)].filter((muscle) => !primary.includes(muscle))
+  const primary = useMemo(() => [...new Set(exercise.pm)], [exercise.pm])
+  const secondary = useMemo(() => [...new Set(exercise.sm)].filter((muscle) => !primary.includes(muscle)), [exercise.sm, primary])
+  const colorFor = useCallback((muscle: string) => primary.includes(muscle) ? PRIMARY : secondary.includes(muscle) ? SECONDARY : muscleColor(0), [primary, secondary])
   if (!primary.length && !secondary.length) return null
   return (
     <div className="space-y-4">
-      <MuscleMap colorFor={(muscle) => primary.includes(muscle) ? PRIMARY : secondary.includes(muscle) ? SECONDARY : muscleColor(0)} />
+      <MuscleMap colorFor={colorFor} />
       <dl className="grid grid-cols-2 gap-4 text-sm">
         {[
           { muscles: primary, color: PRIMARY, title: t("exercise.primaryMuscles") },
@@ -30,4 +32,4 @@ export function ExerciseMuscles({ exercise }: { exercise: Pick<Exercise, "pm" | 
       </dl>
     </div>
   )
-}
+})
