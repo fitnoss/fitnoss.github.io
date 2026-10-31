@@ -22,9 +22,9 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
   const { t } = useTranslation()
   const [text, setText] = useState(value ? String(value) : "")
 
-  // Follow outside changes (e.g. "No rest") without clobbering what's being typed.
+  // Keep the entered duration visible when "No rest" disables the timer.
   useEffect(() => {
-    if (snap(Number(text) || 0) !== value) setText(value ? String(value) : "")
+    if (value > 0 && snap(Number(text) || 0) !== value) setText(String(value))
   }, [value])
 
   return (
@@ -56,7 +56,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
             setText(n ? String(n) : "")
             onChange(snap(n))
           }}
-          onBlur={() => setText(value ? String(value) : "")}
+          onBlur={() => { if (value > 0) setText(String(value)) }}
           onKeyDown={(e) => {
             if (e.key !== "Enter") return
             e.currentTarget.blur()
