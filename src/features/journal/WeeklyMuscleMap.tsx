@@ -32,7 +32,7 @@ export const WeeklyMuscleMap = memo(function WeeklyMuscleMap({ history, exercise
         ))}
       </div>
       <div className="text-sm">
-        <span className="mb-1.5 flex items-center gap-2 text-muted"><span className="size-3 rounded-sm bg-blue-500" aria-hidden="true" />{t("muscleMap.choose")}</span>
+        <span className="mb-1.5 flex items-center gap-2 text-muted"><span className="size-3 rounded-sm border-[1.5px] border-blue-500 shadow-[0_0_4px_rgb(59_130_246_/_0.6)]" aria-hidden="true" />{t("muscleMap.choose")}</span>
         <Select label={t("muscleMap.choose")} value={selected} onChange={setSelected}
           options={MUSCLES.map((muscle) => ({ value: muscle, label: t(`muscle.${key(muscle)}`) }))} />
       </div>
