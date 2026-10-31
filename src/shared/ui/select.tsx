@@ -140,11 +140,11 @@ export function Select<T extends string>({ value, onChange, options, label, disa
       <div ref={popup} id={id} popover="auto" role="listbox" aria-label={label}
         onToggle={(event) => { if (event.newState === "closed") setOpen(false) }}
         onMouseDown={(event) => event.preventDefault()}
-        className="bg-page hairline rounded-control fixed inset-auto m-0 overflow-y-auto overscroll-contain border-0 p-1 text-fg shadow-xl shadow-black/15 [animation:toast-in_.12s]">
+        className="bg-page dark:bg-elevated hairline rounded-control fixed inset-auto m-0 overflow-y-auto overscroll-contain border-0 p-1 text-fg shadow-xl shadow-black/15 dark:shadow-black/30 [animation:toast-in_.12s]">
         {options.map((option, index) => (
           <div key={option.value} id={`${id}-${index}`} role="option" aria-selected={option.value === value}
             onPointerMove={() => setActive(index)} onClick={(event) => { event.preventDefault(); choose(index) }}
-            className={cn("flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm", index === active && "bg-surface-hover", option.value === value && "font-semibold")}>
+            className={cn("flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm", index === active && "bg-surface-hover dark:bg-white/8", option.value === value && "font-semibold")}>
             <span className="min-w-0 flex-1">{option.label}</span>
             {option.value === value && <Check aria-hidden="true" className="size-4 shrink-0" />}
           </div>

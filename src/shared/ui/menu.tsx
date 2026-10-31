@@ -43,7 +43,7 @@ export function Menu({ children, size = "icon", label }: Props) {
             const next = e.key === "ArrowDown" ? (i + 1) % items.length : e.key === "ArrowUp" ? (i - 1 + items.length) % items.length : e.key === "Home" ? 0 : e.key === "End" ? items.length - 1 : undefined
             if (next !== undefined) { e.preventDefault(); items[next]?.focus() }
           }}
-          className="bg-page hairline rounded-control absolute top-full right-0 z-50 mt-1 min-w-48 p-1 shadow-xl shadow-black/10 [animation:toast-in_.12s]"
+          className="bg-page dark:bg-elevated hairline rounded-control absolute top-full right-0 z-50 mt-1 min-w-48 p-1 shadow-xl shadow-black/10 dark:shadow-black/30 [animation:toast-in_.12s]"
           onClick={() => { setOpen(false); ref.current?.querySelector<HTMLButtonElement>("button")?.focus() }}
         >
           {children}
@@ -59,7 +59,7 @@ export function MenuItem({ danger, className, ...props }: React.ComponentProps<"
       type="button"
       role="menuitem"
       className={cn(
-        "hover:bg-surface-hover flex min-h-11 w-full items-center gap-2.5 rounded-lg px-3 text-left text-sm font-medium whitespace-nowrap [&_svg]:size-4",
+        "hover:bg-surface-hover dark:hover:bg-white/8 flex min-h-11 w-full items-center gap-2.5 rounded-lg px-3 text-left text-sm font-medium whitespace-nowrap [&_svg]:size-4",
         danger && "text-danger",
         className,
       )}
