@@ -32,6 +32,7 @@ import { DAY_NAMES } from "@/features/share/codec/fitpack"
 import { ShareDrawer } from "@/features/share/ShareDrawer"
 import { ExercisePicker } from "./ExercisePicker"
 import { ItemEditor } from "./ItemEditor"
+import { ProgramVolume } from "./ProgramVolume"
 import { useStartDay } from "@/features/workout/useStartDay"
 import { dayName, formatScheme, formatWeekdays, weekdayName } from "./format"
 
@@ -230,6 +231,7 @@ function ProgramEditor({ id }: { id: string }) {
         >
           <Plus className="size-5" /> {t("programs.addExercises")}
         </button>}
+        <ProgramVolume program={program} />
       </div>
 
       <ExercisePicker

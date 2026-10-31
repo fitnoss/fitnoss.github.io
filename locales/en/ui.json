@@ -521,6 +521,15 @@
     "setsCount_one": "{{count}} set",
     "setsCount_other": "{{count}} sets"
   },
+  "programVolume": {
+    "weekly": "Sets per muscle · week",
+    "cycle": "Sets per muscle · cycle",
+    "covered": "Muscle groups covered: {{count}} of {{total}}",
+    "weeklyHint": "Planned sets across the whole program, including each scheduled weekday. Direct and indirect work are counted separately; warmups are excluded.",
+    "cycleHint": "One pass through every program day. To calculate weekly volume, assign weekdays to every day with exercises. Direct and indirect work are counted separately; warmups are excluded.",
+    "uncovered": "No planned sets",
+    "missing": "Exercises missing from the catalogue: {{count}}. Their sets are not included."
+  },
   "muscleMap": {
     "title": "Muscles this week",
     "front": "Front",
