@@ -46,7 +46,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
           autoFocus={autoFocus}
           value={text}
           aria-label={t("workout.rest")}
-          className="placeholder:text-muted/60 min-w-0 flex-1 bg-transparent text-left text-base font-semibold tabular-nums outline-none md:text-[15px]"
+          className="placeholder:text-muted/60 h-5 min-w-0 flex-1 bg-transparent p-0 text-left text-sm leading-5 font-medium tabular-nums outline-none"
           onChange={(e) => {
             const digits = e.target.value.replace(/\D/g, "").replace(/^0+/, "").slice(0, String(max).length)
             const n = Math.min(max, Number(digits) || 0)
@@ -60,7 +60,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
             onDone?.()
           }}
         />
-        <span className="text-muted shrink-0 text-[13px] font-medium">{t("workout.seconds")}</span>
+        <span className="text-muted shrink-0 text-sm leading-5 font-medium">{t("workout.seconds")}</span>
       </label>
     </div>
   )
