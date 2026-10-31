@@ -324,14 +324,11 @@ function ItemCard({
             <ItemEditor item={item} onChange={onChange} inSuperset={inSuperset} />
           </div>
           {(linkUp || linkDown) && (
-            <div className="space-y-1.5 pt-3">
-              <div className="text-sm font-medium">{t("programs.superset")}</div>
-              <div className="flex items-center gap-1.5 pl-1">
-                <Link2 className="text-muted size-4" />
-                <span className="text-muted mr-0.5 text-[13px] font-medium">{t("programs.supersetWith")}</span>
-                {linkUp && <LinkToggle dir="up" {...linkUp} />}
-                {linkDown && <LinkToggle dir="down" {...linkDown} />}
-              </div>
+            <div className="flex items-center gap-1.5 pt-3 pl-1">
+              <Link2 className="text-muted size-4" />
+              <span className="text-muted mr-0.5 text-[13px] font-medium">{t("programs.supersetWith")}</span>
+              {linkUp && <LinkToggle dir="up" {...linkUp} />}
+              {linkDown && <LinkToggle dir="down" {...linkDown} />}
             </div>
           )}
           <div className="flex items-center gap-1 pt-2">
