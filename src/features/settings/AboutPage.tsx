@@ -34,6 +34,11 @@ export function AboutPage() {
               </a>{" "}
               (Unlicense).
             </p>
+            <p>
+              {t("about.additionalPhotos")}{" "}
+              <a className={link} href="https://pixabay.com/photos/kettlebell-halo-exercise-2052793/" target="_blank" rel="noreferrer">Taco Fleur (Pixabay)</a>,{" "}
+              <a className={link} href="https://www.pexels.com/photo/strong-young-woman-pull-up-on-crossbar-4194672/" target="_blank" rel="noreferrer">Dinielle De Veyra (Pexels)</a>.
+            </p>
             <p>{t("about.videos")}</p>
             <p>
               {t("about.license")}{" "}

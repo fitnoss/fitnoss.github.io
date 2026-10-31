@@ -48,6 +48,14 @@ npm run new-exercise -- archer-pull-up
 
 ## Правки чужих упражнений
 
+Собственные фото для упражнения из free-exercise-db положите в `content/images/<slug>/` и укажите их в `data/overrides.json`:
+
+```json
+{ "Kettlebell_Halo": { "images": ["kettlebell-halo/0.jpg"] } }
+```
+
+Пути считаются от `content/images/`. Порядок в массиве задаёт порядок кадров. Эти файлы заменяют изображения источника и пересобираются при каждом запуске `npm run data`. Источник, автора и условия использования добавьте в `THIRD_PARTY_NOTICES.md`. Для своих упражнений фото по-прежнему лежат рядом с `exercise.json`.
+
 Упражнения из [free-exercise-db](https://github.com/yuhonas/free-exercise-db) правятся в `data/overrides.json` по их исходному id:
 
 ```json

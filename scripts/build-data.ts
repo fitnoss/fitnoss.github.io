@@ -22,6 +22,7 @@ const RAW = `https://raw.githubusercontent.com/${SOURCE_REPO}/${SOURCE_SHA}`
 const ROOT = path.resolve(import.meta.dirname, "..")
 const CACHE = path.join(ROOT, ".cache", "fedb")
 const CONTENT = path.join(ROOT, "content", "exercises")
+const CONTENT_IMAGES = path.join(ROOT, "content", "images")
 const LOCALES = path.join(ROOT, "locales")
 const ID_MAP = path.join(ROOT, "data", "id-map.json")
 const OVERRIDES = path.join(ROOT, "data", "overrides.json")
@@ -248,9 +249,16 @@ async function main() {
   const sourceById = new Map(source.map((s) => [s.id, s]))
   const local = await loadLocal()
   const localById = new Map(local.map((l) => [LOCAL + l.slug, l]))
-  const overrides = await readJson<Record<string, { places?: Place[]; equipment?: string; equipmentExtra?: string[]; hide?: boolean }>>(OVERRIDES, {})
+  const overrides = await readJson<Record<string, { places?: Place[]; equipment?: string; equipmentExtra?: string[]; hide?: boolean; images?: string[] }>>(OVERRIDES, {})
   for (const [id, override] of Object.entries(overrides)) {
     if (!sourceById.has(id)) throw new Error(`Unknown override ID: ${id}`)
+    for (const image of override.images ?? []) {
+      const file = path.resolve(CONTENT_IMAGES, image)
+      const relative = path.relative(CONTENT_IMAGES, file)
+      if (relative.startsWith("..") || path.isAbsolute(relative) || !IMAGE_RE.test(file) || !(await exists(file))) {
+        throw new Error(`Invalid image override for ${id}: ${image}`)
+      }
+    }
     for (const equipment of [override.equipment, ...(override.equipmentExtra ?? [])].filter(Boolean)) {
       if (!EQUIPMENT.includes(equipment!)) throw new Error(`Unknown equipment for ${id}: ${equipment}`)
     }
@@ -310,9 +318,13 @@ async function main() {
       const o = overrides[id] ?? {}
       if (o.hide) return
       const eq = o.equipment ?? (s.equipment ? SOURCE_EQUIP[s.equipment] : "body")
-      s.images.forEach((img, n) =>
-        images.push({ from: () => fetchCached(`${RAW}/exercises/${img}`, path.join(CACHE, "img", img)), out: `${c}-${n}.webp`, reuse: true }),
-      )
+      if (o.images) {
+        o.images.forEach((img, n) => images.push({ from: () => fs.readFile(path.join(CONTENT_IMAGES, img)), out: `${c}-${n}.webp`, reuse: false }))
+      } else {
+        s.images.forEach((img, n) =>
+          images.push({ from: () => fetchCached(`${RAW}/exercises/${img}`, path.join(CACHE, "img", img)), out: `${c}-${n}.webp`, reuse: true }),
+        )
+      }
       core.push({
         c,
         s: slug,
@@ -325,7 +337,7 @@ async function main() {
         pm: s.primaryMuscles,
         sm: s.secondaryMuscles,
         pl: o.places ?? derivePlaces(s.name, eq),
-        img: s.images.length,
+        img: (o.images ?? s.images).length,
       })
       texts.en[slug] = { name: s.name, steps: s.instructions }
       for (const lang of Object.keys(sourceTexts)) {

@@ -2,11 +2,31 @@
 
 ## free-exercise-db
 
-Exercise descriptions, metadata and photos come from
+Base exercise descriptions, metadata and photos come from
 [yuhonas/free-exercise-db](https://github.com/yuhonas/free-exercise-db)
 (pinned commit `f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5`), released into the public domain under the
 [Unlicense](https://github.com/yuhonas/free-exercise-db/blob/main/LICENSE). Photos are resized and converted
 to WebP at build time; Russian texts are translations of the original English.
+
+## Additional exercise photos
+
+These assets have their own licenses; the repository's MIT license and the base dataset's Unlicense do not apply to them.
+
+### Kettlebell Halo
+
+- File: `content/images/kettlebell-halo/0.jpg` (exercise code 139).
+- Photographer: tacofleur / Taco Fleur.
+- Source: [Kettlebell Halo, Pixabay photo 2052793](https://pixabay.com/photos/kettlebell-halo-exercise-2052793/).
+- License: [Pixabay Content License](https://pixabay.com/service/license-summary/) ([full terms](https://pixabay.com/service/terms/)), checked 2026-10-31.
+- Downloaded the author's 1280 px rendition and added white side padding to preserve the full kettlebell in landscape previews; resized and converted to WebP during the build. Used as an exercise illustration within the app.
+
+### Dead Hang
+
+- File: `content/exercises/dead-hang/0.jpg` (exercise code 877).
+- Photographer: Dinielle De Veyra.
+- Source: [Strong young woman pull up on crossbar, Pexels photo 4194672](https://www.pexels.com/photo/strong-young-woman-pull-up-on-crossbar-4194672/).
+- License: [Pexels License](https://www.pexels.com/license/), checked 2026-10-31.
+- Selected the straight-arm hanging position with the full body visible. Resized and padded with white space to fit the app's landscape previews without cropping the body; converted to WebP during the build.
 
 ## YouTube videos
 

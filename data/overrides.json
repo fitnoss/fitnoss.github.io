@@ -1,4 +1,7 @@
 {
+  "Kettlebell_Halo": {
+    "images": ["kettlebell-halo/0.jpg"]
+  },
   "Pullups": {
     "equipment": "pullupbar",
     "places": [
