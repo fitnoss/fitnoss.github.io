@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "dumbbell",
+  "primary": [
+    "shoulders",
+    "abdominals"
+  ],
+  "secondary": [
+    "middle back",
+    "glutes"
+  ],
+  "places": [
+    "dumbbell",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Dumbbell Reverse Fly in Side Plank",
+      "steps": [
+        "Set up in a side plank on your forearm with your elbow beneath your shoulder and your feet staggered for support.",
+        "Hold a light dumbbell in the upper hand and let that arm reach toward the floor in front of your chest.",
+        "Keep your hips lifted and torso stacked as you open the upper arm toward the ceiling.",
+        "Lower the dumbbell along the same arc without twisting your torso. Complete the repetitions, then switch sides."
+      ]
+    },
+    "ru": {
+      "name": "Разведение гантели в боковой планке",
+      "steps": [
+        "Примите боковую планку на предплечье: локоть под плечом, стопы расположены одна перед другой для устойчивости.",
+        "Возьмите лёгкую гантель верхней рукой и направьте эту руку к полу перед грудью.",
+        "Удерживайте таз поднятым и плечи одно над другим, отводя верхнюю руку к потолку.",
+        "Опустите гантель по той же дуге, не разворачивая корпус. Завершите повторы и смените сторону."
+      ]
+    }
+  }
+}

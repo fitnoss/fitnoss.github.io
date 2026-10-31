@@ -1,0 +1,37 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "cable",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "abdominals"
+  ],
+  "secondary": [],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Seated Cable Torso Rotation",
+      "steps": [
+        "Sit sideways to a pulley set at chest height on a stable bench, with both feet planted.",
+        "Hold one handle with both hands in front of the chest and maintain a small fixed bend in your elbows.",
+        "Rotate the upper torso away from the pulley through a comfortable range while keeping your hips facing forward.",
+        "Return slowly without rounding the lower back, then turn the bench or change sides to train the other direction."
+      ]
+    },
+    "ru": {
+      "name": "Поворот корпуса сидя с блоком",
+      "steps": [
+        "Сядьте на устойчивую скамью боком к блоку на уровне груди и поставьте обе стопы на пол.",
+        "Держите одну рукоять двумя руками перед грудью, сохраняя небольшой постоянный сгиб в локтях.",
+        "Разверните верх корпуса от блока в комфортной амплитуде, оставляя таз направленным вперёд.",
+        "Медленно вернитесь, не округляя поясницу, затем смените сторону к блоку для другого направления."
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "body",
+  "primary": [
+    "shoulders",
+    "triceps"
+  ],
+  "secondary": [
+    "abdominals",
+    "glutes"
+  ],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Wall Walk",
+      "steps": [
+        "Lie face down with feet against a clear wall and palms beside your shoulders.",
+        "Press into a plank, then step your feet up the wall.",
+        "Walk your hands toward the wall while your feet climb, keeping your abdomen braced.",
+        "Stop at a controllable position, then reverse the hand and foot steps until you return to the floor."
+      ]
+    },
+    "ru": {
+      "name": "Заход руками к стене в стойку",
+      "steps": [
+        "Лягте на живот стопами к свободной стене, поставив ладони рядом с плечами.",
+        "Поднимитесь в упор и начните переставлять стопы вверх по стене.",
+        "Шагайте руками к стене одновременно с подъёмом ног, удерживая напряжённый пресс.",
+        "Остановитесь в положении, которое можете контролировать, и обратными шагами рук и ног вернитесь на пол."
+      ]
+    }
+  }
+}

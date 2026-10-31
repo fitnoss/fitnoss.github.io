@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "force": "push",
+  "primary": [
+    "glutes",
+    "abdominals"
+  ],
+  "secondary": [
+    "hamstrings"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Glute Bridge March",
+      "steps": [
+        "Lie on your back with bent knees and feet flat, hip-width apart.",
+        "Lift your hips until shoulders, hips and knees form a straight line.",
+        "Keep your pelvis level as you lift one bent leg a short distance from the floor.",
+        "Replace the foot and alternate legs without lowering or rotating the hips."
+      ]
+    },
+    "ru": {
+      "name": "Ягодичный мостик с попеременным подъёмом ног",
+      "steps": [
+        "Лягте на спину, согните колени и поставьте стопы на ширине таза.",
+        "Поднимите таз до прямой линии от плеч до коленей.",
+        "Сохраняя ровное положение таза, немного поднимите одну согнутую ногу от пола.",
+        "Верните стопу и чередуйте ноги, не опуская и не разворачивая таз."
+      ]
+    }
+  }
+}

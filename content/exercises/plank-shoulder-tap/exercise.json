@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "force": "static",
+  "primary": [
+    "abdominals",
+    "shoulders"
+  ],
+  "secondary": [
+    "triceps",
+    "glutes"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Plank Shoulder Tap",
+      "steps": [
+        "Take a high plank with hands below shoulders and feet slightly apart.",
+        "Brace your abdomen and shift enough weight onto one palm to lift the other.",
+        "Touch the opposite shoulder while keeping your pelvis facing the floor.",
+        "Return your hand and alternate sides without rocking your hips."
+      ]
+    },
+    "ru": {
+      "name": "Касания плеч в упоре лёжа",
+      "steps": [
+        "Примите упор лёжа с кистями под плечами и слегка разведёнными стопами.",
+        "Напрягите пресс и перенесите вес на одну ладонь, чтобы поднять другую.",
+        "Коснитесь противоположного плеча, сохраняя таз развёрнутым к полу.",
+        "Верните ладонь и чередуйте стороны без раскачивания таза."
+      ]
+    }
+  }
+}

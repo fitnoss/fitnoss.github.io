@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "body",
+  "primary": [
+    "shoulders",
+    "triceps"
+  ],
+  "secondary": [
+    "abdominals",
+    "glutes"
+  ],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Freestanding Handstand Push-Up",
+      "steps": [
+        "Start in a stable freestanding handstand with hands slightly wider than shoulders.",
+        "Brace your trunk and bend your elbows, moving your head slightly ahead of your hands.",
+        "Lower only as far as you can control without placing your weight on your head.",
+        "Press through your palms to extend your arms and recover your balance before the next repetition."
+      ]
+    },
+    "ru": {
+      "name": "Отжимания в стойке без опоры о стену",
+      "steps": [
+        "Примите устойчивую стойку без опоры, поставив ладони немного шире плеч.",
+        "Напрягите корпус и согните локти, направляя голову немного вперёд от линии кистей.",
+        "Опускайтесь только до контролируемой глубины, не перенося вес на голову.",
+        "Оттолкнитесь ладонями, выпрямите руки и восстановите равновесие перед следующим повторением."
+      ]
+    }
+  }
+}

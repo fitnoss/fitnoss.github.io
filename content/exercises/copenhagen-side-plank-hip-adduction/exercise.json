@@ -1,0 +1,42 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "force": "pull",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "adductors",
+    "abdominals"
+  ],
+  "secondary": [
+    "shoulders",
+    "glutes"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Copenhagen Side Plank Hip Adduction",
+      "steps": [
+        "Lie on your side with your upper ankle supported on a stable bench and elbow below shoulder.",
+        "Lift your hips so your upper leg and trunk form a straight line; keep the lower foot on the floor initially.",
+        "Raise the lower straight leg toward the supported leg without twisting your pelvis.",
+        "Lower it under control, then repeat on the opposite side."
+      ]
+    },
+    "ru": {
+      "name": "Приведение нижней ноги в копенгагенской планке",
+      "steps": [
+        "Лягте на бок, положив верхнюю лодыжку на устойчивую скамью и расположив локоть под плечом.",
+        "Поднимите таз до прямой линии с верхней ногой; нижняя стопа сначала остаётся на полу.",
+        "Поднимите нижнюю прямую ногу к опорной, не разворачивая таз.",
+        "Подконтрольно опустите её и после подхода повторите на другой стороне."
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "force": "static",
+  "primary": [
+    "abdominals",
+    "shoulders"
+  ],
+  "secondary": [
+    "triceps",
+    "glutes"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Kneeling Plank Shoulder Tap",
+      "steps": [
+        "Set your hands below your shoulders and move your knees back into a kneeling plank.",
+        "Keep a straight line from head to knees and brace your abdomen.",
+        "Lift one hand to tap the opposite shoulder without turning your pelvis.",
+        "Replace the hand and alternate sides while keeping both knees on the floor."
+      ]
+    },
+    "ru": {
+      "name": "Касания плеч в упоре с колен",
+      "steps": [
+        "Поставьте кисти под плечами и отведите колени назад, приняв упор с колен.",
+        "Удерживайте прямую линию от головы до коленей и напрягите пресс.",
+        "Поднимите одну ладонь и коснитесь противоположного плеча, не разворачивая таз.",
+        "Верните ладонь и чередуйте стороны, оставляя оба колена на полу."
+      ]
+    }
+  }
+}

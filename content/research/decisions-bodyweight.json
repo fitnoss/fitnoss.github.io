@@ -1,0 +1,270 @@
+{
+  "date": "2026-10-31",
+  "sections": [
+    "calisthenics",
+    "home"
+  ],
+  "notes": "Candidate dataset instructions were reviewed but not copied. Several contradictory source instructions were replaced with independently authored movement descriptions verified against primary coaching references. Source links record factual reference, not media license. No images or videos imported.",
+  "decisions": [
+    {
+      "candidateId": "openbody:l-sit",
+      "status": "added",
+      "slug": "floor-l-sit",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/l-sit/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:front-lever.advanced-tuck",
+      "status": "added",
+      "slug": "advanced-tuck-front-lever",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/levers/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:front-lever",
+      "status": "added",
+      "slug": "front-lever",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/levers/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:back-lever",
+      "status": "added",
+      "slug": "ring-back-lever",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/levers/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:planche.lean",
+      "status": "added",
+      "slug": "planche-lean",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/planche/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:planche.tuck",
+      "status": "added",
+      "slug": "tuck-planche",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/planche/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:planche.straddle",
+      "status": "added",
+      "slug": "straddle-planche",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/planche/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:wall-walk",
+      "status": "added",
+      "slug": "wall-walk",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://www.crossfit.com/essentials/the-wall-walk",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:handstand-walk",
+      "status": "added",
+      "slug": "handstand-walk",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://www.crossfit.com/essentials/crossfit-handstand-walking-rx-plan",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:handstand-push-up.freestanding",
+      "status": "added",
+      "slug": "freestanding-handstand-push-up",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://www.crossfit.com/essentials/hspu-and-you-master-the-movement",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:support-hold.rings",
+      "status": "added",
+      "slug": "ring-support-hold",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/rings/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:skin-the-cat",
+      "status": "added",
+      "slug": "ring-skin-the-cat",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://www.crossfit.com/workout/2026/06",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:human-flag",
+      "status": "added",
+      "slug": "human-flag",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://www.schoolofcalisthenics.com/course/human-flag-course",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:pull-up.archer",
+      "status": "added",
+      "slug": "archer-pull-up",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/pull-ups/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:push-up.archer",
+      "status": "added",
+      "slug": "archer-push-up",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/push-up-variations/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3360",
+      "status": "added",
+      "slug": "bear-crawl",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://www.acefitness.org/resources/everyone/exercise-library/150/bear-crawl/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1771",
+      "status": "added",
+      "slug": "kneeling-bodyweight-triceps-extension",
+      "reason": "Distinct kneeling elbow-extension exercise, verified against the coach-authored reference. Replaced contradictory source instructions that instead described a normal push-up.",
+      "sourceUrl": "https://weighttraining.guide/exercises/kneeling-bodyweight-triceps-extension/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1769",
+      "status": "skipped",
+      "reason": "Unresisted side-lying biceps curl: source has no load or self-resistance and does not establish a meaningful distinct exercise.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3165",
+      "status": "skipped",
+      "reason": "Towel row source omits anchor/partner or other resistance; cannot identify its intended variant reliably.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1468",
+      "status": "added",
+      "slug": "crab-toe-touch",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2429",
+      "status": "skipped",
+      "reason": "Duplicate of current code 524 Frog Sit-Ups, which already specifies a partial crunch in butterfly-leg position. Source instructions also describe ordinary crunches.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3561",
+      "status": "added",
+      "slug": "glute-bridge-march",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://www.acefitness.org/resources/everyone/exercise-library/145/glute-bridge-single-leg-progression/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3523",
+      "status": "skipped",
+      "reason": "Bench bridge instructions conflict with title: source does not reliably specify shoulders or feet on bench. Do not invent the intended variant.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3239",
+      "status": "added",
+      "slug": "kneeling-plank-shoulder-tap",
+      "reason": "Kept the actual knee-supported shoulder-tap regression and explicit knee support in both languages; source incorrectly instructed a full toes plank.",
+      "sourceUrl": "https://www.crossfit.com/workout/2026/06",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3147",
+      "status": "added",
+      "slug": "supine-pelvic-tilt",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3663",
+      "status": "added",
+      "slug": "reverse-plank-leg-lift",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://www.acefitness.org/resources/pros/expert-articles/6471/recruit-the-glutes-6-exercises-to-improve-mobility-and-strength/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3021",
+      "status": "added",
+      "slug": "scapular-push-up",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://gmb.io/planche/",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3699",
+      "status": "added",
+      "slug": "plank-shoulder-tap",
+      "reason": "Distinct movement or progression; original EN/RU technique authored, no third-party media copied.",
+      "sourceUrl": "https://www.crossfit.com/workout/2026/06",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1775",
+      "status": "added",
+      "slug": "copenhagen-side-plank-hip-adduction",
+      "reason": "Verified adduction variation uses upper ankle supported on a bench and lifts the lower leg. Source incorrectly described upper-leg abduction; wrote the correct Copenhagen-supported version and marked bench as required.",
+      "sourceUrl": "https://libres.uncg.edu/ir/uncg/f/Tarara_uncg_0154D_11122.pdf",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0730",
+      "status": "skipped",
+      "reason": "Platform slide intended technique/setup is insufficiently defined; current code 312 already covers platform hamstring slides. Defer until clear demo/reference is found.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    }
+  ]
+}

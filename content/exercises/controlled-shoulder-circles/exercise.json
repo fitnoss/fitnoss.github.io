@@ -1,0 +1,34 @@
+{
+  "category": "stretching",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "shoulders"
+  ],
+  "secondary": [],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Controlled Shoulder Circles",
+      "steps": [
+        "Stand tall with the trunk braced and both arms by your sides.",
+        "Raise one straight arm slowly forward and overhead while keeping the ribs and pelvis still.",
+        "Rotate through the shoulder as you sweep the arm backward and down within your available range, without turning the torso.",
+        "Reverse the circle, then change arms. Use a smaller arc if you cannot move smoothly."
+      ]
+    },
+    "ru": {
+      "name": "Контролируемые круги прямой рукой",
+      "steps": [
+        "Встаньте прямо, напрягите мышцы корпуса и опустите обе руки вдоль тела.",
+        "Медленно проведите одну прямую руку вперёд и вверх, сохраняя рёбра и таз неподвижными.",
+        "Плавно разворачивайте плечо и ведите руку назад и вниз по доступной дуге. Не разворачивайте вслед за ней корпус.",
+        "Повторите круг в обратную сторону, затем смените руку. Уменьшайте дугу, если движение теряет плавность."
+      ]
+    }
+  }
+}

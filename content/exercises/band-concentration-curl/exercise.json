@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "bands",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "biceps"
+  ],
+  "secondary": [
+    "forearms"
+  ],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Band Concentration Curl",
+      "steps": [
+        "Sit on a stable bench with your feet apart. Pin one end of a band under the working-side foot and hold the other end palm up.",
+        "Lean forward and brace the back of your upper arm against the inside of your thigh; let the hand lower without locking the elbow.",
+        "Bend the elbow to bring the hand toward your shoulder while the upper arm stays supported and the wrist stays straight.",
+        "Lower slowly against the band tension, then complete the same movement on the other side."
+      ]
+    },
+    "ru": {
+      "name": "Концентрированное сгибание руки с резинкой",
+      "steps": [
+        "Сядьте на устойчивую скамью, расставив стопы. Прижмите один конец резинки стопой со стороны рабочей руки, другой держите ладонью вверх.",
+        "Наклонитесь и уприте заднюю поверхность плеча во внутреннюю сторону бедра; опустите кисть, не запирая локоть.",
+        "Согните локоть и приблизьте кисть к плечу, сохраняя опору плеча и прямое запястье.",
+        "Медленно опустите кисть против натяжения резинки, затем повторите другой рукой."
+      ]
+    }
+  }
+}

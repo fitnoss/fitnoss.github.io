@@ -1,0 +1,36 @@
+{
+  "category": "cardio",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "other",
+  "primary": [
+    "quadriceps",
+    "glutes"
+  ],
+  "secondary": [
+    "hamstrings",
+    "shoulders",
+    "abdominals"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Deep Water Running",
+      "steps": [
+        "Use an aqua-running flotation belt in a pool area intended for this activity, keeping your head above water without standing on the bottom.",
+        "Maintain an almost upright position with a small forward lean through the body.",
+        "Alternate bringing each knee forward and sweeping the leg down and back to imitate running.",
+        "Move the arms opposite the legs. Breathe steadily and avoid tipping the head backward."
+      ]
+    },
+    "ru": {
+      "name": "Бег в глубокой воде",
+      "steps": [
+        "В зоне бассейна для занятий наденьте пояс для аквабега, позволяющий держать голову над водой без опоры ногами на дно.",
+        "Удерживайте тело почти вертикально, слегка наклонившись вперёд от голеностопов.",
+        "Попеременно ведите колени вперёд и направляйте ноги вниз и назад, имитируя бег.",
+        "Двигайте руками в противофазе ногам. Сохраняйте ровное дыхание и не запрокидывайте голову."
+      ]
+    }
+  }
+}

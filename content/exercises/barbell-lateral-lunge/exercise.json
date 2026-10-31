@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "barbell",
+  "primary": [
+    "quadriceps",
+    "glutes",
+    "adductors"
+  ],
+  "secondary": [
+    "hamstrings"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Barbell Lateral Lunge",
+      "steps": [
+        "Stand upright with a securely balanced bar across your upper back and your feet together or hip-width apart.",
+        "Take a controlled step to one side and sit your hips back over the stepping leg, bending that knee while the other leg stays long.",
+        "Keep the stepping foot planted and its knee tracking in the same direction as the toes.",
+        "Push the floor away with the stepping leg to bring your feet back together. Repeat on the other side."
+      ]
+    },
+    "ru": {
+      "name": "Боковые выпады со штангой",
+      "steps": [
+        "Встаньте прямо, надёжно расположив штангу на верхней части спины. Стопы вместе или на ширине таза.",
+        "Сделайте подконтрольный шаг в сторону и отведите таз назад над шагающей ногой, сгибая её колено; другая нога остаётся вытянутой.",
+        "Не отрывайте стопу шагающей ноги от пола и направляйте колено в ту же сторону, что и носок.",
+        "Оттолкнитесь шагающей ногой и верните стопы в исходное положение. Повторите в другую сторону."
+      ]
+    }
+  }
+}

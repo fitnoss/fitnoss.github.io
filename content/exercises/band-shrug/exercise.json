@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "bands",
+  "primary": [
+    "traps"
+  ],
+  "secondary": [
+    "forearms"
+  ],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Band Shrug",
+      "steps": [
+        "Stand evenly on the middle of a long band and hold its ends at your sides with straight arms.",
+        "Keep your neck neutral, chest relaxed and wrists straight; shorten your grip if the band is slack.",
+        "Lift both shoulders toward your ears without rolling them or bending the elbows.",
+        "Pause briefly, then lower the shoulders slowly while maintaining your stance."
+      ]
+    },
+    "ru": {
+      "name": "Шраги с резинкой",
+      "steps": [
+        "Равномерно встаньте на середину длинной резинки и держите её концы по бокам на прямых руках.",
+        "Сохраняйте нейтральное положение шеи и прямые запястья; при провисании резинки укоротите хват.",
+        "Поднимите плечи к ушам, не вращая ими и не сгибая локти.",
+        "Ненадолго задержитесь и медленно опустите плечи, сохраняя устойчивую стойку."
+      ]
+    }
+  }
+}

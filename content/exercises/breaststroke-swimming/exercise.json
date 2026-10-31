@@ -1,0 +1,36 @@
+{
+  "category": "cardio",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "quadriceps",
+    "adductors"
+  ],
+  "secondary": [
+    "glutes",
+    "lats",
+    "shoulders"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Breaststroke Swimming",
+      "steps": [
+        "Begin face down in a streamlined position with your arms forward and your legs together.",
+        "Sweep both hands outward and inward toward the chest, lifting your head to inhale.",
+        "Draw the heels toward the hips and turn the feet outward. Reach the arms forward and perform a symmetrical whip kick.",
+        "Bring the legs together, return your face to the water and glide briefly before the next cycle."
+      ]
+    },
+    "ru": {
+      "name": "Плавание брассом",
+      "steps": [
+        "Начните с вытянутого положения на груди: руки впереди, ноги вместе, лицо в воде.",
+        "Выполните симметричное движение руками наружу и к груди, приподнимая голову для вдоха.",
+        "Подтяните пятки к тазу и разверните стопы наружу. Вытяните руки вперёд и выполните симметричный толчок ногами.",
+        "Соедините ноги, опустите лицо в воду и ненадолго вытянитесь в скольжении перед следующим циклом."
+      ]
+    }
+  }
+}

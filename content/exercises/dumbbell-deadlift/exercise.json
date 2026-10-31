@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "dumbbell",
+  "primary": [
+    "glutes",
+    "quadriceps",
+    "hamstrings"
+  ],
+  "secondary": [
+    "lower back",
+    "forearms"
+  ],
+  "places": [
+    "dumbbell",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Dumbbell Deadlift",
+      "steps": [
+        "Place a dumbbell outside each foot and stand with your feet about hip-width apart.",
+        "Bend your hips and knees to take the handles, keeping your back steady and both feet fully planted.",
+        "Push through the floor and straighten your hips and knees together until you stand upright with the weights at your sides.",
+        "Bend your hips and knees to return the weights to the floor under control, then reset before repeating."
+      ]
+    },
+    "ru": {
+      "name": "Становая тяга с гантелями",
+      "steps": [
+        "Поставьте по гантели снаружи каждой стопы и встаньте примерно на ширине таза.",
+        "Согните тазобедренные суставы и колени, чтобы взяться за рукояти; сохраняйте спину неподвижной и опирайтесь на всю стопу.",
+        "Оттолкнитесь от пола и одновременно разогните колени и тазобедренные суставы, встав с гантелями по бокам.",
+        "Подконтрольно верните гантели на пол, сгибая колени и отводя таз назад. Проверьте положение тела перед следующим повтором."
+      ]
+    }
+  }
+}

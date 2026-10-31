@@ -1,0 +1,35 @@
+{
+  "category": "cardio",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "glutes",
+    "quadriceps"
+  ],
+  "secondary": [
+    "hamstrings",
+    "calves"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Hill Sprint",
+      "steps": [
+        "Choose a clear incline with even, grippy footing and space to stop near the top.",
+        "After warming up, accelerate with a slight forward lean from the ankles.",
+        "Run uphill with short quick strides and active arms, keeping the trunk long rather than folding at the waist.",
+        "Slow down gradually at the end. Walk back down and recover before repeating."
+      ]
+    },
+    "ru": {
+      "name": "Спринт в подъём",
+      "steps": [
+        "Выберите свободный подъём с ровным нескользким покрытием и местом для остановки наверху.",
+        "После разминки начните ускорение, слегка наклоняясь вперёд от голеностопных суставов.",
+        "Бегите вверх короткими быстрыми шагами, помогая себе движением рук и не сгибаясь в пояснице.",
+        "В конце отрезка плавно остановитесь. Спускайтесь шагом и восстановите дыхание перед повторением."
+      ]
+    }
+  }
+}

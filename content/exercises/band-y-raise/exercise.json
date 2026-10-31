@@ -1,0 +1,37 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "bands",
+  "primary": [
+    "shoulders",
+    "traps"
+  ],
+  "secondary": [],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Band Y-Raise",
+      "steps": [
+        "Stand on a long band and hold one end in each hand, with the thumbs pointing upward.",
+        "Brace your trunk and keep a small fixed bend in your elbows.",
+        "Lift your arms forward and diagonally outward into a Y shape, stopping within a comfortable overhead range.",
+        "Lower slowly without shrugging, arching your lower back or letting the band pull your arms down."
+      ]
+    },
+    "ru": {
+      "name": "Y-подъём рук с резинкой",
+      "steps": [
+        "Встаньте на длинную резинку и возьмите по одному концу в каждую руку, направив большие пальцы вверх.",
+        "Напрягите корпус и сохраняйте небольшой постоянный сгиб в локтях.",
+        "Поднимите руки вперёд и по диагонали в стороны, образуя букву Y, в комфортной амплитуде над головой.",
+        "Медленно опустите руки, не поднимая плечи к ушам, не прогибая поясницу и не бросая резинку."
+      ]
+    }
+  }
+}

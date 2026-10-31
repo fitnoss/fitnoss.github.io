@@ -1,0 +1,36 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "bands",
+  "primary": [
+    "abdominals"
+  ],
+  "secondary": [],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Standing Band Crunch",
+      "steps": [
+        "Anchor a band securely above your head. Stand facing away and hold the ends near your upper chest with the band passing over your shoulders.",
+        "Plant your feet firmly and soften the knees; keep the hands close to your shoulders throughout.",
+        "Bring your ribs toward your pelvis in a small controlled crunch instead of sitting your hips back.",
+        "Return slowly to an upright position without leaning backward or pulling the band with your arms."
+      ]
+    },
+    "ru": {
+      "name": "Скручивание стоя с резинкой",
+      "steps": [
+        "Надёжно закрепите резинку выше головы. Встаньте спиной к опоре и держите концы у верхней части груди, пропустив резинку через плечи.",
+        "Устойчиво поставьте стопы и слегка согните колени; удерживайте кисти возле плеч на протяжении движения.",
+        "Сблизьте рёбра и таз коротким подконтрольным скручиванием, не отводя таз назад.",
+        "Медленно выпрямитесь, не отклоняясь назад и не подтягивая резинку руками."
+      ]
+    }
+  }
+}

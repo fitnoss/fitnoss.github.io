@@ -1,0 +1,37 @@
+{
+  "category": "cardio",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "other",
+  "primary": [
+    "shoulders"
+  ],
+  "secondary": [
+    "triceps",
+    "abdominals",
+    "quadriceps"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Heavy Bag Boxing",
+      "steps": [
+        "Put on hand wraps and boxing gloves. Face a securely mounted bag in a staggered stance with your hands near your chin.",
+        "Throw light alternating straight punches, turning your foot and hip with your torso.",
+        "Bring each hand back to your guard and keep the wrist aligned with the forearm.",
+        "Move with short steps and maintain a controlled rhythm for the round."
+      ]
+    },
+    "ru": {
+      "name": "Бокс на мешке",
+      "steps": [
+        "Наденьте бинты и боксёрские перчатки. Встаньте перед устойчиво закреплённым мешком, одна стопа немного впереди, кисти у подбородка.",
+        "Наносите лёгкие прямые удары поочерёдно, разворачивая стопу и таз вместе с корпусом.",
+        "Возвращайте кисть к подбородку после каждого удара, сохраняя запястье прямым.",
+        "Перемещайтесь небольшими шагами и поддерживайте контролируемый темп до конца раунда."
+      ]
+    }
+  }
+}

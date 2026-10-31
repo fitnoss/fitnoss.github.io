@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "bands",
+  "primary": [
+    "quadriceps",
+    "glutes",
+    "middle back"
+  ],
+  "secondary": [
+    "lats",
+    "biceps"
+  ],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Band Squat to Row",
+      "steps": [
+        "Secure a band at about waist height and face the anchor, holding one end in each hand with the arms reaching forward.",
+        "Sit your hips back and bend your knees into a controlled squat, keeping your heels down and spine neutral.",
+        "Stand up and draw your elbows behind you, bringing your hands toward your lower ribs.",
+        "Extend the arms as you lower into the next squat; keep the band tension smooth rather than jerking."
+      ]
+    },
+    "ru": {
+      "name": "Приседание с тягой резинки",
+      "steps": [
+        "Закрепите резинку примерно на уровне пояса и встаньте лицом к опоре, удерживая концы двумя руками перед собой.",
+        "Отведите таз назад и подконтрольно присядьте, сохраняя пятки на полу и нейтральное положение спины.",
+        "Поднимитесь и отведите локти назад, подтягивая кисти к нижним рёбрам.",
+        "Выпрямляйте руки при следующем приседании; поддерживайте плавное натяжение без рывков."
+      ]
+    }
+  }
+}

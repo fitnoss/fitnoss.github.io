@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "other",
+  "primary": [
+    "lats",
+    "shoulders"
+  ],
+  "secondary": [
+    "abdominals",
+    "glutes"
+  ],
+  "places": [
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Human Flag",
+      "steps": [
+        "Use a rigid vertical pole designed for calisthenics and begin with feet supported.",
+        "Place your hands widely apart, pulling with the upper arm and pushing with the lower arm.",
+        "Brace your trunk and raise your joined legs sideways until your body is horizontal.",
+        "Hold with straight arms and hips stacked, then lower your feet under control; practice both sides."
+      ]
+    },
+    "ru": {
+      "name": "Флажок",
+      "steps": [
+        "Используйте жёстко закреплённый вертикальный шест для калистеники и начните с опорой ногами.",
+        "Возьмитесь широко: верхней рукой тяните опору, нижней отталкивайтесь от неё.",
+        "Напрягите корпус и поднимите соединённые ноги в сторону до горизонтального положения тела.",
+        "Удерживайте прямые руки и ровный таз, затем подконтрольно опустите ноги; выполняйте на обе стороны."
+      ]
+    }
+  }
+}

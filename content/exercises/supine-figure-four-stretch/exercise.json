@@ -1,0 +1,35 @@
+{
+  "category": "stretching",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "glutes"
+  ],
+  "secondary": [],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Supine Figure-Four Stretch",
+      "steps": [
+        "Lie on your back with both knees bent and your feet on the floor.",
+        "Rest the outside of one ankle across the opposite thigh just above the knee.",
+        "Hold the back of the supporting thigh and draw it gently toward you while keeping the head on the floor.",
+        "Hold a comfortable glute stretch without pressing on the knee, then release and change sides."
+      ]
+    },
+    "ru": {
+      "name": "Растяжка ягодичных лёжа «четвёрка»",
+      "steps": [
+        "Лягте на спину, согните колени и поставьте стопы на пол.",
+        "Положите наружную сторону лодыжки одной ноги на бедро другой, немного выше колена.",
+        "Возьмитесь за заднюю поверхность опорного бедра и мягко подтягивайте его к себе, оставляя голову на полу.",
+        "Удерживайте комфортное натяжение в ягодице, не давите на колено. Отпустите ноги и смените сторону."
+      ]
+    }
+  },
+  "force": "static"
+}

@@ -1,0 +1,38 @@
+{
+  "category": "cardio",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "shoulders"
+  ],
+  "secondary": [
+    "triceps",
+    "abdominals",
+    "quadriceps"
+  ],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Shadowboxing",
+      "steps": [
+        "Take a staggered boxing stance with soft knees and your hands near your chin.",
+        "Throw alternating straight punches into the air, allowing the hips and feet to turn.",
+        "Avoid snapping the elbow into lockout and return each hand to your guard.",
+        "Add small forward, backward and sideways steps while staying balanced and breathing freely."
+      ]
+    },
+    "ru": {
+      "name": "Бой с тенью",
+      "steps": [
+        "Встаньте в боксёрскую стойку: одна стопа впереди, колени немного согнуты, кисти возле подбородка.",
+        "Поочерёдно выполняйте прямые удары в воздух, мягко разворачивая таз и стопу.",
+        "Не выпрямляйте локоть ударом до упора. Возвращайте руку в защитное положение.",
+        "Добавляйте небольшие шаги вперёд, назад и в стороны, сохраняя равновесие и свободное дыхание."
+      ]
+    }
+  }
+}

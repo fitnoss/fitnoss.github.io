@@ -1,0 +1,34 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "push",
+  "equipment": "cable",
+  "primary": [
+    "triceps"
+  ],
+  "secondary": [],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Floor Rope Cable Triceps Extension",
+      "steps": [
+        "Attach a rope to a low pulley and lie on your back with your head toward the machine, holding the rope ends securely.",
+        "Raise your upper arms above your chest and keep the elbows pointing upward; bend the knees to support a steady position.",
+        "Bend the elbows to bring your hands beside the head while keeping the upper arms nearly still.",
+        "Extend the elbows under control, returning the hands above your chest without flaring the elbows or moving the shoulders."
+      ]
+    },
+    "ru": {
+      "name": "Разгибание рук с канатом на блоке лёжа на полу",
+      "steps": [
+        "Прикрепите канат к нижнему блоку и лягте на спину головой к тренажёру, надёжно удерживая концы каната.",
+        "Направьте плечевые части рук вверх над грудью и держите локти обращёнными к потолку; согните колени для устойчивости.",
+        "Согните локти, приблизив кисти к голове, и сохраняйте положение плечевых частей рук.",
+        "Подконтрольно разогните локти и верните кисти над грудью, не разводя локти и не двигая плечевыми суставами."
+      ]
+    }
+  }
+}

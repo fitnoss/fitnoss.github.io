@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "body",
+  "primary": [
+    "abdominals"
+  ],
+  "secondary": [
+    "quadriceps",
+    "triceps",
+    "shoulders"
+  ],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Floor L-Sit",
+      "steps": [
+        "Sit with straight legs together and palms beside your hips.",
+        "Press the floor away through straight arms and lift your hips.",
+        "Lift both straight legs, keeping your shoulders down and knees extended.",
+        "Hold without swinging, then lower your heels and hips under control."
+      ]
+    },
+    "ru": {
+      "name": "Уголок на полу",
+      "steps": [
+        "Сядьте, соединив прямые ноги, и поставьте ладони рядом с тазом.",
+        "Оттолкнитесь прямыми руками от пола и приподнимите таз.",
+        "Поднимите обе прямые ноги, опуская плечи от ушей и не сгибая колени.",
+        "Удерживайте уголок без раскачивания, затем плавно опустите пятки и таз."
+      ]
+    }
+  }
+}

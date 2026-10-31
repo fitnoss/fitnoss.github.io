@@ -1,0 +1,42 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "dumbbell",
+  "primary": [
+    "shoulders"
+  ],
+  "secondary": [
+    "triceps",
+    "quadriceps",
+    "glutes",
+    "abdominals"
+  ],
+  "places": [
+    "dumbbell",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Dumbbell Push Press",
+      "steps": [
+        "Stand holding the dumbbells at shoulder height with your forearms beneath them and your torso braced.",
+        "Dip slightly by bending your knees, keeping your feet planted and your torso upright.",
+        "Drive through your legs and continue the motion by pressing the dumbbells overhead.",
+        "Finish standing tall with the weights balanced over your shoulders, without leaning backward.",
+        "Lower to shoulder height under control and reset your stance before the next repetition."
+      ]
+    },
+    "ru": {
+      "name": "Жимовой швунг с гантелями",
+      "steps": [
+        "Встаньте с гантелями у плеч, расположив предплечья под ними, и напрягите корпус.",
+        "Сделайте небольшой подсед, сгибая колени; стопы остаются на полу, корпус — вертикальным.",
+        "Разгоните гантели разгибанием ног и продолжите движение жимом над головой.",
+        "Завершите движение в стойке с весом над плечами, не отклоняясь назад.",
+        "Подконтрольно опустите гантели к плечам и восстановите исходное положение перед следующим повтором."
+      ]
+    }
+  }
+}

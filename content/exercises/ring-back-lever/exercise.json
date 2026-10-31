@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "rings",
+  "primary": [
+    "shoulders",
+    "lats"
+  ],
+  "secondary": [
+    "biceps",
+    "abdominals",
+    "glutes",
+    "lower back"
+  ],
+  "places": [
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Ring Back Lever",
+      "steps": [
+        "Use a low ring setup that allows a controlled exit; begin in an inverted hang.",
+        "Keep your arms straight and legs together as you lower toward the face-down side.",
+        "Stop with your body horizontal, keeping your hips and shoulders aligned.",
+        "Maintain active shoulders; return through the inverted position under control without dropping into a deep shoulder stretch."
+      ]
+    },
+    "ru": {
+      "name": "Задний горизонтальный вис на кольцах",
+      "steps": [
+        "Настройте кольца невысоко, чтобы можно было безопасно выйти из положения, и примите перевёрнутый вис.",
+        "Сохраняя прямые руки и соединённые ноги, опускайте тело в сторону положения лицом вниз.",
+        "Остановитесь в горизонтали, удерживая таз и плечи на одной линии.",
+        "Сохраняйте активную опору плечами и подконтрольно вернитесь через перевёрнутый вис, не проваливаясь в глубокое растяжение плеч."
+      ]
+    }
+  }
+}

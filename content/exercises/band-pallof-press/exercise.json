@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "bands",
+  "primary": [
+    "abdominals"
+  ],
+  "secondary": [
+    "glutes"
+  ],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Band Pallof Press",
+      "steps": [
+        "Secure a band to a fixed anchor at chest height and stand side-on to it with your feet about shoulder-width apart.",
+        "Hold the band in both hands against your chest and move away until it is under light tension.",
+        "Brace your trunk and press your hands straight forward, keeping your shoulders and pelvis facing ahead.",
+        "Pause without turning toward the anchor, return your hands to your chest, and repeat facing the other direction."
+      ]
+    },
+    "ru": {
+      "name": "Жим Паллофа с резинкой",
+      "steps": [
+        "Закрепите резинку за неподвижную опору на уровне груди и встаньте к ней боком, поставив стопы примерно на ширине плеч.",
+        "Удерживайте резинку двумя руками у груди и отойдите до небольшого натяжения.",
+        "Напрягите корпус и выпрямите руки перед собой, сохраняя плечи и таз направленными вперёд.",
+        "Задержитесь, не разворачиваясь к опоре, верните кисти к груди и повторите другой стороной к креплению."
+      ]
+    }
+  }
+}

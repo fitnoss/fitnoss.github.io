@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "dumbbell",
+  "primary": [
+    "quadriceps",
+    "glutes"
+  ],
+  "secondary": [
+    "adductors",
+    "abdominals"
+  ],
+  "places": [
+    "dumbbell",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Dumbbell Goblet Squat",
+      "steps": [
+        "Hold a single fixed-head dumbbell vertically against your chest, supporting the upper head with both palms.",
+        "Stand with your feet about shoulder-width apart and brace your torso.",
+        "Bend your knees and hips to squat between your legs, keeping your heels down and knees tracking with your toes.",
+        "Descend only while you can keep your balance and back position, then push through your feet to stand."
+      ]
+    },
+    "ru": {
+      "name": "Гоблет-приседания с гантелью",
+      "steps": [
+        "Удерживайте одну гантель с несъёмными головками вертикально у груди, поддерживая верхнюю головку обеими ладонями.",
+        "Поставьте стопы примерно на ширине плеч и напрягите корпус.",
+        "Сгибайте колени и тазобедренные суставы, опускаясь между ног; пятки остаются на полу, колени направлены вдоль носков.",
+        "Опускайтесь до глубины, на которой сохраняете равновесие и положение спины, затем оттолкнитесь стопами и встаньте."
+      ]
+    }
+  }
+}

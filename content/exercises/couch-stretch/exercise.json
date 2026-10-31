@@ -1,0 +1,35 @@
+{
+  "category": "stretching",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "bench",
+  "primary": [
+    "quadriceps"
+  ],
+  "secondary": [],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Couch Stretch",
+      "steps": [
+        "Kneel on one knee in front of a stable low bench. Rest the top of the rear foot on it and plant the front foot on the floor.",
+        "Tuck the pelvis slightly and engage the rear glute without arching the lower back.",
+        "Raise the torso gradually until you feel a gentle stretch through the front of the rear thigh and hip.",
+        "Breathe freely, then come out of the position and change legs."
+      ]
+    },
+    "ru": {
+      "name": "Растяжка передней поверхности бедра с опорой",
+      "steps": [
+        "Опуститесь на одно колено перед устойчивой низкой скамьёй. Положите подъём задней стопы на опору, переднюю стопу поставьте на пол.",
+        "Слегка подкрутите таз и напрягите ягодицу задней ноги, не прогибаясь в пояснице.",
+        "Постепенно поднимайте корпус до мягкого натяжения передней поверхности бедра и области таза.",
+        "Дышите свободно, затем выйдите из положения и смените ногу."
+      ]
+    }
+  },
+  "force": "static"
+}

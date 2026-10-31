@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "pullupbar",
+  "primary": [
+    "lats",
+    "biceps"
+  ],
+  "secondary": [
+    "middle back",
+    "forearms",
+    "abdominals"
+  ],
+  "places": [
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Archer Pull-Up",
+      "steps": [
+        "Hang from a bar with a wide overhand grip.",
+        "Pull your chest toward one hand while allowing the other arm to remain nearly straight.",
+        "Keep the shoulders controlled and avoid swinging or twisting your hips.",
+        "Lower back to the centered hang and repeat toward the opposite hand."
+      ]
+    },
+    "ru": {
+      "name": "Подтягивания лучника",
+      "steps": [
+        "Повисните на турнике широким прямым хватом.",
+        "Подтяните грудь к одной кисти, оставляя противоположную руку почти прямой.",
+        "Контролируйте плечи и не раскачивайтесь, не разворачивая таз.",
+        "Подконтрольно опуститесь в центральный вис и повторите к другой руке."
+      ]
+    }
+  }
+}

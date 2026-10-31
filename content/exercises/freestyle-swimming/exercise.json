@@ -1,0 +1,36 @@
+{
+  "category": "cardio",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "lats"
+  ],
+  "secondary": [
+    "shoulders",
+    "triceps",
+    "quadriceps",
+    "glutes"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Freestyle Swimming",
+      "steps": [
+        "Begin in the water with your body extended and your face down, using a familiar pool and an appropriate lane.",
+        "Alternate arm pulls from in front of you toward the hip, recovering each arm above the water.",
+        "Use small alternating kicks from the hips and keep your body near the surface.",
+        "Exhale into the water. Turn your head with your torso to breathe to the side, then return your face downward."
+      ]
+    },
+    "ru": {
+      "name": "Плавание кролем",
+      "steps": [
+        "Начните в воде с вытянутым телом, лицо направлено вниз. Используйте знакомый бассейн и дорожку подходящей глубины.",
+        "Поочерёдно проводите руками под водой от положения впереди к бедру, возвращая руку вперёд над водой.",
+        "Выполняйте небольшие попеременные движения ногами от бедра, сохраняя тело близко к поверхности.",
+        "Выдыхайте в воду. Для вдоха поворачивайте голову вместе с корпусом в сторону и возвращайте лицо вниз."
+      ]
+    }
+  }
+}

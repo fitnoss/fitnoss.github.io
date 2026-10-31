@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "barbell",
+  "primary": [
+    "shoulders"
+  ],
+  "secondary": [
+    "traps"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Landmine Lateral Raise",
+      "steps": [
+        "Secure one end of a bar in a landmine attachment. Stand side-on to the anchor with the free end held in the hand farther from it.",
+        "Start with the hand across the front of your hips and your elbow slightly soft.",
+        "Guide the bar outward and upward along its arc without leaning your torso or shrugging toward your ear.",
+        "Lower along the same path under control. Finish the repetitions, then change sides."
+      ]
+    },
+    "ru": {
+      "name": "Мах одной рукой с грифом в landmine",
+      "steps": [
+        "Надёжно закрепите один конец грифа в шарнире landmine. Встаньте боком к креплению и возьмите свободный конец дальней от него рукой.",
+        "Начните с кистью перед тазом и слегка смягчённым локтем.",
+        "Поднимайте конец грифа наружу и вверх по дуге, не наклоняя корпус и не подтягивая плечо к уху.",
+        "Подконтрольно опустите гриф по той же траектории. Завершите повторы и смените сторону."
+      ]
+    }
+  },
+  "equipmentExtra": [
+    "other"
+  ]
+}

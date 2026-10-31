@@ -1,0 +1,41 @@
+{
+  "category": "cardio",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "machine",
+  "primary": [
+    "lats",
+    "abdominals"
+  ],
+  "secondary": [
+    "triceps",
+    "glutes",
+    "quadriceps"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Ski Erg",
+      "steps": [
+        "Face the SkiErg with your feet about hip-width apart. Hold the handles with your hands just above head height.",
+        "Initiate the pull with your trunk, then hinge at the hips and soften your knees.",
+        "Drive the handles down toward your thighs, extending your elbows through the stroke.",
+        "Stand back up smoothly and let the hands return overhead. Repeat without jerking or dropping into a deep squat."
+      ]
+    },
+    "ru": {
+      "name": "Лыжный эргометр",
+      "steps": [
+        "Встаньте перед лыжным эргометром, стопы примерно на ширине таза. Возьмите рукояти и поднимите кисти чуть выше головы.",
+        "Начните тягу сокращением мышц корпуса, затем наклонитесь в тазобедренных суставах и немного согните колени.",
+        "Проведите рукояти вниз к бёдрам, постепенно разгибая локти.",
+        "Плавно выпрямитесь и верните руки вверх. Повторяйте без рывков и глубокого приседания."
+      ]
+    }
+  },
+  "video": {
+    "yt": "B0lIgT5PHc8"
+  }
+}

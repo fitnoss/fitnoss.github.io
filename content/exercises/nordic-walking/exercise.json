@@ -1,0 +1,36 @@
+{
+  "category": "cardio",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "other",
+  "primary": [
+    "quadriceps",
+    "glutes"
+  ],
+  "secondary": [
+    "calves",
+    "triceps",
+    "shoulders"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Nordic Walking",
+      "steps": [
+        "Hold appropriately sized Nordic walking poles and stand tall with slightly bent elbows.",
+        "Step forward while bringing the opposite arm forward with the leading leg.",
+        "Plant the pole angled backward and push it gently past the hip.",
+        "Keep a natural heel-to-toe walking action and avoid shrugging the shoulders."
+      ]
+    },
+    "ru": {
+      "name": "Скандинавская ходьба",
+      "steps": [
+        "Возьмите подходящие по длине палки для скандинавской ходьбы и выпрямитесь, слегка согнув локти.",
+        "Шагайте вперёд, выводя противоположную руку вместе с ногой.",
+        "Ставьте палку под углом назад и мягко отталкивайтесь ею за линию таза.",
+        "Сохраняйте естественный перекат стопы и не поднимайте плечи к ушам."
+      ]
+    }
+  }
+}

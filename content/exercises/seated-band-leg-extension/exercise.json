@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "push",
+  "equipment": "bands",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "quadriceps"
+  ],
+  "secondary": [],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Seated Band Leg Extension",
+      "steps": [
+        "Sit on a stable bench with your back upright. Loop the middle of a band under the working foot and hold the ends securely near your lap.",
+        "Keep the working thigh supported and begin with the knee bent; shorten your grip to remove slack.",
+        "Straighten the knee to lift the foot forward against the band while keeping the thigh still.",
+        "Bend the knee slowly to return, then repeat with the other leg."
+      ]
+    },
+    "ru": {
+      "name": "Разгибание ноги сидя с резинкой",
+      "steps": [
+        "Сядьте на устойчивую скамью с прямой спиной. Пропустите середину резинки под рабочей стопой, а концы надёжно держите возле бёдер.",
+        "Оставьте рабочее бедро на опоре и начните с согнутым коленом; укоротите хват, чтобы убрать провисание.",
+        "Разогните колено и поднимите стопу вперёд против натяжения резинки, не двигая бедром.",
+        "Медленно согните колено и вернитесь в исходное положение, затем повторите другой ногой."
+      ]
+    }
+  }
+}

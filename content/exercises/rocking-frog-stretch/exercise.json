@@ -1,0 +1,34 @@
+{
+  "category": "stretching",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "adductors"
+  ],
+  "secondary": [],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Rocking Frog Stretch",
+      "steps": [
+        "Begin on all fours on a padded mat and separate the knees to a comfortable width.",
+        "Turn the lower legs outward so the feet align with the knees, supporting yourself on your hands or forearms.",
+        "Keep the spine neutral and shift the hips backward until you feel a mild inner-thigh stretch.",
+        "Return the hips forward and repeat slowly without bouncing or forcing pressure through the knees."
+      ]
+    },
+    "ru": {
+      "name": "Динамическая растяжка приводящих в позе лягушки",
+      "steps": [
+        "Встаньте на четвереньки на мягком коврике и разведите колени до комфортной ширины.",
+        "Поверните голени наружу, оставляя стопы на одной линии с коленями, и опирайтесь на ладони или предплечья.",
+        "Сохраняя нейтральную спину, медленно отводите таз назад до мягкого натяжения внутренней поверхности бёдер.",
+        "Верните таз вперёд и повторяйте плавные покачивания, не пружиня и не увеличивая давление на колени."
+      ]
+    }
+  }
+}

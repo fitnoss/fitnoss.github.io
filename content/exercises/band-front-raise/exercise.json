@@ -1,0 +1,36 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "push",
+  "equipment": "bands",
+  "primary": [
+    "shoulders"
+  ],
+  "secondary": [],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Band Front Raise",
+      "steps": [
+        "Stand on the middle of a long band with both feet and hold its ends in front of your thighs.",
+        "Brace your trunk and keep a small, fixed bend in the elbows with your wrists straight.",
+        "Raise your hands forward to shoulder height without leaning back or shrugging.",
+        "Lower your hands under control, keeping the band secured under your feet."
+      ]
+    },
+    "ru": {
+      "name": "Подъём рук перед собой с резинкой",
+      "steps": [
+        "Встаньте обеими стопами на середину длинной резинки и возьмитесь за её концы перед бёдрами.",
+        "Напрягите корпус, слегка согните локти и сохраняйте этот угол; держите запястья прямыми.",
+        "Поднимите руки перед собой до уровня плеч, не отклоняя корпус назад и не поднимая плечи к ушам.",
+        "Подконтрольно опустите руки, удерживая резинку под стопами."
+      ]
+    }
+  }
+}

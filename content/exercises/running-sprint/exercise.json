@@ -1,0 +1,35 @@
+{
+  "category": "cardio",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "quadriceps",
+    "glutes"
+  ],
+  "secondary": [
+    "hamstrings",
+    "calves"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Running Sprint",
+      "steps": [
+        "Choose a flat clear route with room to slow down, and begin after warming up.",
+        "Accelerate from a stable stance with short forceful steps and a slight whole-body forward lean.",
+        "Rise gradually as you gain speed. Drive the arms forward and backward with relaxed shoulders.",
+        "Decelerate gradually at the end of the effort, moving into an easy jog and then a walk."
+      ]
+    },
+    "ru": {
+      "name": "Спринт",
+      "steps": [
+        "Выберите ровный свободный участок и заранее оставьте место для торможения. Начинайте после разминки.",
+        "Из устойчивой стойки начните ускорение короткими энергичными шагами, немного наклонив всё тело вперёд.",
+        "Постепенно выпрямляйтесь по мере набора скорости. Работайте руками вперёд и назад, не зажимая плечи.",
+        "В конце отрезка плавно снижайте скорость, переходя на лёгкий бег и затем шаг."
+      ]
+    }
+  }
+}

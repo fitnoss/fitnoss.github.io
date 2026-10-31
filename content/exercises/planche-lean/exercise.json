@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "body",
+  "primary": [
+    "shoulders",
+    "chest"
+  ],
+  "secondary": [
+    "triceps",
+    "abdominals",
+    "glutes"
+  ],
+  "places": [
+    "home",
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Planche Lean",
+      "steps": [
+        "Take a high plank with hands under your shoulders and feet on the floor.",
+        "Keep your elbows straight and push your upper back away from the floor.",
+        "Shift your shoulders ahead of your wrists while keeping your body rigid and toes grounded.",
+        "Hold within a comfortable wrist range, then shift back to the starting plank."
+      ]
+    },
+    "ru": {
+      "name": "Наклон вперёд в упоре на прямых руках",
+      "steps": [
+        "Примите упор лёжа, поставив кисти под плечами и оставив стопы на полу.",
+        "Сохраняйте прямые локти и активно отталкивайте верх спины от пола.",
+        "Сместите плечи вперёд за кисти, удерживая тело прямым и не отрывая носки.",
+        "Удерживайте положение в комфортной для запястий амплитуде и вернитесь в обычный упор."
+      ]
+    }
+  }
+}

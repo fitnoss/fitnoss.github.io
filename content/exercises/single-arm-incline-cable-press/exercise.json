@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "cable",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "chest"
+  ],
+  "secondary": [
+    "triceps",
+    "shoulders",
+    "abdominals"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Single-Arm Incline Cable Press",
+      "steps": [
+        "Set an incline bench in front of a low pulley with its back toward the machine. Take one handle and sit with your back supported.",
+        "Bring the handle beside the working shoulder and plant both feet; keep the other hand on the bench for balance.",
+        "Press the handle forward and upward over the upper chest without rotating your torso off the pad.",
+        "Return the hand slowly beside the shoulder, then repeat on the other side."
+      ]
+    },
+    "ru": {
+      "name": "Жим одной рукой на наклонной скамье с блоком",
+      "steps": [
+        "Поставьте наклонную скамью перед нижним блоком спинкой к тренажёру. Возьмите рукоять одной рукой и сядьте с опорой спиной.",
+        "Подведите рукоять к рабочему плечу и устойчиво поставьте обе стопы; свободной рукой держитесь за скамью для равновесия.",
+        "Выжмите рукоять вперёд и вверх над верхней частью груди, не разворачивая корпус от спинки.",
+        "Медленно верните кисть к плечу, затем повторите другой рукой."
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "machine",
+  "primary": [
+    "lats",
+    "middle back"
+  ],
+  "secondary": [
+    "biceps",
+    "shoulders"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Single-Arm Machine High Row",
+      "steps": [
+        "Use an independent-arm high-row machine and adjust the seat so you can reach the handle while keeping your torso supported.",
+        "Hold one handle and steady yourself with the other hand on a fixed support.",
+        "Pull the working elbow down and back toward your ribs, keeping your chest and pelvis facing forward.",
+        "Let the arm extend again under control without twisting your torso. Finish the set and change arms."
+      ]
+    },
+    "ru": {
+      "name": "Тяга высокого рычага в тренажёре одной рукой",
+      "steps": [
+        "Используйте тренажёр высокой тяги с независимыми рычагами. Настройте сиденье так, чтобы доставать до рукояти, сохраняя опору корпуса.",
+        "Возьмите одну рукоять и стабилизируйте тело другой рукой на неподвижной опоре.",
+        "Направляйте рабочий локоть вниз и назад к рёбрам, не разворачивая грудь и таз.",
+        "Подконтрольно выпрямите руку без скручивания корпуса. Завершите подход и смените руку."
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "barbell",
+  "primary": [
+    "chest"
+  ],
+  "secondary": [
+    "triceps",
+    "shoulders"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Incline Reverse-Grip Barbell Press",
+      "steps": [
+        "Use an incline bench in a rack with correctly positioned safeties and arrange help with the unrack.",
+        "Grip the bar with palms toward your face, slightly wider than shoulder-width. Keep the thumbs around the bar and the wrists supported over the forearms.",
+        "With your feet planted and upper back steady, lower the bar toward the upper chest while keeping your elbows near your sides.",
+        "Press upward along a controlled path and return the bar to the hooks with assistance when needed."
+      ]
+    },
+    "ru": {
+      "name": "Жим штанги на наклонной скамье обратным хватом",
+      "steps": [
+        "Используйте наклонную скамью в стойке с настроенными страховочными упорами; заранее договоритесь о помощи при снятии грифа.",
+        "Возьмите гриф обратным хватом немного шире плеч: ладони направлены к лицу, большие пальцы обхватывают гриф, кисти расположены над предплечьями.",
+        "Упритесь стопами в пол и удерживайте верх спины на скамье. Опускайте гриф к верхней части груди, направляя локти вдоль корпуса.",
+        "Подконтрольно выжмите штангу и верните её на крюки, при необходимости с помощью страхующего."
+      ]
+    }
+  },
+  "equipmentExtra": [
+    "bench"
+  ]
+}

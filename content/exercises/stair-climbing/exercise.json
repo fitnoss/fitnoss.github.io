@@ -1,0 +1,35 @@
+{
+  "category": "cardio",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "quadriceps",
+    "glutes"
+  ],
+  "secondary": [
+    "calves",
+    "hamstrings"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Stair Climbing",
+      "steps": [
+        "Choose a clear staircase with dry stable steps and an accessible handrail.",
+        "Walk upward, placing the foot securely on each step and driving through the supporting leg.",
+        "Keep the trunk controlled rather than pulling yourself upward with the arms.",
+        "Maintain a steady pace and descend slowly and deliberately after the ascent."
+      ]
+    },
+    "ru": {
+      "name": "Подъём по лестнице",
+      "steps": [
+        "Выберите свободную устойчивую лестницу с сухими ступенями и доступными перилами.",
+        "Поднимайтесь шагом, ставя стопу на ступень и выталкивая тело вверх усилием опорной ноги.",
+        "Держите корпус собранным и не тяните себя вверх руками за перила.",
+        "Сохраняйте равномерный темп. Завершив подъём, спускайтесь медленно и подконтрольно."
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "barbell",
+  "primary": [
+    "hamstrings",
+    "glutes"
+  ],
+  "secondary": [
+    "lower back",
+    "forearms"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Single-Leg Barbell Romanian Deadlift",
+      "steps": [
+        "Stand holding the bar in front of your thighs. Shift your weight to one foot and keep that knee slightly bent.",
+        "Move your hips back as your free leg extends behind you and your torso tips forward.",
+        "Keep your hips level, back steady and the bar near the supporting leg. Stop before you lose balance or start rounding your back.",
+        "Push through the supporting foot and bring your hips forward to stand tall. Complete the repetitions, then change legs."
+      ]
+    },
+    "ru": {
+      "name": "Румынская тяга со штангой на одной ноге",
+      "steps": [
+        "Встаньте со штангой перед бёдрами. Перенесите вес на одну стопу и слегка согните её колено.",
+        "Отводите таз назад, вытягивая свободную ногу за собой и наклоняя корпус вперёд.",
+        "Сохраняйте таз ровным, спину неподвижной, а гриф близко к опорной ноге. Остановитесь до потери равновесия или округления спины.",
+        "Оттолкнитесь опорной стопой и разогните тазобедренный сустав, возвращаясь в стойку. Завершите повторы и смените ногу."
+      ]
+    }
+  }
+}

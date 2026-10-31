@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "dumbbell",
+  "primary": [
+    "traps",
+    "shoulders"
+  ],
+  "secondary": [
+    "middle back"
+  ],
+  "places": [
+    "dumbbell",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Incline Dumbbell Y-Raise",
+      "steps": [
+        "Lie chest-down on a low incline bench with light dumbbells hanging below your shoulders.",
+        "Keep your thumbs pointing upward and your elbows slightly bent.",
+        "Lift your arms diagonally forward and outward so they form a Y with your torso, stopping within a comfortable shoulder range.",
+        "Lower slowly without lifting your chest off the bench or arching your lower back."
+      ]
+    },
+    "ru": {
+      "name": "Y-подъём гантелей с упором грудью",
+      "steps": [
+        "Лягте грудью на скамью с небольшим наклоном, опустив лёгкие гантели под плечами.",
+        "Направьте большие пальцы вверх и слегка согните локти.",
+        "Поднимайте руки по диагонали вперёд и наружу, образуя с корпусом букву Y; работайте в комфортной для плеч амплитуде.",
+        "Медленно опустите руки, не отрывая грудь от скамьи и не прогибая поясницу."
+      ]
+    }
+  },
+  "equipmentExtra": [
+    "bench"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "dumbbell",
+  "primary": [
+    "forearms"
+  ],
+  "secondary": [],
+  "places": [
+    "dumbbell",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Dumbbell Finger Curl",
+      "steps": [
+        "Sit with one forearm supported on your thigh or a bench, palm facing upward, holding a light dumbbell.",
+        "Keep the wrist still and gradually open your fingers enough to let the handle move toward the fingers without losing control.",
+        "Close your fingers to roll the handle back into your palm.",
+        "Repeat smoothly, then change hands; keep the weight supported rather than letting it drop."
+      ]
+    },
+    "ru": {
+      "name": "Сгибание пальцев с гантелью",
+      "steps": [
+        "Сядьте и положите предплечье на бедро или скамью ладонью вверх, удерживая лёгкую гантель.",
+        "Не двигая запястьем, постепенно разогните пальцы, позволяя рукояти сместиться к ним без потери контроля.",
+        "Согните пальцы и перекатите рукоять обратно в ладонь.",
+        "Повторяйте плавно, затем смените руку; удерживайте гантель под контролем, не позволяя ей падать."
+      ]
+    }
+  }
+}

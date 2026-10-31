@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "rings",
+  "primary": [
+    "lats",
+    "abdominals",
+    "shoulders"
+  ],
+  "secondary": [
+    "biceps"
+  ],
+  "places": [
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Skin the Cat on Rings",
+      "steps": [
+        "Use low rings with space around you and an easy foot-assisted exit.",
+        "From a hang, tuck your knees and lift your hips over your shoulders with controlled rotation.",
+        "Let your feet pass behind you, opening the shoulders only within a comfortable range.",
+        "Reverse the rotation while tucked and return to the starting hang without dropping or forcing the stretch."
+      ]
+    },
+    "ru": {
+      "name": "Прокрут в висе на кольцах",
+      "steps": [
+        "Используйте невысокие кольца со свободным пространством вокруг и возможностью поставить ноги на пол.",
+        "Из виса подтяните колени и подконтрольно поднимите таз выше плеч, выполняя переворот.",
+        "Проведите стопы за спину, раскрывая плечи только в комфортной амплитуде.",
+        "Обратным вращением в группировке вернитесь в исходный вис, не падая вниз и не продавливая растяжение."
+      ]
+    }
+  }
+}

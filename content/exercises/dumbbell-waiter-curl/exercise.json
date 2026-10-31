@@ -1,0 +1,37 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "dumbbell",
+  "primary": [
+    "biceps"
+  ],
+  "secondary": [
+    "forearms"
+  ],
+  "places": [
+    "dumbbell",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Dumbbell Waiter Curl",
+      "steps": [
+        "Stand holding one fixed-head dumbbell vertically in front of your thighs, with both open palms supporting the underside of its upper head.",
+        "Keep your elbows near your sides and your upper arms steady.",
+        "Bend your elbows to bring the dumbbell toward your chest while keeping its upper head approximately level.",
+        "Lower slowly without swinging your torso or letting the dumbbell slip; use a weight you can hold securely in this grip."
+      ]
+    },
+    "ru": {
+      "name": "Сгибание рук с гантелью за головку (waiter curl)",
+      "steps": [
+        "Встаньте, удерживая одну гантель с несъёмными головками вертикально перед бёдрами: обе раскрытые ладони поддерживают верхнюю головку снизу.",
+        "Удерживайте локти около корпуса, а плечевые части рук неподвижными.",
+        "Согните локти и поднимите гантель к груди, сохраняя её верхнюю головку примерно горизонтальной.",
+        "Медленно опустите гантель без раскачивания корпуса и проскальзывания; подберите вес, который надёжно удерживаете таким хватом."
+      ]
+    }
+  }
+}

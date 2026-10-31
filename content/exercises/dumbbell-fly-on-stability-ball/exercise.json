@@ -1,0 +1,43 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "isolation",
+  "force": "push",
+  "equipment": "dumbbell",
+  "primary": [
+    "chest"
+  ],
+  "secondary": [
+    "shoulders",
+    "abdominals"
+  ],
+  "places": [
+    "dumbbell",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Dumbbell Fly on Stability Ball",
+      "steps": [
+        "Sit on a stable exercise ball with light dumbbells, then walk your feet forward until your upper back and head are supported.",
+        "Plant your feet wide enough for balance and hold your hips level. Position the dumbbells above your chest with your palms facing each other.",
+        "Keep a small, fixed bend in your elbows and open your arms to the sides through a controlled comfortable range.",
+        "Bring the dumbbells together above your chest without bouncing or letting your hips sag.",
+        "After the set, bring the weights close to your torso and return to sitting in a controlled manner."
+      ]
+    },
+    "ru": {
+      "name": "Разведение гантелей лёжа на фитболе",
+      "steps": [
+        "Сядьте на устойчивый фитбол с лёгкими гантелями и пройдите стопами вперёд, пока верх спины и голова не окажутся на мяче.",
+        "Поставьте стопы достаточно широко для равновесия и удерживайте таз ровным. Расположите гантели над грудью ладонями друг к другу.",
+        "Сохраняйте небольшой постоянный сгиб локтей и разводите руки в стороны в комфортной подконтрольной амплитуде.",
+        "Сведите гантели над грудью, не пружиня и не опуская таз.",
+        "После подхода приблизьте гантели к корпусу и подконтрольно вернитесь в положение сидя."
+      ]
+    }
+  },
+  "equipmentExtra": [
+    "fitball"
+  ]
+}

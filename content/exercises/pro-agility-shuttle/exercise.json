@@ -1,0 +1,36 @@
+{
+  "category": "cardio",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "quadriceps",
+    "glutes"
+  ],
+  "secondary": [
+    "hamstrings",
+    "calves",
+    "adductors"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Pro-Agility Shuttle",
+      "steps": [
+        "Mark a centre line and an outer line five yards to either side.",
+        "Start at the centre line and accelerate to one outer line.",
+        "Lower your centre of mass to change direction, then run ten yards to the opposite outer line.",
+        "Turn again and run five yards through the centre. Start the next repetition in the other direction."
+      ]
+    },
+    "ru": {
+      "name": "Челночный бег 5–10–5",
+      "steps": [
+        "Обозначьте центральную линию и две крайние линии в пяти ярдах от неё с каждой стороны.",
+        "Встаньте на центральной линии и ускорьтесь к одной крайней линии.",
+        "У крайней линии снизьте центр тяжести и смените направление. Пробегите десять ярдов до противоположной линии.",
+        "Снова развернитесь и пробегите пять ярдов через центр. В следующем повторении начинайте в другую сторону."
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "cable",
+  "primary": [
+    "quadriceps",
+    "glutes",
+    "middle back"
+  ],
+  "secondary": [
+    "lats",
+    "biceps"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Cable Squat to Row",
+      "steps": [
+        "Set a pulley at waist height and hold a rope or two-hand attachment while facing the machine.",
+        "With the arms extended, sit your hips back and bend your knees into a controlled squat.",
+        "Stand up and pull the attachment toward your lower ribs, keeping the elbows close to your sides.",
+        "Let the arms lengthen as you lower into the next squat, keeping your back neutral and the weight stack controlled."
+      ]
+    },
+    "ru": {
+      "name": "Приседание с тягой блока",
+      "steps": [
+        "Установите блок на уровне пояса и возьмитесь за канат или рукоять для двух рук лицом к тренажёру.",
+        "С вытянутыми руками отведите таз назад и подконтрольно согните колени, опускаясь в приседание.",
+        "Поднимитесь и подтяните рукоять к нижним рёбрам, удерживая локти возле корпуса.",
+        "Выпрямляйте руки при следующем приседании, сохраняя нейтральную спину и контроль над грузом."
+      ]
+    }
+  }
+}

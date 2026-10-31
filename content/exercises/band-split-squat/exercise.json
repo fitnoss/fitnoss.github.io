@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "bands",
+  "primary": [
+    "quadriceps",
+    "glutes"
+  ],
+  "secondary": [
+    "hamstrings"
+  ],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Band Split Squat",
+      "steps": [
+        "Place the middle of a long band under the front foot and hold its ends beside your shoulders. Step the other foot back into a split stance.",
+        "Keep your feet on separate tracks, front heel grounded and torso tall.",
+        "Bend both knees to lower straight down, letting the back knee approach the floor without striking it.",
+        "Push through the front foot to stand, keeping the band secured, and switch your stance after the set."
+      ]
+    },
+    "ru": {
+      "name": "Сплит-приседание с резинкой",
+      "steps": [
+        "Прижмите середину длинной резинки передней стопой и держите концы возле плеч. Отставьте другую ногу назад в разножку.",
+        "Сохраняйте небольшое расстояние между стопами по ширине, переднюю пятку на полу и корпус вертикальным.",
+        "Согните оба колена и опуститесь вниз, приблизив заднее колено к полу без касания.",
+        "Оттолкнитесь передней стопой и выпрямитесь, удерживая резинку; после подхода смените положение ног."
+      ]
+    }
+  }
+}

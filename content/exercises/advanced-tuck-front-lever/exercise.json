@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "pullupbar",
+  "primary": [
+    "lats",
+    "abdominals"
+  ],
+  "secondary": [
+    "shoulders",
+    "biceps",
+    "lower back"
+  ],
+  "places": [
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Advanced Tuck Front Lever",
+      "steps": [
+        "Hang from a bar with an overhand grip and straight arms.",
+        "Draw your knees up and lean back until your torso is horizontal.",
+        "Open the angle at your hips so your knees move away from your chest while staying bent.",
+        "Keep your back flat and hips level; hold briefly, then return to a hang under control."
+      ]
+    },
+    "ru": {
+      "name": "Передний вис в раскрытой группировке",
+      "steps": [
+        "Повисните на турнике прямым хватом на прямых руках.",
+        "Подтяните колени и отклонитесь назад, выводя туловище в горизонтальное положение.",
+        "Раскройте угол в тазобедренных суставах: отведите согнутые колени от груди.",
+        "Держите спину ровной и таз на уровне плеч; после удержания подконтрольно вернитесь в вис."
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "category": "cardio",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "other",
+  "primary": [
+    "quadriceps",
+    "glutes"
+  ],
+  "secondary": [
+    "calves",
+    "traps",
+    "abdominals"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Rucking",
+      "steps": [
+        "Secure a load close to your back inside a backpack so it cannot shift as you walk.",
+        "Adjust the straps and stand tall with a natural head and shoulder position.",
+        "Walk at a controlled pace using your normal stride rather than reaching far forward with each step.",
+        "Maintain steady breathing and a stable upright posture throughout the effort."
+      ]
+    },
+    "ru": {
+      "name": "Ходьба с нагруженным рюкзаком",
+      "steps": [
+        "Равномерно разместите груз в рюкзаке и закрепите его ближе к спине, чтобы он не перемещался при ходьбе.",
+        "Подтяните лямки и встаньте прямо, сохраняя обычное положение головы и плеч.",
+        "Идите привычным шагом в контролируемом темпе, не вытягивая стопу далеко вперёд.",
+        "Сохраняйте спокойное дыхание и устойчивую осанку на протяжении отрезка."
+      ]
+    }
+  }
+}

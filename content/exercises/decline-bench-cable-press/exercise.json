@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "cable",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "chest"
+  ],
+  "secondary": [
+    "triceps",
+    "shoulders"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Decline Bench Cable Press",
+      "steps": [
+        "Position a decline bench between two low pulleys. Secure your legs in the bench supports and get both handles safely into position before lying back.",
+        "With your head below your hips, hold the handles beside your chest and keep your shoulders supported.",
+        "Press the handles upward over your chest until your arms are nearly straight, keeping the wrists aligned with the forearms.",
+        "Bend the elbows slowly to return beside the chest without lowering into an uncomfortable shoulder stretch."
+      ]
+    },
+    "ru": {
+      "name": "Жим на блоках на скамье с отрицательным наклоном",
+      "steps": [
+        "Поставьте скамью с отрицательным наклоном между двумя нижними блоками. Зафиксируйте ноги в упорах и безопасно возьмите рукояти перед тем, как лечь.",
+        "Когда голова находится ниже таза, удерживайте рукояти по сторонам груди, оставляя плечи на скамье.",
+        "Выжмите рукояти вверх над грудью почти до выпрямления рук, сохраняя кисти на одной линии с предплечьями.",
+        "Медленно согните локти и верните рукояти к груди, не уходя в дискомфортное растяжение плеч."
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "force": "push",
+  "primary": [
+    "abdominals",
+    "shoulders"
+  ],
+  "secondary": [
+    "quadriceps",
+    "glutes",
+    "triceps"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Bear Crawl",
+      "steps": [
+        "Start on hands and knees, hands below shoulders and knees below hips.",
+        "Brace your trunk and lift your knees a few centimeters from the floor.",
+        "Move one hand forward together with the opposite foot, taking short steps.",
+        "Alternate sides while keeping your back level and knees close to the floor."
+      ]
+    },
+    "ru": {
+      "name": "Медвежья ходьба",
+      "steps": [
+        "Встаньте на четвереньки, расположив кисти под плечами, а колени под тазом.",
+        "Напрягите корпус и приподнимите колени на несколько сантиметров от пола.",
+        "Одновременно переставьте вперёд одну ладонь и противоположную стопу коротким шагом.",
+        "Чередуйте стороны, удерживая спину ровной, а колени близко к полу."
+      ]
+    }
+  }
+}

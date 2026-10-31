@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "force": "push",
+  "primary": [
+    "abdominals",
+    "glutes"
+  ],
+  "secondary": [
+    "shoulders",
+    "triceps",
+    "hamstrings"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Crab Toe Touch",
+      "steps": [
+        "Sit with knees bent and palms behind your hips, then lift your hips a little from the floor.",
+        "Transfer your weight onto one hand and the opposite foot.",
+        "Lift the free leg and reach toward its toes with the opposite hand, rotating through your trunk.",
+        "Return hand and foot to the floor and alternate sides with control."
+      ]
+    },
+    "ru": {
+      "name": "Касания стопы в обратном упоре",
+      "steps": [
+        "Сядьте с согнутыми коленями, поставьте ладони за тазом и немного приподнимите таз.",
+        "Перенесите вес на одну ладонь и противоположную стопу.",
+        "Поднимите свободную ногу и потянитесь к её носку противоположной рукой, поворачивая корпус.",
+        "Верните ладонь и стопу на пол и подконтрольно чередуйте стороны."
+      ]
+    }
+  }
+}

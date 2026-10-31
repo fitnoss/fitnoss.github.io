@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "bands",
+  "primary": [
+    "lats"
+  ],
+  "secondary": [
+    "biceps",
+    "middle back"
+  ],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Kneeling Single-Arm Band Pulldown",
+      "steps": [
+        "Attach a band securely above head height. Kneel facing the anchor and hold the free end in one hand.",
+        "Reach the working arm overhead and position yourself so the band already has some tension; keep the trunk upright.",
+        "Pull your elbow down toward the side of your ribs without leaning back or twisting.",
+        "Let the arm rise slowly, keeping tension and control, then switch sides."
+      ]
+    },
+    "ru": {
+      "name": "Тяга резинки одной рукой с колена",
+      "steps": [
+        "Надёжно закрепите резинку выше головы. Опуститесь на колени лицом к креплению и возьмитесь за свободный конец одной рукой.",
+        "Вытяните рабочую руку вверх и расположитесь так, чтобы резинка была слегка натянута; держите корпус вертикально.",
+        "Опустите локоть к боковой поверхности рёбер, не отклоняясь назад и не разворачивая корпус.",
+        "Медленно верните руку вверх, сохраняя контроль и натяжение, затем смените сторону."
+      ]
+    }
+  }
+}

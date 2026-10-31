@@ -28,6 +28,18 @@ These assets have their own licenses; the repository's MIT license and the base 
 - License: [Pexels License](https://www.pexels.com/license/), checked 2026-10-31.
 - Selected the straight-arm hanging position with the full body visible. Resized and padded with white space to fit the app's landscape previews without cropping the body; converted to WebP during the build.
 
+## Additional exercise definitions
+
+The first catalog expansion adds 88 locally maintained exercise definitions under `content/exercises/`.
+Their English and Russian steps were independently authored for fitnoss after reviewing the named movements;
+third-party instruction paragraphs and media were not copied. The app's MIT license applies to these original texts.
+
+Names and equipment concepts were checked against the [OpenBody registry](https://github.com/openbody/openbody-registry/tree/66660efd17364be3e9700997a398a208738403ee)
+(CC0-1.0) and the metadata portion of [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset/tree/7455efae41b330c265e7cd4b78dfa848e7ce5ebd)
+(MIT, Copyright (c) 2026 Hasan Emir Yıldırım; [license and media exception](content/research/LICENSE-exercises-dataset.txt)).
+Gym visual images and animations from that dataset are not included or licensed by this import.
+Per-movement references and review outcomes are recorded in [the batch report](content/research/EXPANSION_BATCH_1.md).
+
 ## YouTube videos
 
 Videos are embedded with the standard YouTube player (youtube-nocookie.com) and are not copied or hosted

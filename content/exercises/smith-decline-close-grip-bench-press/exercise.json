@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "machine",
+  "primary": [
+    "triceps",
+    "chest"
+  ],
+  "secondary": [
+    "shoulders"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Smith Machine Decline Close-Grip Press",
+      "steps": [
+        "Position a decline bench under the Smith bar and set the safety stops. Secure your legs using the bench supports.",
+        "Grip the bar about shoulder-width apart and check that the bar path reaches your lower chest without forcing the shoulders.",
+        "Unhook the bar and lower it under control with your elbows angled toward your sides.",
+        "Press upward while keeping your back and hips supported, then hook the bar securely after the final repetition."
+      ]
+    },
+    "ru": {
+      "name": "Жим узким хватом в Смите на скамье с отрицательным наклоном",
+      "steps": [
+        "Установите скамью с отрицательным наклоном под гриф Смита и настройте страховочные упоры. Зафиксируйте ноги предусмотренными опорами скамьи.",
+        "Возьмите гриф примерно на ширине плеч и проверьте, что траектория направлена к нижней части груди без неудобного положения плеч.",
+        "Снимите гриф с крюков и подконтрольно опустите его, направляя локти ближе к бокам.",
+        "Выжмите гриф, сохраняя опору спины и таза, затем надёжно зафиксируйте его на крюках."
+      ]
+    }
+  },
+  "equipmentExtra": [
+    "bench"
+  ]
+}

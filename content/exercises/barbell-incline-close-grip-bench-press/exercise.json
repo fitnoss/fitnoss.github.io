@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "barbell",
+  "primary": [
+    "triceps",
+    "chest"
+  ],
+  "secondary": [
+    "shoulders"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Incline Close-Grip Barbell Bench Press",
+      "steps": [
+        "Set a bench to a modest incline inside a rack and set the safety bars. Lie back with both feet planted and grip the bar about shoulder-width apart.",
+        "Keep your shoulder blades against the bench and your wrists above your forearms as you unrack the bar.",
+        "Lower the bar toward the upper chest with your elbows angled toward your sides; keep the forearms approximately vertical.",
+        "Press the bar upward without lifting your hips, then rack it securely after the last repetition."
+      ]
+    },
+    "ru": {
+      "name": "Жим штанги на наклонной скамье узким хватом",
+      "steps": [
+        "Установите скамью с небольшим положительным наклоном в стойку и настройте страховочные упоры. Лягте, упритесь стопами в пол и возьмите гриф примерно на ширине плеч.",
+        "Прижмите лопатки к скамье, удерживайте кисти над предплечьями и снимите штангу со стоек.",
+        "Опускайте гриф к верхней части груди, направляя локти ближе к бокам; предплечья остаются примерно вертикальными.",
+        "Выжмите штангу, не отрывая таз. После последнего повтора надёжно верните гриф на стойки."
+      ]
+    }
+  },
+  "equipmentExtra": [
+    "bench"
+  ]
+}

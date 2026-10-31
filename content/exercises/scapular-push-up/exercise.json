@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "force": "push",
+  "primary": [
+    "shoulders"
+  ],
+  "secondary": [
+    "chest",
+    "abdominals"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Scapular Push-Up",
+      "steps": [
+        "Take a high plank with palms below shoulders and elbows straight.",
+        "Keep your trunk steady and let your chest sink slightly as the shoulder blades move together.",
+        "Push the floor away to spread the shoulder blades and raise the upper back.",
+        "Repeat this small movement without bending the elbows or arching the lower back."
+      ]
+    },
+    "ru": {
+      "name": "Лопаточные отжимания",
+      "steps": [
+        "Примите упор лёжа с кистями под плечами и прямыми локтями.",
+        "Удерживая корпус, немного опустите грудь между плечами, сближая лопатки.",
+        "Оттолкните пол от себя, разводя лопатки и приподнимая верх спины.",
+        "Повторяйте небольшое движение, не сгибая локти и не прогибая поясницу."
+      ]
+    }
+  }
+}

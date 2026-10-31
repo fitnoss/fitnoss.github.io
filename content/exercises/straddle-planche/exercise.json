@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "body",
+  "primary": [
+    "shoulders",
+    "chest"
+  ],
+  "secondary": [
+    "triceps",
+    "abdominals",
+    "glutes"
+  ],
+  "places": [
+    "home",
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Straddle Planche",
+      "steps": [
+        "Enter from a controlled tuck planche on straight arms.",
+        "Maintain forward shoulder lean and actively push the floor away.",
+        "Extend both knees outward into a wide straddle until your body is horizontal.",
+        "Keep hips level and elbows straight; tuck your legs back in before lowering your feet."
+      ]
+    },
+    "ru": {
+      "name": "Планш с разведёнными ногами",
+      "steps": [
+        "Начните из устойчивого планша в группировке на прямых руках.",
+        "Удерживайте плечи впереди кистей и активно отталкивайтесь от пола.",
+        "Выпрямите колени, разводя ноги в стороны и выводя тело в горизонталь.",
+        "Не опускайте таз и не сгибайте локти; для выхода снова сгруппируйтесь и опустите стопы."
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "body",
+  "primary": [
+    "chest",
+    "triceps"
+  ],
+  "secondary": [
+    "shoulders",
+    "abdominals"
+  ],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Archer Push-Up",
+      "steps": [
+        "Take a wide-hand plank, keeping your body straight.",
+        "Shift toward one hand and bend that elbow while the opposite arm stays nearly straight.",
+        "Lower your chest beside the working hand without dropping your hips.",
+        "Press back to the middle and alternate sides with the same controlled range."
+      ]
+    },
+    "ru": {
+      "name": "Отжимания лучника",
+      "steps": [
+        "Примите упор лёжа с широко расставленными ладонями и прямым корпусом.",
+        "Перенесите вес к одной кисти и согните этот локоть, оставляя другую руку почти прямой.",
+        "Опустите грудь рядом с рабочей кистью, не проваливая таз.",
+        "Выжмите себя обратно к центру и чередуйте стороны в одинаковой контролируемой амплитуде."
+      ]
+    }
+  }
+}

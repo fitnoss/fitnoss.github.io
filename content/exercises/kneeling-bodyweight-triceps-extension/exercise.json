@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "force": "push",
+  "primary": [
+    "triceps"
+  ],
+  "secondary": [
+    "shoulders",
+    "chest"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Kneeling Bodyweight Triceps Extension",
+      "steps": [
+        "Kneel with your palms on the floor in front of you, shoulder-width apart.",
+        "Bend your elbows forward until your forearms rest on the floor, keeping palms planted.",
+        "Press through your palms and extend your elbows to lift your forearms, without rocking your hips backward.",
+        "Slowly bend your elbows to return the forearms to the floor."
+      ]
+    },
+    "ru": {
+      "name": "Разгибание рук с весом тела с колен",
+      "steps": [
+        "Встаньте на колени и поставьте ладони перед собой на ширине плеч.",
+        "Согните локти вперёд и опустите предплечья на пол, сохраняя ладони на месте.",
+        "Надавите ладонями на пол и разогните локти, поднимая предплечья без отведения таза назад.",
+        "Плавно согните локти и верните предплечья на пол."
+      ]
+    }
+  }
+}

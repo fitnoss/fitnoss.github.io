@@ -1,0 +1,36 @@
+{
+  "category": "cardio",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "lats"
+  ],
+  "secondary": [
+    "shoulders",
+    "triceps",
+    "quadriceps",
+    "glutes"
+  ],
+  "places": [],
+  "i18n": {
+    "en": {
+      "name": "Backstroke Swimming",
+      "steps": [
+        "Float on your back with your eyes upward and your hips near the surface.",
+        "Recover the arms alternately above the water and enter approximately in line with each shoulder.",
+        "Bend the elbow under water and push the hand toward your hip before the next recovery.",
+        "Keep a small alternating flutter kick and use pool markings to judge your approach to the wall."
+      ]
+    },
+    "ru": {
+      "name": "Плавание на спине",
+      "steps": [
+        "Лягте на воду спиной, направьте взгляд вверх и удерживайте таз близко к поверхности.",
+        "Поочерёдно переносите руки над водой и вводите их в воду примерно на линии плеч.",
+        "Под водой сгибайте локоть и проводите кисть к бедру, затем начинайте новый перенос.",
+        "Поддерживайте небольшие попеременные движения ногами. Следите за ориентирами бассейна, чтобы вовремя остановиться у стенки."
+      ]
+    }
+  }
+}

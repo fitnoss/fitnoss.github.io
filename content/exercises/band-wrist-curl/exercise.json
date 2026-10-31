@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "bands",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "forearms"
+  ],
+  "secondary": [],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Band Wrist Curl",
+      "steps": [
+        "Sit on a stable bench and pin one end of a band under your foot. Hold the other end palm up.",
+        "Support your forearm on your thigh with the wrist just past the knee and the fingers closed around the band.",
+        "Bend the wrist to bring the palm toward the forearm without lifting your elbow.",
+        "Lower slowly to a comfortable stretch and repeat on the other side."
+      ]
+    },
+    "ru": {
+      "name": "Сгибание запястья с резинкой",
+      "steps": [
+        "Сядьте на устойчивую скамью и прижмите один конец резинки стопой. Другой конец держите ладонью вверх.",
+        "Положите предплечье на бедро, оставив запястье за краем колена; держите резинку закрытым хватом.",
+        "Согните запястье, приблизив ладонь к предплечью, и не поднимайте локоть.",
+        "Медленно опустите кисть до комфортного растяжения и повторите другой рукой."
+      ]
+    }
+  }
+}

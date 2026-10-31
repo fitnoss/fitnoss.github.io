@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "rings",
+  "primary": [
+    "triceps",
+    "shoulders"
+  ],
+  "secondary": [
+    "chest",
+    "abdominals"
+  ],
+  "places": [
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Ring Support Hold",
+      "steps": [
+        "Set rings low enough to step into and out of support.",
+        "Hold the rings beside your hips and press down until your elbows are straight and feet lift clear.",
+        "Keep rings close, shoulders away from ears and trunk upright without swinging.",
+        "Hold steadily, then lower until your feet touch the floor."
+      ]
+    },
+    "ru": {
+      "name": "Упор на прямых руках на кольцах",
+      "steps": [
+        "Установите кольца так, чтобы можно было легко войти в упор и выйти из него.",
+        "Держите кольца рядом с тазом и выжмите себя вверх на прямые руки, отрывая стопы.",
+        "Прижимайте кольца к бокам, опускайте плечи от ушей и сохраняйте вертикальный корпус без раскачивания.",
+        "Удерживайте упор, затем опуститесь до касания стопами пола."
+      ]
+    }
+  }
+}

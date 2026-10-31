@@ -1,0 +1,42 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "bands",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "quadriceps",
+    "glutes"
+  ],
+  "secondary": [
+    "hamstrings"
+  ],
+  "places": [
+    "home",
+    "bands",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Band Step-Up",
+      "steps": [
+        "Use a stable step or low bench. Place the middle of a long band under the working foot on the step and hold the ends beside your shoulders.",
+        "Keep the whole working foot supported and stand close enough to avoid pulling yourself forward.",
+        "Press through the raised foot to stand on the step, using the lower leg only for balance.",
+        "Lower the trailing foot back to the floor slowly, keeping the band pinned, then change working legs."
+      ]
+    },
+    "ru": {
+      "name": "Зашагивание с резинкой",
+      "steps": [
+        "Используйте устойчивую платформу или невысокую скамью. Прижмите середину длинной резинки рабочей стопой на платформе, концы держите у плеч.",
+        "Полностью поставьте рабочую стопу на опору и встаньте достаточно близко, чтобы не тянуть корпус вперёд.",
+        "Оттолкнитесь поднятой стопой и встаньте на платформу; нижняя нога помогает только удерживать равновесие.",
+        "Медленно опустите свободную стопу на пол, не выпуская резинку из-под рабочей стопы, затем смените ногу."
+      ]
+    }
+  }
+}

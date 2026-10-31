@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "cable",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "middle back",
+    "lats"
+  ],
+  "secondary": [
+    "biceps",
+    "shoulders"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Chest-Supported Incline Cable Row",
+      "steps": [
+        "Set an incline bench facing a low pulley and take a handle in each hand or a two-hand row attachment.",
+        "Rest your chest on the pad and plant your feet; let the arms reach toward the pulley without rounding your back.",
+        "Pull the handles toward the sides of your lower ribs while keeping your chest against the pad.",
+        "Extend the arms slowly and allow the shoulder blades to move forward under control without losing support."
+      ]
+    },
+    "ru": {
+      "name": "Тяга блока с упором грудью в наклонную скамью",
+      "steps": [
+        "Поставьте наклонную скамью лицом к нижнему блоку и возьмите две рукояти или рукоять для тяги двумя руками.",
+        "Обопритесь грудью на спинку и устойчиво поставьте стопы; вытяните руки к блоку, не округляя спину.",
+        "Подтяните рукояти к нижним рёбрам по бокам корпуса, сохраняя упор грудью в скамью.",
+        "Медленно выпрямите руки и подконтрольно разведите лопатки, не теряя опору."
+      ]
+    }
+  }
+}

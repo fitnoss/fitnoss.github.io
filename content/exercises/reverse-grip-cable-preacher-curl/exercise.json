@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "cable",
+  "equipmentExtra": [
+    "bench"
+  ],
+  "primary": [
+    "forearms",
+    "biceps"
+  ],
+  "secondary": [],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Reverse-Grip Cable Preacher Curl",
+      "steps": [
+        "Place a preacher bench in front of a low pulley and attach a straight bar. Choose a load you can control with an overhand grip.",
+        "Sit with the upper arms resting on the pad and hold the bar palms down, wrists straight.",
+        "Bend the elbows to raise the bar without lifting your upper arms from the pad or bending the wrists.",
+        "Lower slowly until the elbows are almost straight; avoid forcing them into a locked position."
+      ]
+    },
+    "ru": {
+      "name": "Сгибание рук обратным хватом на скамье Скотта с блоком",
+      "steps": [
+        "Поставьте скамью Скотта перед нижним блоком с прямой рукоятью. Выберите вес, который можете контролировать хватом сверху.",
+        "Сядьте, положив плечи на подушку, и возьмите рукоять ладонями вниз, удерживая запястья прямыми.",
+        "Согните локти и поднимите рукоять, не отрывая плечи от подушки и не сгибая запястья.",
+        "Медленно опустите рукоять почти до выпрямления локтей, не выталкивая их в жёсткий замок."
+      ]
+    }
+  }
+}

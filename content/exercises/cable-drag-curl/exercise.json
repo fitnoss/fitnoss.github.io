@@ -1,0 +1,36 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "cable",
+  "primary": [
+    "biceps"
+  ],
+  "secondary": [
+    "forearms"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Cable Drag Curl",
+      "steps": [
+        "Attach a straight bar to a low pulley and stand close to it, holding the bar palms up in front of your thighs.",
+        "Keep your torso upright and lift the bar along the front of your body while letting the elbows travel backward.",
+        "Stop when you cannot raise the bar farther without moving it away from your torso or shrugging.",
+        "Lower slowly along the same path, bringing the elbows forward to the starting position."
+      ]
+    },
+    "ru": {
+      "name": "Сгибание рук на блоке с протягиванием вдоль корпуса",
+      "steps": [
+        "Прикрепите прямую рукоять к нижнему блоку и встаньте рядом, удерживая её перед бёдрами ладонями вверх.",
+        "Держите корпус вертикально и поднимайте рукоять вдоль передней поверхности тела, отводя локти назад.",
+        "Остановитесь, когда не можете поднять рукоять выше без отведения от корпуса или подъёма плеч.",
+        "Медленно опустите рукоять по той же траектории, вернув локти в исходное положение."
+      ]
+    }
+  }
+}

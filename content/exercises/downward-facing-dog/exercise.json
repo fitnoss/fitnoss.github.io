@@ -1,0 +1,39 @@
+{
+  "category": "stretching",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "hamstrings",
+    "calves"
+  ],
+  "secondary": [
+    "shoulders",
+    "lats"
+  ],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Downward-Facing Dog",
+      "steps": [
+        "From all fours, place the hands slightly forward of the shoulders and tuck your toes under.",
+        "Press through the palms and lift the hips upward and backward, initially keeping the knees soft.",
+        "Lengthen the spine and spread pressure through the hands without crowding the neck.",
+        "Straighten the legs only as far as you can maintain a long back; the heels do not need to reach the floor."
+      ]
+    },
+    "ru": {
+      "name": "Собака мордой вниз",
+      "steps": [
+        "Из положения на четвереньках поставьте ладони чуть впереди плеч и подверните пальцы ног.",
+        "Оттолкнитесь ладонями и поднимите таз вверх и назад, сначала оставляя колени немного согнутыми.",
+        "Удлиняйте спину и распределяйте давление по ладоням. Не зажимайте голову между плечами.",
+        "Постепенно выпрямляйте ноги настолько, насколько позволяет сохранять длинную спину; пятки не обязательно опускать на пол."
+      ]
+    }
+  },
+  "force": "static"
+}

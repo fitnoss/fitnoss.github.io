@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "pullupbar",
+  "primary": [
+    "lats",
+    "abdominals"
+  ],
+  "secondary": [
+    "shoulders",
+    "biceps",
+    "lower back"
+  ],
+  "places": [
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Front Lever",
+      "steps": [
+        "Start from a controlled inverted hang with straight arms on a bar.",
+        "Keep your legs together and brace your abdomen and glutes.",
+        "Lower your straight body until it is horizontal, facing upward.",
+        "Hold your hips in line with your shoulders without bending your elbows, then lower into a hang."
+      ]
+    },
+    "ru": {
+      "name": "Передний горизонтальный вис",
+      "steps": [
+        "Начните из контролируемого перевёрнутого виса на турнике на прямых руках.",
+        "Соедините ноги, напрягите пресс и ягодицы.",
+        "Опустите прямое тело до горизонтали лицом вверх.",
+        "Удерживайте таз на уровне плеч, не сгибая локти, затем подконтрольно опуститесь в обычный вис."
+      ]
+    }
+  }
+}

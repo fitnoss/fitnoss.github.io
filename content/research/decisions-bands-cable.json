@@ -1,0 +1,269 @@
+{
+  "date": "2026-10-31",
+  "sections": [
+    "bands",
+    "cable"
+  ],
+  "notes": "Only name/equipment concepts taken from research metadata. Instructions are authored in EN/RU; raw source instructions with contradictory setup or muscles were not copied. No media copied.",
+  "decisions": [
+    {
+      "candidateId": "exercisedb-metadata:0976",
+      "status": "added",
+      "slug": "band-concentration-curl",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0978",
+      "status": "added",
+      "slug": "band-front-raise",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0979",
+      "status": "added",
+      "slug": "band-pallof-press",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://us.physitrack.com/home-exercise-video/pallof-press-with-exercise-band"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:0983",
+      "status": "added",
+      "slug": "band-kneeling-single-arm-pulldown",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0994",
+      "status": "added",
+      "slug": "band-reverse-wrist-curl",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://us.physitrack.com/home-exercise-video/resisted-eccentric-wrist-extension----option-1"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:1018",
+      "status": "added",
+      "slug": "band-shrug",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1001",
+      "status": "added",
+      "slug": "band-split-squat",
+      "reason": "Distinct long-band split squat: band under the front foot with ends beside shoulders. Source ankle-loop instructions were not copied because that setup does not clearly load knee/hip extension.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1003",
+      "status": "added",
+      "slug": "band-squat-to-row",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.acefitness.org/resources/everyone/exercise-library/344/squat-to-row/"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:1005",
+      "status": "added",
+      "slug": "band-standing-crunch",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1008",
+      "status": "added",
+      "slug": "band-step-up",
+      "reason": "Distinct long-band step-up under the raised foot. Instructions intentionally specify a resistance path; source mini-band/leg-extension sequence was not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://us.physitrack.com/home-exercise-video/band-resisted-step-ups"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:1016",
+      "status": "added",
+      "slug": "band-wrist-curl",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1017",
+      "status": "added",
+      "slug": "band-y-raise",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.acefitness.org/resources/everyone/exercise-library/237/shoulder-stability-mobility-series-i-y-t-w-formations/"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:3007",
+      "status": "added",
+      "slug": "seated-band-leg-extension",
+      "reason": "Seated band knee extension verified with Physitrack, rather than the source standing straight-leg hip-flexion description.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://us.physitrack.com/home-exercise-video/resisted-knee-extension-in-sitting"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:1261",
+      "status": "added",
+      "slug": "decline-bench-cable-press",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1632",
+      "status": "added",
+      "slug": "cable-drag-curl",
+      "reason": "Actual drag curl verified with Muscle & Strength; elbows travel back and bar remains near torso. Source standard-curl text was not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.muscleandstrength.com/exercises/cable-drag-curl.html"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:1318",
+      "status": "added",
+      "slug": "chest-supported-incline-cable-row",
+      "reason": "Added clearly named chest-supported incline cable row; chest stays on the bench, unlike existing unsupported seated rows. Source seated/lean-forward text was not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.catalystathletics.com/exercise/813/Cable-T-Bar-Row/",
+        "https://archive.t-nation.com/training/tip-build-your-back-with-21s/amp/"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:1265",
+      "status": "added",
+      "slug": "single-arm-incline-cable-press",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0209",
+      "status": "added",
+      "slug": "reverse-grip-cable-preacher-curl",
+      "reason": "Overhand-grip cable preacher curl differs from existing supinated preacher and unsupported reverse curl. Source conflicting overhand/underhand wording was replaced with one clear setup.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1726",
+      "status": "added",
+      "slug": "floor-rope-cable-triceps-extension",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2399",
+      "status": "added",
+      "slug": "seated-cable-torso-rotation",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1717",
+      "status": "added",
+      "slug": "cable-squat-to-row",
+      "reason": "Distinct equipment, support position or combined movement; original bilingual instructions authored after comparison with the current catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.acefitness.org/resources/everyone/exercise-library/344/squat-to-row/"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:0984",
+      "status": "skipped",
+      "reason": "The named internal hip rotation conflicts with the source instructions, which describe knees opening outward; no sufficiently clear technique reference verified.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1015",
+      "status": "skipped",
+      "reason": "Source describes the same horizontal anti-rotation press as 0979 despite the vertical name. Retained one clear Band Pallof Press instead.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0157",
+      "status": "skipped",
+      "reason": "Cable Deadlifts already exists in the catalog; the source record adds no distinct movement.",
+      "existingCode": 89,
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0223",
+      "status": "skipped",
+      "reason": "Source low-pulley side-bend description is unclear and risks duplicating the existing high-pulley side-bend variants; defer until the named side-crunch setup is verified.",
+      "existingCode": 304,
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1375",
+      "status": "skipped",
+      "reason": "Source alternates between holding handles and ankle straps without a coherent loading setup for a calf raise; defer pending technique verification.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0240",
+      "status": "skipped",
+      "reason": "Supine name conflicts with instructions to lie face down. Do not publish an invented or incorrectly named variant.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2464",
+      "status": "skipped",
+      "reason": "Source describes a generic one-arm seated cable row rather than a verified Thibaudeau kayak row. Defer to avoid relabeling an existing row.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "techniqueSources": []
+    }
+  ]
+}

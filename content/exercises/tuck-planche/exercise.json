@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "body",
+  "primary": [
+    "shoulders",
+    "chest"
+  ],
+  "secondary": [
+    "triceps",
+    "abdominals",
+    "glutes"
+  ],
+  "places": [
+    "home",
+    "bars",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Tuck Planche",
+      "steps": [
+        "Place your palms on the floor and begin in a low squat.",
+        "Lean your shoulders ahead of your wrists, keeping elbows straight and shoulder blades spread.",
+        "Draw both knees toward your chest and lift your feet without resting knees on your arms.",
+        "Hold with your hips near shoulder height, then place your feet down slowly."
+      ]
+    },
+    "ru": {
+      "name": "Планш в группировке",
+      "steps": [
+        "Поставьте ладони на пол и присядьте между руками.",
+        "Перенесите плечи вперёд за кисти, сохраняя прямые локти и разведённые лопатки.",
+        "Подтяните оба колена к груди и оторвите стопы, не опираясь коленями на руки.",
+        "Удерживайте таз примерно на уровне плеч, затем плавно поставьте стопы на пол."
+      ]
+    }
+  }
+}

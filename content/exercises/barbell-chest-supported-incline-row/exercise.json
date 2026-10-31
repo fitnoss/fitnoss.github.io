@@ -1,0 +1,41 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "pull",
+  "equipment": "barbell",
+  "primary": [
+    "middle back",
+    "lats"
+  ],
+  "secondary": [
+    "biceps",
+    "shoulders"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Chest-Supported Incline Barbell Row",
+      "steps": [
+        "Use an incline bench and position the bar beneath it so it can move freely without hitting the frame.",
+        "Lie chest-down on the pad with your feet braced. Grip the bar overhand and let your arms hang below your shoulders.",
+        "Pull the bar toward your lower chest, moving your elbows behind you while keeping your chest on the bench.",
+        "Lower until your arms are extended again. Keep the same torso position throughout the set."
+      ]
+    },
+    "ru": {
+      "name": "Тяга штанги с упором грудью в наклонную скамью",
+      "steps": [
+        "Установите наклонную скамью и расположите штангу под ней так, чтобы гриф свободно двигался, не задевая раму.",
+        "Лягте грудью на опору и устойчиво поставьте стопы. Возьмите гриф прямым хватом, опустив руки под плечами.",
+        "Тяните гриф к нижней части груди, отводя локти назад и сохраняя контакт груди со скамьёй.",
+        "Опустите штангу до выпрямления рук. Не меняйте положение корпуса в течение подхода."
+      ]
+    }
+  },
+  "equipmentExtra": [
+    "bench"
+  ]
+}

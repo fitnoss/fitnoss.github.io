@@ -1,0 +1,38 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "machine",
+  "primary": [
+    "chest"
+  ],
+  "secondary": [
+    "triceps",
+    "shoulders",
+    "abdominals"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Standing Machine Chest Press",
+      "steps": [
+        "Use a chest-press machine designed for standing use and adjust its handles to chest height.",
+        "Take a stable stance on the platform or floor and brace against the supplied support if the model has one.",
+        "Press the handles forward while keeping your torso steady and your wrists aligned with your forearms.",
+        "Return slowly until your elbows are beside your torso, without allowing the resistance to pull you out of position."
+      ]
+    },
+    "ru": {
+      "name": "Жим от груди стоя в рычажном тренажёре",
+      "steps": [
+        "Используйте рычажный тренажёр, предназначенный для жима стоя, и настройте рукояти на уровне груди.",
+        "Устойчиво встаньте на платформу или пол и используйте опору корпуса, если она предусмотрена конструкцией.",
+        "Выжмите рукояти вперёд, сохраняя корпус неподвижным, а кисти — на линии предплечий.",
+        "Медленно верните локти к корпусу, не позволяя сопротивлению вывести вас из устойчивого положения."
+      ]
+    }
+  }
+}

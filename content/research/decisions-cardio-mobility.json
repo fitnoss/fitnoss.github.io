@@ -1,0 +1,263 @@
+{
+  "date": "2026-10-31",
+  "sections": [
+    "cardio",
+    "mobility"
+  ],
+  "notes": "Original EN/RU steps authored after movement review; no third-party images copied. Verified SkiErg coaching video linked.",
+  "decisions": [
+    {
+      "candidateId": "openbody:heavy-bag",
+      "status": "added",
+      "slug": "heavy-bag-boxing",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:shadowboxing",
+      "status": "added",
+      "slug": "shadowboxing",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:ski.erg",
+      "status": "added",
+      "slug": "ski-erg",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "verified-video",
+      "techniqueSources": [
+        "https://www.concept2.com/blog/skierg-technique"
+      ]
+    },
+    {
+      "candidateId": "openbody:swim.freestyle",
+      "status": "added",
+      "slug": "freestyle-swimming",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.swimming.org/learntoswim/learning-the-four-swimming-strokes/"
+      ]
+    },
+    {
+      "candidateId": "openbody:downward-dog",
+      "status": "added",
+      "slug": "downward-facing-dog",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.acefitness.org/exerciselibrary/18/downward-facing-dog"
+      ]
+    },
+    {
+      "candidateId": "openbody:couch-stretch",
+      "status": "added",
+      "slug": "couch-stretch",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.wholelifechallenge.com/a-quick-video-lesson-on-the-couch-stretch/"
+      ]
+    },
+    {
+      "candidateId": "openbody:cat-cow",
+      "status": "added",
+      "slug": "cat-cow",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.acefitness.org/resources/everyone/exercise-library/"
+      ]
+    },
+    {
+      "candidateId": "openbody:shoulder-cars",
+      "status": "added",
+      "slug": "controlled-shoulder-circles",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.movementprofessional.com/movementprofessional/2020/9/22/shoulder-cars"
+      ]
+    },
+    {
+      "candidateId": "openbody:sprint",
+      "status": "added",
+      "slug": "running-sprint",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:pro-agility-shuttle",
+      "status": "added",
+      "slug": "pro-agility-shuttle",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:swim.backstroke",
+      "status": "added",
+      "slug": "backstroke-swimming",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://scottishswimming.com/learn-to-swim/what-to-expect/technique-videos"
+      ]
+    },
+    {
+      "candidateId": "openbody:swim.breaststroke",
+      "status": "added",
+      "slug": "breaststroke-swimming",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.swimwales.org/stroke-drill-progressions-breaststroke/"
+      ]
+    },
+    {
+      "candidateId": "openbody:run.deep-water",
+      "status": "added",
+      "slug": "deep-water-running",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:ruck",
+      "status": "added",
+      "slug": "rucking",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": [
+        "https://www.goruck.com/pages/get-started-rucking"
+      ]
+    },
+    {
+      "candidateId": "openbody:walk.nordic",
+      "status": "added",
+      "slug": "nordic-walking",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:stair-climb",
+      "status": "added",
+      "slug": "stair-climbing",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "openbody:sprint.hill",
+      "status": "added",
+      "slug": "hill-sprint",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/openbody/openbody-registry/blob/66660efd17364be3e9700997a398a208738403ee/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1710",
+      "status": "added",
+      "slug": "supine-figure-four-stretch",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3220",
+      "status": "skipped",
+      "reason": "Ambiguous astride/star-jump label and inconsistent source instructions; do not create another jump variation without a reliable demonstration.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1559",
+      "status": "skipped",
+      "reason": "Ball hip-flexor instructions target the wrong hip and do not identify a stable reproducible position; deferred.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1339",
+      "status": "skipped",
+      "reason": "Ball lat-stretch source unexpectedly requires a dumbbell and lacks clear alignment with its name; deferred.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0613",
+      "status": "skipped",
+      "reason": "Existing code 697 On Your Side Quad Stretch already describes the same side-lying quadriceps stretch.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2571",
+      "status": "added",
+      "slug": "rocking-frog-stretch",
+      "reason": "Distinct movement; bilingual steps authored and checked against movement mechanics. No third-party media copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2208",
+      "status": "skipped",
+      "reason": "Generic rolling over the lower back is not a clear distinct exercise; source instructions unsuitable for import.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2205",
+      "status": "skipped",
+      "reason": "Roller hip lat stretch name and instructions do not identify a coherent conventional movement; deferred.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2567",
+      "status": "skipped",
+      "reason": "Source seated piriformis instructions describe a seated spinal rotation instead of a clearly defined figure-four stretch; deferred.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2329",
+      "status": "skipped",
+      "reason": "Spine-twist source combines contradictory knee/elbow cues; defer until a specific conventional variant is established.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing",
+      "techniqueSources": []
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "category": "stretching",
+  "level": "beginner",
+  "mechanic": "compound",
+  "equipment": "body",
+  "primary": [
+    "lower back"
+  ],
+  "secondary": [
+    "abdominals"
+  ],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Cat-Cow",
+      "steps": [
+        "Start on all fours with your hands under your shoulders, knees under your hips and spine neutral.",
+        "Exhale as you round the back gently, drawing the abdomen inward and lowering the head.",
+        "Inhale as you open the chest forward and allow a small comfortable extension through the spine.",
+        "Alternate slowly within a comfortable range without forcing the neck."
+      ]
+    },
+    "ru": {
+      "name": "Кошка-корова",
+      "steps": [
+        "Встаньте на четвереньки: кисти под плечами, колени под тазом, спина в нейтральном положении.",
+        "На выдохе плавно округлите спину, подтягивая живот и опуская голову.",
+        "На вдохе мягко прогнитесь в грудном отделе, направляя грудину вперёд и немного поднимая взгляд.",
+        "Медленно чередуйте положения в комфортной амплитуде без давления на шею."
+      ]
+    }
+  }
+}

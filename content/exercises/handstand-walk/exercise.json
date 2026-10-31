@@ -1,0 +1,39 @@
+{
+  "category": "strength",
+  "level": "expert",
+  "mechanic": "compound",
+  "force": "push",
+  "equipment": "body",
+  "primary": [
+    "shoulders",
+    "triceps"
+  ],
+  "secondary": [
+    "abdominals",
+    "glutes"
+  ],
+  "places": [
+    "home",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Handstand Walk",
+      "steps": [
+        "Begin in a balanced freestanding handstand on a clear, level surface.",
+        "Keep your elbows extended and push tall through your shoulders.",
+        "Shift your weight to one hand and take a small step with the other.",
+        "Alternate short hand steps while keeping your trunk firm; finish with a controlled exit you have already practiced."
+      ]
+    },
+    "ru": {
+      "name": "Ходьба на руках",
+      "steps": [
+        "Примите устойчивую свободную стойку на руках на ровной свободной площадке.",
+        "Выпрямите локти и активно вытягивайтесь вверх через плечи.",
+        "Перенесите вес на одну руку и сделайте небольшой шаг другой.",
+        "Чередуйте короткие шаги, сохраняя напряжённый корпус; завершите движение заранее освоенным контролируемым выходом."
+      ]
+    }
+  }
+}

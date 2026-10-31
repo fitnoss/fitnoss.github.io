@@ -1,0 +1,36 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "force": "pull",
+  "equipment": "machine",
+  "primary": [
+    "hamstrings"
+  ],
+  "secondary": [
+    "calves"
+  ],
+  "places": [
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Machine Kneeling Leg Curl",
+      "steps": [
+        "Adjust the machine so the working knee lines up with its pivot and the roller rests above the heel.",
+        "Place the other knee on the support pad, brace your torso on the provided pads and hold the handles.",
+        "Bend the working knee to bring the heel toward your glutes without lifting your thigh or rotating your hips.",
+        "Lower the lever slowly, then repeat on the other leg after finishing the set."
+      ]
+    },
+    "ru": {
+      "name": "Сгибание ноги в тренажёре с опорой на колено",
+      "steps": [
+        "Настройте тренажёр так, чтобы колено рабочей ноги совпадало с осью рычага, а валик располагался над пяткой.",
+        "Поставьте другое колено на опорную подушку, зафиксируйте корпус предусмотренными опорами и возьмитесь за рукояти.",
+        "Согните рабочее колено, приближая пятку к ягодицам, не поднимая бедро и не разворачивая таз.",
+        "Медленно опустите рычаг. После подхода повторите другой ногой."
+      ]
+    }
+  }
+}

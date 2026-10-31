@@ -1,0 +1,36 @@
+{
+  "category": "strength",
+  "level": "beginner",
+  "mechanic": "isolation",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "primary": [
+    "abdominals"
+  ],
+  "secondary": [
+    "glutes"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Supine Pelvic Tilt",
+      "steps": [
+        "Lie on your back with knees bent and feet flat.",
+        "Gently tighten your abdomen and roll your pelvis so the lower back moves toward the floor.",
+        "Hold the small tilt while breathing, keeping your hips on the floor.",
+        "Release to a comfortable neutral position without lifting into a bridge."
+      ]
+    },
+    "ru": {
+      "name": "Наклон таза лёжа",
+      "steps": [
+        "Лягте на спину, согните колени и поставьте стопы на пол.",
+        "Мягко напрягите пресс и подкрутите таз, приближая поясницу к полу.",
+        "Ненадолго задержите небольшой наклон и продолжайте дышать, не отрывая таз.",
+        "Вернитесь в удобное нейтральное положение, не переходя в ягодичный мостик."
+      ]
+    }
+  }
+}

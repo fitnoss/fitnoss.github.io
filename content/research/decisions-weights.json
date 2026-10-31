@@ -1,0 +1,390 @@
+{
+  "date": "2026-10-31",
+  "decisions": [
+    {
+      "candidateId": "exercisedb-metadata:1719",
+      "status": "added",
+      "slug": "barbell-incline-close-grip-bench-press",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0048",
+      "status": "added",
+      "slug": "barbell-incline-reverse-grip-press",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": [
+        "https://www.muscleandfitness.com/routine/workouts/workout-routines/reverse-grip-upper-body-workout-routine/"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:0049",
+      "status": "added",
+      "slug": "barbell-chest-supported-incline-row",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1410",
+      "status": "added",
+      "slug": "barbell-lateral-lunge",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3017",
+      "status": "added",
+      "slug": "pendlay-row",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": [
+        "https://www.muscleandstrength.com/exercises/pendlay-row"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:1756",
+      "status": "added",
+      "slug": "barbell-single-leg-romanian-deadlift",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3237",
+      "status": "added",
+      "slug": "landmine-lateral-raise",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": [
+        "https://www.muscleandstrength.com/exercises/landmine-lateral-raise"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:0300",
+      "status": "added",
+      "slug": "dumbbell-deadlift",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1437",
+      "status": "added",
+      "slug": "dumbbell-finger-curl",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1277",
+      "status": "added",
+      "slug": "dumbbell-fly-on-stability-ball",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1760",
+      "status": "added",
+      "slug": "dumbbell-goblet-squat",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3541",
+      "status": "added",
+      "slug": "incline-dumbbell-y-raise",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1700",
+      "status": "added",
+      "slug": "dumbbell-push-press",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1624",
+      "status": "added",
+      "slug": "reverse-grip-dumbbell-bench-press",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": [
+        "https://www.muscleandfitness.com/routine/workouts/workout-routines/reverse-grip-upper-body-workout-routine/"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:3664",
+      "status": "added",
+      "slug": "dumbbell-side-plank-reverse-fly",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3548",
+      "status": "added",
+      "slug": "single-arm-dumbbell-overhead-carry",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:5201",
+      "status": "added",
+      "slug": "dumbbell-waiter-curl",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": [
+        "https://learn.athleanx.com/articles/home-dumbbell-workout"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:2288",
+      "status": "added",
+      "slug": "machine-grip-squeeze",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": [
+        "https://www.lifefitness.com/en-eu/catalog/strength-training/plate-loaded/plate-loaded-gripper"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:0582",
+      "status": "added",
+      "slug": "machine-kneeling-leg-curl",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": [
+        "https://www.lifefitness.com.au/commercial/iso-lateral-kneeling-leg-curl-ilklc"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:1356",
+      "status": "added",
+      "slug": "machine-single-arm-high-row",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3758",
+      "status": "added",
+      "slug": "machine-standing-chest-press",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": [
+        "https://www.atxfitness.com/atx-standing-chest-press"
+      ]
+    },
+    {
+      "candidateId": "exercisedb-metadata:1433",
+      "status": "added",
+      "slug": "smith-machine-front-squat",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1625",
+      "status": "added",
+      "slug": "smith-decline-close-grip-bench-press",
+      "reason": "Distinct equipment, support, movement path or loading pattern compared with the existing catalog. EN/RU technique authored for the named exercise; source prose not copied.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "missing-no-unlicensed-media-copied",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1201",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Source labels this burpee but describes a clean and overhead press finish; unclear distinction from devil press or man-maker variations.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:1434",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Generic low-bar placement variation of existing code 186 Smith Machine Squat; source contradicts its own low-bar label by placing the bar on the traps.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2187",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Duplicate of existing code 469 Reverse Triceps Bench Press, which already uses a close supinated grip.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:2397",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Scott press is a specific partial rotational shoulder movement; source instead describes a generic full-range dumbbell press. Defer until the intended variant is verified.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3542",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Duplicate of existing code 54 Reverse Flyes and code 518 Dumbbell Lying Rear Lateral Raise, which already lift the arms sideways with chest support.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:3759",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Generic seated hinge text does not establish the machine contact points or lever design; defer until a primary equipment reference is available.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0067",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Source describes a two-handed setup for a one-arm snatch; advanced uncommon movement needs a reliable dedicated technique reference before inclusion.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0072",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Duplicate of existing code 222 Barbell Curls Lying Against An Incline, with the same chest-down bench support and barbell curl.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0022",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Name promises pullover plus press, but the source only describes a straight-arm pullover already covered by the catalog; combination is not defined clearly.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0102",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Duplicate of existing code 782 Kneeling Squat. Source instructions are also inconsistent with a kneeling position.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0112",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Source alternates between a bar held at chest height and a torso twist with conflicting lower-body cues; defer until a precise variant is established.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0307",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Wrist-rotation-only fly variant; defer rather than inflate the catalog without dependable confirmation of the intended technique.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0438",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Source describes an ordinary dumbbell shoulder press with no W-shaped path, already covered by the catalog.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0578",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Duplicate of existing code 146 Leverage Deadlift. Source incorrectly describes a seated leg-press setup.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0580",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Gripless shoulder-pad shrug is already represented by code 249 Calf-Machine Shoulder Shrug; source instead tells the user to grip handles.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0600",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Source does not establish how the leg lever and torso resistance are connected; defer ambiguous machine-specific instructions.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0755",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Source is an ordinary Smith squat already covered by code 186, without the feet-forward/support distinction required for a hack-squat variant.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    },
+    {
+      "candidateId": "exercisedb-metadata:0769",
+      "status": "skipped",
+      "slug": null,
+      "reason": "Existing code 445 Lunge Sprint already covers the Smith sprint-lunge pattern. Source confusingly describes rear-foot support on the bar instead.",
+      "sourceUrl": "https://github.com/hasaneyldrm/exercises-dataset/blob/7455efae41b330c265e7cd4b78dfa848e7ce5ebd/data/exercises.json",
+      "mediaStatus": "not-used",
+      "techniqueSources": []
+    }
+  ]
+}

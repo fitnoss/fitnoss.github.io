@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "force": "static",
+  "equipment": "dumbbell",
+  "primary": [
+    "shoulders",
+    "abdominals"
+  ],
+  "secondary": [
+    "triceps",
+    "traps",
+    "glutes"
+  ],
+  "places": [
+    "dumbbell",
+    "gym"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Single-Arm Dumbbell Overhead Carry",
+      "steps": [
+        "Raise a dumbbell into a stable overhead position with your arm extended and the weight balanced above your shoulder.",
+        "Keep your ribs over your pelvis and your shoulder active, without leaning to either side.",
+        "Walk with short controlled steps, keeping the dumbbell steady overhead.",
+        "Stop before your arm position or balance changes, lower the weight safely and repeat with the other arm."
+      ]
+    },
+    "ru": {
+      "name": "Ходьба с гантелью над головой одной рукой",
+      "steps": [
+        "Поднимите гантель в устойчивое положение над головой: рука выпрямлена, вес расположен над плечом.",
+        "Удерживайте рёбра над тазом и активно стабилизируйте плечо, не наклоняясь в сторону.",
+        "Идите короткими подконтрольными шагами, сохраняя гантель неподвижной над головой.",
+        "Остановитесь до изменения положения руки или потери равновесия, безопасно опустите вес и повторите другой рукой."
+      ]
+    }
+  }
+}

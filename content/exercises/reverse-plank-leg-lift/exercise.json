@@ -1,0 +1,40 @@
+{
+  "category": "strength",
+  "level": "intermediate",
+  "mechanic": "compound",
+  "equipment": "body",
+  "places": [
+    "home",
+    "gym"
+  ],
+  "force": "push",
+  "primary": [
+    "glutes",
+    "hamstrings",
+    "abdominals"
+  ],
+  "secondary": [
+    "shoulders",
+    "triceps"
+  ],
+  "i18n": {
+    "en": {
+      "name": "Reverse Plank with Leg Lift",
+      "steps": [
+        "Sit with legs straight and place palms behind your hips in a comfortable wrist position.",
+        "Press into your hands and heels to lift your hips into a straight reverse plank.",
+        "Raise one straight leg slightly without letting your pelvis drop or rotate.",
+        "Lower the heel and alternate legs, then sit down under control."
+      ]
+    },
+    "ru": {
+      "name": "Обратная планка с подъёмом ноги",
+      "steps": [
+        "Сядьте с прямыми ногами и поставьте ладони позади таза в удобном для запястий положении.",
+        "Оттолкнитесь ладонями и пятками, поднимая таз в прямую обратную планку.",
+        "Немного поднимите одну прямую ногу, не опуская и не разворачивая таз.",
+        "Верните пятку, чередуйте ноги и в конце подконтрольно опустите таз."
+      ]
+    }
+  }
+}
