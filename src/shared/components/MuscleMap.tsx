@@ -22,7 +22,8 @@ export const MuscleMap = memo(function MuscleMap({ colorFor, selected, onSelect 
           <svg viewBox={side ? "-115 -15 1230 2340" : "-115 -15 1230 2140"} className="mx-auto h-64 w-full max-w-44" aria-hidden="true">
             {regions.map(({ muscle, points }, index) => (
               <g key={index}
-                className={muscle && onSelect ? "cursor-pointer" : undefined}
+                className={`transition-opacity duration-200${muscle && onSelect ? " cursor-pointer" : ""}`}
+                opacity={selected && muscle !== selected ? 0.35 : 1}
                 onClick={muscle && onSelect ? () => onSelect(muscle) : undefined}>
                 {points.map((polygon) => (
                   <polygon key={polygon} points={polygon}
@@ -34,16 +35,6 @@ export const MuscleMap = memo(function MuscleMap({ colorFor, selected, onSelect 
                 {muscle && <title>{t(`muscle.${key(muscle)}`)}</title>}
               </g>
             ))}
-            {/* Draw selection last so its outline stays visible without replacing the volume color. */}
-            {selected && (
-              <g data-selection={selected} fill="none" stroke="#3b82f6" strokeWidth={1.5}
-                strokeLinejoin="round" pointerEvents="none"
-                style={{ filter: "drop-shadow(0 0 2px rgb(59 130 246 / 0.6))" }}>
-                {regions.filter(({ muscle }) => muscle === selected).flatMap(({ points }) => points).map((polygon) => (
-                  <polygon key={polygon} points={polygon} vectorEffect="non-scaling-stroke" />
-                ))}
-              </g>
-            )}
           </svg>
           <figcaption className="text-muted text-center text-xs">{t(side ? "muscleMap.back" : "muscleMap.front")}</figcaption>
         </figure>
