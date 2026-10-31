@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { memo, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { MUSCLES, key, type Exercise } from "@/entities/exercise/types"
 import type { Session } from "@/entities/session/store"
@@ -7,12 +7,12 @@ import { MuscleMap, muscleColor } from "@/shared/components/MuscleMap"
 import { Panel } from "@/shared/ui/panel"
 import { Select } from "@/shared/ui/select"
 
-export function WeeklyMuscleMap({ history, exercises }: { history: Session[]; exercises: ReadonlyMap<number, Exercise> }) {
+export const WeeklyMuscleMap = memo(function WeeklyMuscleMap({ history, exercises }: { history: Session[]; exercises: ReadonlyMap<number, Exercise> }) {
   const { t, i18n } = useTranslation()
   const [selected, setSelected] = useState("chest")
   const now = Date.now()
-  const volume = weeklyMuscleVolume(history, exercises, now)
   const { start, end } = calendarWeek(now)
+  const volume = useMemo(() => weeklyMuscleVolume(history, exercises, Date.now()), [history, exercises, start])
   const date = new Intl.DateTimeFormat(i18n.language, { day: "numeric", month: "short" })
   const hasSets = Object.values(volume).some((v) => v.primary || v.secondary)
   return (
@@ -46,4 +46,4 @@ export function WeeklyMuscleMap({ history, exercises }: { history: Session[]; ex
       <p className="text-muted text-xs">{t(hasSets ? "muscleMap.hint" : "muscleMap.empty")}</p>
     </Panel>
   )
-}
+})

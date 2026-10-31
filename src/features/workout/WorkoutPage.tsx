@@ -28,7 +28,7 @@ export function WorkoutPage() {
   return active ? <ActiveWorkout session={active} /> : null
 }
 
-function useElapsed(since: number, pausedMs = 0) {
+function ElapsedTime({ since, pausedMs = 0 }: { since: number; pausedMs?: number }) {
   const [now, setNow] = useState(Date.now())
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000)
@@ -37,18 +37,19 @@ function useElapsed(since: number, pausedMs = 0) {
   const s = Math.max(0, Math.floor((now - since - pausedMs) / 1000))
   const h = Math.floor(s / 3600)
   const m = String(Math.floor((s % 3600) / 60)).padStart(h ? 2 : 1, "0")
-  return `${h ? `${h}:` : ""}${m}:${String(s % 60).padStart(2, "0")}`
+  return <span className="text-accent">{`${h ? `${h}:` : ""}${m}:${String(s % 60).padStart(2, "0")}`}</span>
 }
 
 function ActiveWorkout({ session }: { session: Session }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { finish, discard, addExercise } = useSessionStore()
+  const finish = useSessionStore((s) => s.finish)
+  const discard = useSessionStore((s) => s.discard)
+  const addExercise = useSessionStore((s) => s.addExercise)
   const [finishOpen, setFinishOpen] = useState(false)
   const [discardOpen, setDiscardOpen] = useState(false)
   const [showHint, setShowHint] = useState(() => !localStorage.getItem("fitnoss:set-details-seen"))
   const [pickerOpen, setPickerOpen] = useState(false)
-  const elapsed = useElapsed(session.startedAt, session.pausedMs)
   const view = useSettings((s) => s.workoutView)
   const hasRest = useSessionStore((s) => !!s.rest)
   const setSettings = useSettings((s) => s.set)
@@ -76,7 +77,7 @@ function ActiveWorkout({ session }: { session: Session }) {
           <span className="flex flex-col">
             <span className="truncate text-[17px] leading-tight font-semibold">{session.title}</span>
             <span className="text-muted mt-0.5 flex items-center gap-1.5 text-[13px] font-medium tabular-nums">
-              <span className="text-accent">{elapsed}</span>·
+              <ElapsedTime since={session.startedAt} pausedMs={session.pausedMs} />·
               <span>
                 {doneSets}/{totalSets}
               </span>

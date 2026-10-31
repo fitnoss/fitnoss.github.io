@@ -88,7 +88,7 @@ export function CardsView({ session, carousel, onAdd }: { session: Session; caro
     // Only when the view opens; afterwards the strip's own scroll position is the truth.
   }, [])
 
-  const afterSet = (i: number) =>
+  const afterSet = useCallback((i: number) =>
     setTimeout(() => {
       const list = useSessionStore.getState().active?.exercises
       if (!list) return
@@ -104,7 +104,7 @@ export function CardsView({ session, carousel, onAdd }: { session: Session; caro
       } else if (pending(list[i])) return
       const next = list.findIndex((e, n) => n > g.at(-1)! && pending(e))
       if (next >= 0) carousel.go(next)
-    }, 450)
+    }, 450), [carousel.go])
 
   const addButton = (
     <button
@@ -137,7 +137,7 @@ export function CardsView({ session, carousel, onAdd }: { session: Session; caro
               last={i === exercises.length - 1}
               restsAfter={!next?.superset}
               supersetLabel={inSuperset ? labels[i] : undefined}
-              onSetDone={() => afterSet(i)}
+              onSetDone={afterSet}
             />
             {next ? (
               <button

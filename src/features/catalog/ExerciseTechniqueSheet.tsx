@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { useExercises } from "@/entities/exercise/store"
+import { useExerciseText } from "@/entities/exercise/store"
 import { type Exercise, exerciseEquipment } from "@/entities/exercise/types"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { Button } from "@/shared/ui/button"
@@ -12,8 +12,7 @@ export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }
   exercise: Exercise; onClose: () => void; selected?: boolean; onToggle?: () => void
 }) {
   const { t } = useTranslation()
-  const { text } = useExercises()
-  const description = text(exercise)
+  const description = useExerciseText(exercise)
   return (
     <Sheet open onOpenChange={(open) => !open && onClose()} title={description.name}
       bodyClassName="space-y-4" footer={
@@ -24,7 +23,7 @@ export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }
           </Button>}
         </div>
       }>
-      <ExerciseImage ex={exercise} alt="" size="l" className="aspect-video w-full rounded-xl object-contain" />
+      <ExerciseImage ex={exercise} alt="" size="l" animate priority className="aspect-video w-full rounded-xl object-contain" />
       <div className="flex flex-wrap gap-1.5">
         {exerciseEquipment(exercise).map((item) => <Tag key={item}>{t(`equipment.${item}`)}</Tag>)}
       </div>
@@ -33,6 +32,7 @@ export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }
         <ExerciseMuscles exercise={exercise} />
       </section>
       <h3 className="font-semibold">{t("exercise.technique")}</h3>
+      {description.loading && <p role="status" className="text-muted text-sm">{t("common.loading")}</p>}
       <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed">
         {description.steps.filter((step) => step.trim()).map((step, i) => <li key={i}>{step}</li>)}
       </ol>

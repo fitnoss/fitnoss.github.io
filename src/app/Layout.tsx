@@ -107,7 +107,7 @@ export function Layout() {
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(34rem,70svh)] wash" />
           <div className={cn("mx-auto max-w-2xl", active && "pb-32")}>
-            <Suspense fallback={null}>
+            <Suspense fallback={<div role="status" className="text-muted px-4 py-8 text-center text-sm">{t("common.loading")}</div>}>
               <Outlet />
             </Suspense>
           </div>

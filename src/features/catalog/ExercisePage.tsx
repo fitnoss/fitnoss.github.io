@@ -10,7 +10,7 @@ import { Segmented } from "@/shared/ui/segmented"
 import { Section } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
 import { cn } from "@/shared/lib/utils"
-import { useExercises, useFavorites } from "@/entities/exercise/store"
+import { useExercises, useExerciseText, useFavorites } from "@/entities/exercise/store"
 import { exerciseEquipment, key } from "@/entities/exercise/types"
 import { useSessionStore } from "@/entities/session/store"
 import { VideoPlayer, YoutubeSearchButton } from "@/features/video/VideoPlayer"
@@ -23,13 +23,14 @@ export function ExercisePage() {
   const { slug = "" } = useParams()
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { bySlug, ready, text, videos, lang, en } = useExercises()
+  const { bySlug, ready, videos, lang, en } = useExercises()
   const fav = useFavorites()
   const [frame, setFrame] = useState<"anim" | "0" | "1">("anim")
   const [addOpen, setAddOpen] = useState(false)
   const activeWorkout = useSessionStore((s) => !!s.active)
   const addToWorkout = useSessionStore((s) => s.addExercise)
   const ex = bySlug.get(slug)
+  const tx = useExerciseText(ex)
 
   if (!ready) return <PageHeader title="" back />
   if (!ex) {
@@ -41,7 +42,6 @@ export function ExercisePage() {
     )
   }
 
-  const tx = text(ex)
   const isFav = fav.codes.includes(ex.c)
   const video = videos[ex.s]
 
@@ -60,6 +60,8 @@ export function ExercisePage() {
       <div className="space-y-7 px-4 pb-8">
         <div className="space-y-2.5">
           <ExerciseImage
+            animate
+            priority
             ex={ex}
             alt={tx.name}
             frame={frame === "anim" ? undefined : Number(frame)}
@@ -134,6 +136,7 @@ export function ExercisePage() {
             )
           }
         >
+          {tx.loading && <p role="status" className="text-muted text-sm">{t("common.loading")}</p>}
           <ol className="space-y-3.5">
             {tx.steps.filter((s) => s.trim()).map((s, i) => (
               <li key={i} className="flex gap-3">

@@ -6,13 +6,13 @@ import { Button } from "@/shared/ui/button"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { scroller } from "@/shared/lib/scroller"
 import { cn } from "@/shared/lib/utils"
-import { key, type Exercise, type ExerciseText } from "@/entities/exercise/types"
+import { key, type Exercise, type ExerciseName } from "@/entities/exercise/types"
 
 const ROW = 80
 
 type RowProps = {
   ex: Exercise
-  text: ExerciseText
+  text: ExerciseName
   selected?: boolean
   onClick: () => void
   trailing?: ReactNode
@@ -56,7 +56,7 @@ export function ExerciseRow({ ex, text, selected, onClick, trailing, onPreview }
 
 type ListProps = {
   items: Exercise[]
-  text: (ex: Exercise) => ExerciseText
+  text: (ex: Exercise) => ExerciseName
   onSelect: (ex: Exercise) => void
   isSelected?: (ex: Exercise) => boolean
   onPreview?: (ex: Exercise) => void

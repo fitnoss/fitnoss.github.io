@@ -18,7 +18,8 @@ export type Exercise = {
   img: number
 }
 
-export type ExerciseText = { name: string; steps: string[]; machine?: boolean }
+export type ExerciseName = { name: string }
+export type ExerciseText = ExerciseName & { steps: string[]; machine?: boolean }
 
 export type Video = { yt: string; start?: number; end?: number; ru?: string }
 

@@ -41,10 +41,12 @@ export function primeAudio() {
 export function RestTimerBar() {
   const { t } = useTranslation()
   const rest = useSessionStore((s) => s.rest)
-  const active = useSessionStore((s) => s.active)
+  const activeTitle = useSessionStore((s) => s.active?.title)
   const { pathname } = useLocation()
-  const { adjustRest, stopRest } = useSessionStore()
-  const { sound, vibration } = useSettings()
+  const adjustRest = useSessionStore((s) => s.adjustRest)
+  const stopRest = useSessionStore((s) => s.stopRest)
+  const sound = useSettings((s) => s.sound)
+  const vibration = useSettings((s) => s.vibration)
   const [now, setNow] = useState(Date.now())
   const fired = useRef<number | null>(null)
 
@@ -66,7 +68,7 @@ export function RestTimerBar() {
     stopRest()
   }, [left, rest, sound, vibration, stopRest, t])
 
-  const away = !!active && pathname !== "/workout"
+  const away = activeTitle !== undefined && pathname !== "/workout"
   if (!rest && !away) return null
   const progress = rest ? Math.max(0, Math.min(1, 1 - (rest.endsAt - now) / (rest.total * 1000))) : 0
   const mm = Math.floor(left / 60)
@@ -79,7 +81,7 @@ export function RestTimerBar() {
         <div className="bg-accent absolute inset-y-0 left-0 opacity-15 dark:opacity-25 transition-[width] duration-300 ease-linear" style={{ width: `${progress * 100}%` }} />
         <div className="relative flex items-center gap-1.5 p-2 pl-4">
           {away && <Link to="/workout" className="min-w-0 flex-1 py-2">
-            <div className="truncate text-sm font-semibold">{active.title}</div>
+            <div className="truncate text-sm font-semibold">{activeTitle}</div>
             <div className="text-accent text-sm">{rest ? t("workout.rest") + " " + mm + ":" + ss + " · " : ""}{t("home.continue")}</div>
           </Link>}
           {rest && <><div className={away ? "hidden" : "flex-1"}>

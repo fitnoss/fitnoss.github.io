@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { memo, useMemo, useState } from "react"
+import { useShallow } from "zustand/react/shallow"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router"
 import { ArrowDown, ArrowLeftRight, ArrowUp, Check, Clock, Flame, Link2, Minus, Plus, Trash2, TrendingDown, TrendingUp, Unlink2, X } from "lucide-react"
@@ -36,19 +37,24 @@ type Props = {
   /** "2a" when the exercise is part of a superset, shown on slides. */
   supersetLabel?: string
   /** Called after a set gets checked off. */
-  onSetDone?: () => void
+  onSetDone?: (index: number) => void
 }
 
-export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSetDone }: Props) {
+export const ExerciseCard = memo(function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSetDone }: Props) {
   const { t } = useTranslation()
   const { byCode, text } = useExercises()
-  const { updateSet, toggleSet, addSet, removeSet, removeExercise, replaceExercise, moveExercise, setRest, toggleSuperset, setWarmup } = useSessionStore()
+  const { updateSet, toggleSet, addSet, removeSet, removeExercise, replaceExercise, moveExercise, setRest, toggleSuperset, setWarmup } = useSessionStore(useShallow((s) => ({
+    updateSet: s.updateSet, toggleSet: s.toggleSet, addSet: s.addSet, removeSet: s.removeSet,
+    removeExercise: s.removeExercise, replaceExercise: s.replaceExercise, moveExercise: s.moveExercise,
+    setRest: s.setRest, toggleSuperset: s.toggleSuperset, setWarmup: s.setWarmup,
+  })))
   const navigate = useNavigate()
   const history = useSessionStore((s) => s.history)
-  const previous = lastSets(history, e.ex, e.reps)
+  const previous = useMemo(() => lastSets(history, e.ex, e.reps), [history, e.ex, e.reps])
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [removeSetOpen, setRemoveSetOpen] = useState(false)
-  const { barWeight, plates } = useSettings()
+  const barWeight = useSettings((s) => s.barWeight)
+  const plates = useSettings((s) => s.plates)
   const [restOpen, setRestOpen] = useState(false)
   const [replaceOpen, setReplaceOpen] = useState(false)
   const ex = byCode.get(e.ex)
@@ -82,7 +88,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
     <Panel className={cn("space-y-3 p-2.5", allDone && "shadow-[inset_0_0_0_1.5px_var(--accent)]")}>
       {big && ex && (
         <Link to={`/ex/${ex.s}`} className="block">
-          <ExerciseImage ex={ex} alt="" size="l" className="hairline aspect-[3/2] w-full rounded-[12px]" />
+          <ExerciseImage ex={ex} alt="" size="l" animate className="hairline aspect-[3/2] w-full rounded-[12px]" />
         </Link>
       )}
       <div className={cn("flex items-center gap-3", big && "px-1")}>
@@ -195,7 +201,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
               if (active && set && beatsRecord(history, active, i, j)) {
                 toast.success(t("workout.record", { weight: set.weight, reps: set.reps }), { icon: <CongratsCat /> })
               }
-              onSetDone?.()
+              onSetDone?.(i)
             }}
           />
         ))}
@@ -224,7 +230,7 @@ export function ExerciseCard({ e, i, last, restsAfter, big, supersetLabel, onSet
       )}
     </Panel>
   )
-}
+})
 
 function SetRow(props: {
   label: string

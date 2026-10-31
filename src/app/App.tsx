@@ -3,19 +3,18 @@ import { HashRouter, Navigate, Route, Routes } from "react-router"
 import { ConfirmationDialog } from "@/shared/ui/confirm"
 import { Toaster } from "@/shared/ui/toast"
 import { Layout } from "./Layout"
-import { CatalogPage } from "@/features/catalog/CatalogPage"
-import { ExercisePage } from "@/features/catalog/ExercisePage"
 import { ProgramsPage } from "@/features/programs/ProgramsPage"
-import { ProgramEditorPage } from "@/features/programs/ProgramEditorPage"
-import { SharePage } from "@/features/share/SharePage"
-import { WorkoutPage } from "@/features/workout/WorkoutPage"
-import { JournalPage } from "@/features/journal/JournalPage"
-import { SessionPage } from "@/features/journal/SessionPage"
-import { MorePage } from "@/features/settings/MorePage"
-import { AboutPage } from "@/features/settings/AboutPage"
 import { UpdatePrompt } from "@/features/settings/UpdatePrompt"
 
-// Heavier pages (charts) load on demand.
+const CatalogPage = lazy(() => import("@/features/catalog/CatalogPage").then((m) => ({ default: m.CatalogPage })))
+const ExercisePage = lazy(() => import("@/features/catalog/ExercisePage").then((m) => ({ default: m.ExercisePage })))
+const ProgramEditorPage = lazy(() => import("@/features/programs/ProgramEditorPage").then((m) => ({ default: m.ProgramEditorPage })))
+const SharePage = lazy(() => import("@/features/share/SharePage").then((m) => ({ default: m.SharePage })))
+const WorkoutPage = lazy(() => import("@/features/workout/WorkoutPage").then((m) => ({ default: m.WorkoutPage })))
+const JournalPage = lazy(() => import("@/features/journal/JournalPage").then((m) => ({ default: m.JournalPage })))
+const SessionPage = lazy(() => import("@/features/journal/SessionPage").then((m) => ({ default: m.SessionPage })))
+const MorePage = lazy(() => import("@/features/settings/MorePage").then((m) => ({ default: m.MorePage })))
+const AboutPage = lazy(() => import("@/features/settings/AboutPage").then((m) => ({ default: m.AboutPage })))
 const ExerciseProgressPage = lazy(() =>
   import("@/features/journal/ExerciseProgressPage").then((m) => ({ default: m.ExerciseProgressPage })),
 )

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { lazy, Suspense, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useLocation, useNavigate } from "react-router"
 import { CalendarDays, Check, ChevronRight, Coffee, ListChecks, Play, Plus, Timer } from "lucide-react"
@@ -14,8 +14,9 @@ import { weekdayOf, type Program } from "@/entities/program/types"
 import { useSessionStore } from "@/entities/session/store"
 import { primeAudio } from "@/features/workout/RestTimerBar"
 import { useStartDay } from "@/features/workout/useStartDay"
-import { NewProgramSheet } from "./NewProgramSheet"
 import { dayName, weekdayName } from "./format"
+
+const NewProgramSheet = lazy(() => import("./NewProgramSheet").then((m) => ({ default: m.NewProgramSheet })))
 
 type Slot = { program: Program; day: number }
 
@@ -86,7 +87,9 @@ export function ProgramsPage() {
           </Section>
         )}
       </div>
-      <NewProgramSheet open={newOpen} onOpenChange={setNewOpen} />
+      {newOpen && <Suspense fallback={<p role="status" className="text-muted px-4 py-3 text-sm">{t("common.loading")}</p>}>
+        <NewProgramSheet open onOpenChange={setNewOpen} />
+      </Suspense>}
     </>
   )
 }

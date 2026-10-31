@@ -13,6 +13,7 @@ vi.mock("@/shared/storage/settings", () => ({ useSettings: { getState: () => ({ 
 
 import { lastSets, useSessionStore } from "./store"
 import { sessionDuration } from "./history"
+import { HISTORY_KEY } from "./storage"
 
 const store = () => useSessionStore.getState()
 const start = () => store().start({ title: "Test", plan: { name: "", items: [{ ex: 1, sets: 2, reps: "5", rest: 90, weight: 60 }] } })
@@ -20,6 +21,42 @@ beforeEach(() => useSessionStore.setState({ history: [], active: undefined, rest
 afterEach(() => vi.restoreAllMocks())
 
 describe("set logging lifecycle", () => {
+  it("writes only the live snapshot on set entry and combines checking a set with starting rest", async () => {
+    const history = Array.from({ length: 1000 }, (_, i) => ({
+      id: `history-${i}`, title: "History", startedAt: i, endedAt: i + 1, exercises: [],
+    }))
+    useSessionStore.setState({ history })
+    start()
+    const write = vi.spyOn(localStorage, "setItem")
+    const stringify = vi.spyOn(JSON, "stringify")
+    store().toggleSet(0, 0)
+    expect(write).toHaveBeenCalledTimes(1)
+    expect(write.mock.calls[0][0]).toBe("fitnoss:workout")
+    expect(stringify).toHaveBeenCalledTimes(1)
+    expect(stringify.mock.calls[0][0].state).not.toHaveProperty("history")
+    expect(store().rest).toBeDefined()
+    store().updateSet(0, 1, { weight: 70 })
+    expect(write).toHaveBeenCalledTimes(2)
+    expect(store().history).toBe(history)
+    await useSessionStore.persist.rehydrate()
+    expect(store().history).toEqual(history)
+    expect(store().active!.exercises[0].sets[1].weight).toBe(70)
+    expect(store().rest).toBeDefined()
+  })
+
+  it("persists history corrections independently of the live snapshot", async () => {
+    start()
+    store().toggleSet(0, 0)
+    const saved = store().finish()!
+    const write = vi.spyOn(localStorage, "setItem")
+    expect(store().editHistory(saved, { ...saved, title: "Corrected" })).toBe(true)
+    expect(write).toHaveBeenCalledTimes(1)
+    expect(write.mock.calls[0][0]).toBe(HISTORY_KEY)
+    await useSessionStore.persist.rehydrate()
+    expect(store().history[0].title).toBe("Corrected")
+    expect(store().active).toBeUndefined()
+  })
+
   it("persists completed warmups, types and effort through finish and rehydration", async () => {
     start()
     store().setWarmup(0, [{ weight: 20, reps: 5 }])
@@ -32,9 +69,9 @@ describe("set logging lifecycle", () => {
     expect(saved.exercises[0].sets).toHaveLength(2)
     expect(saved.exercises[0].sets[0].type).toBe("warmup")
     expect(saved.exercises[0].sets[1].effort).toEqual({ scale: "rir", value: 0 })
-    const persisted = localStorage.getItem("fitnoss:sessions")!
+    const persisted = localStorage.getItem(HISTORY_KEY)!
     useSessionStore.setState({ history: [] })
-    localStorage.setItem("fitnoss:sessions", persisted)
+    localStorage.setItem(HISTORY_KEY, persisted)
     await useSessionStore.persist.rehydrate()
     expect(store().history).toEqual([saved])
     expect(store().active).toBeUndefined()

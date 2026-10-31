@@ -10,6 +10,10 @@
     "home": "Home"
   },
   "common": {
+    "loading": "Loading…",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "page": "Page {{page}} of {{total}}",
     "clear": "Clear",
     "delete": "Delete",
     "done": "Done",

@@ -404,6 +404,8 @@ async function main() {
   for (const [lang, t] of Object.entries(texts)) {
     await fs.mkdir(path.join(OUT_LOCALES, lang), { recursive: true })
     await fs.writeFile(path.join(OUT_LOCALES, lang, "exercises.json"), JSON.stringify(t))
+    const names = Object.fromEntries(Object.entries(t).map(([slug, text]) => [slug, { name: text.name }]))
+    await fs.writeFile(path.join(OUT_LOCALES, lang, "exercise-names.json"), JSON.stringify(names))
   }
   // Translation coverage shown next to each language in the app: UI strings and exercise texts, equally weighted.
   const coverage: Record<string, number> = {}

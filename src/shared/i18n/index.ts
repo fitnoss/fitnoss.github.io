@@ -1,12 +1,14 @@
 import i18n, { type BackendModule } from "i18next"
 import { initReactI18next } from "react-i18next"
+import languageList from "../../../locales/index.json"
+import englishUi from "../../../locales/en/ui.json"
 
 export type LanguageInfo = { code: string; name: string; nativeName: string }
 
 const BASE = import.meta.env.BASE_URL
 const STORAGE_KEY = "fitnoss:lang"
 
-export let languages: LanguageInfo[] = [{ code: "en", name: "English", nativeName: "English" }]
+export const languages: LanguageInfo[] = languageList
 
 export async function fetchLocale<T>(lng: string, file: string): Promise<T | null> {
   try {
@@ -39,10 +41,6 @@ function detect(): string {
 }
 
 export async function initI18n() {
-  try {
-    const res = await fetch(`${BASE}locales/index.json`)
-    if (res.ok) languages = (await res.json()) as LanguageInfo[]
-  } catch {}
   const lng = detect()
   document.documentElement.lang = lng
   await i18n
@@ -50,6 +48,8 @@ export async function initI18n() {
     .use(initReactI18next)
     .init({
       lng,
+      resources: { en: { ui: englishUi } },
+      partialBundledLanguages: true,
       fallbackLng: "en",
       supportedLngs: languages.map((l) => l.code),
       ns: ["ui"],

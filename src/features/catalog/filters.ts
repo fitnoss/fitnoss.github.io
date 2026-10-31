@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import { useSearchParams } from "react-router"
 import MiniSearch from "minisearch"
-import { exerciseEquipment, type Exercise, type ExerciseText, type Level, type Place } from "@/entities/exercise/types"
+import { exerciseEquipment, type Exercise, type ExerciseName, type Level, type Place } from "@/entities/exercise/types"
 
 export type Filters = {
   q: string
@@ -55,7 +55,7 @@ export function useUrlFilters(): [Filters, (f: Filters) => void] {
   return [filters, set]
 }
 
-type TextFn = (ex: Exercise) => ExerciseText
+type TextFn = (ex: Exercise) => ExerciseName
 
 const RU_ENDING = /(иями|ями|ами|иях|ание|ания|ение|ения|ого|его|ому|ему|ыми|ими|ой|ей|ий|ый|ая|яя|ое|ее|ые|ие|ов|ев|ам|ям|ах|ях|ом|ем|ую|юю|а|я|ы|и|у|ю|е|о|ь)$/
 const EN_ENDING = /(ings|ing|es|s)$/
@@ -68,7 +68,7 @@ export function stem(term: string) {
   return cut.length >= 3 ? cut : t
 }
 
-export function useSearchIndex(list: Exercise[], text: TextFn, en: Record<string, ExerciseText>, lang: string) {
+export function useSearchIndex(list: Exercise[], text: TextFn, en: Record<string, ExerciseName>, lang: string) {
   return useMemo(() => {
     const ms = new MiniSearch<{ id: number; name: string; en: string }>({
       fields: ["name", "en"],

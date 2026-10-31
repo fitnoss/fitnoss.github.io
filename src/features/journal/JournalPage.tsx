@@ -5,6 +5,7 @@ import { ChevronRight, Flame, History, Trophy } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { Empty, Panel } from "@/shared/ui/panel"
 import { Segmented } from "@/shared/ui/segmented"
+import { PaginatedList } from "@/shared/ui/paginated-list"
 import { cn } from "@/shared/lib/utils"
 import { useExercises } from "@/entities/exercise/store"
 import { useSessionStore, type Session } from "@/entities/session/store"
@@ -52,6 +53,7 @@ export function JournalPage() {
   }, [history])
 
   const records = useMemo(() => {
+    if (tab !== "records") return []
     const best = new Map<number, { e1rm: number; weight: number; reps: number; at: number }>()
     for (const s of history) {
       for (const e of s.exercises) {
@@ -64,17 +66,18 @@ export function JournalPage() {
       }
     }
     return [...best.entries()].sort((a, b) => b[1].at - a[1].at)
-  }, [history])
+  }, [history, tab])
 
   const [query, setQuery] = useState("")
   const mine = useMemo(() => {
+    if (tab !== "exercises") return []
     const found = new Map<number, { at: number; weight?: number; reps?: number; timed: boolean }>()
     for (const s of history) for (const e of s.exercises) {
       const last = e.sets.findLast(isCountedSet)
       if (last && !found.has(e.ex)) found.set(e.ex, { at: s.startedAt, weight: last.weight, reps: last.reps, timed: parseReps(e.reps).kind === "time" })
     }
     return [...found.entries()]
-  }, [history])
+  }, [history, tab])
   const recent = history.filter((s) => s.startedAt >= Date.now() - 28 * DAY).length
   const prior = history.filter((s) => s.startedAt >= Date.now() - 56 * DAY && s.startedAt < Date.now() - 28 * DAY).length
   const weekday = new Intl.DateTimeFormat(i18n.language, { weekday: "narrow" })
@@ -121,23 +124,25 @@ export function JournalPage() {
           />
           {tab === "exercises" ? <div className="space-y-3">
             <input type="search" aria-label={t("catalog.search")} placeholder={t("catalog.search")} value={query} onChange={(e) => setQuery(e.target.value)} className="bg-surface hairline h-11 w-full rounded-xl px-3" />
-            <Panel className="divide-y overflow-hidden">{mine.filter(([code]) => text(byCode.get(code)).name.toLowerCase().includes(query.toLowerCase())).map(([code, result]) => <Link key={code} to={"/progress/ex/" + code} className="hover:bg-surface-hover flex items-center gap-3 p-4"><div className="min-w-0 flex-1"><div className="text-sm font-medium">{text(byCode.get(code)).name}</div><div className="text-muted text-xs">{result.weight !== undefined ? t("units.kg", { n: result.weight }) + " × " : ""}{result.reps ?? "—"} {t(result.timed ? "workout.seconds" : "workout.reps")} · {fmtDate.format(result.at)}</div></div><ChevronRight className="size-4" /></Link>)}</Panel>
+            <PaginatedList key={`exercises-${query}`} items={mine.filter(([code]) => text(byCode.get(code)).name.toLowerCase().includes(query.toLowerCase()))}>
+              {([code, result]) => <Link key={code} to={"/progress/ex/" + code} className="hover:bg-surface-hover flex items-center gap-3 p-4"><div className="min-w-0 flex-1"><div className="text-sm font-medium">{text(byCode.get(code)).name}</div><div className="text-muted text-xs">{result.weight !== undefined ? t("units.kg", { n: result.weight }) + " × " : ""}{result.reps ?? "—"} {t(result.timed ? "workout.seconds" : "workout.reps")} · {fmtDate.format(result.at)}</div></div><ChevronRight className="size-4" /></Link>}
+            </PaginatedList>
             {mine.length === 0 && <Empty title={t("journal.empty")} />}
           </div> : tab === "history" ? (
             history.length === 0 ? (
               <Empty icon={<History />} title={t("journal.empty")} />
             ) : (
-              <Panel className="divide-y overflow-hidden">
-                {history.map((s) => (
+              <PaginatedList key="history" items={history}>
+                {(s) => (
                   <SessionRow key={s.id} s={s} date={fmtDate.format(s.startedAt)} />
-                ))}
-              </Panel>
+                )}
+              </PaginatedList>
             )
           ) : records.length === 0 ? (
             <Empty icon={<Trophy />} title={t("journal.noRecords")} />
           ) : (
-            <Panel className="divide-y overflow-hidden">
-              {records.map(([code, r]) => (
+            <PaginatedList key="records" items={records}>
+              {([code, r]) => (
                 <Link key={code} to={`/progress/ex/${code}`} className="hover:bg-surface-hover flex items-center gap-3 px-4 py-3">
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[15px] font-medium">{text(byCode.get(code)).name}</div>
@@ -150,8 +155,8 @@ export function JournalPage() {
                     <div className="text-muted text-[10px] font-medium">e1RM</div>
                   </div>
                 </Link>
-              ))}
-            </Panel>
+              )}
+            </PaginatedList>
           )}
         </div>
       </div>

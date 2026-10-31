@@ -19,6 +19,10 @@ type Props = {
 
 /** Full-height catalog in a sheet with multi-select. */
 export function ExercisePicker({ open, onOpenChange, onPick }: Props) {
+  return open ? <OpenExercisePicker onOpenChange={onOpenChange} onPick={onPick} /> : null
+}
+
+function OpenExercisePicker({ onOpenChange, onPick }: Omit<Props, "open">) {
   const { t } = useTranslation()
   const { list, text, en, lang } = useExercises()
   const favorites = useFavorites((s) => s.codes)
@@ -44,7 +48,7 @@ export function ExercisePicker({ open, onOpenChange, onPick }: Props) {
 
   return (
     <Sheet
-      open={open}
+      open
       onOpenChange={(o) => (o ? onOpenChange(true) : close(false))}
       title={t("picker.title")}
       className="h-[94dvh] sm:h-[85dvh] sm:max-w-xl"

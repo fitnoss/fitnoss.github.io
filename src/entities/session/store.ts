@@ -7,6 +7,7 @@ import { progression } from "./progression"
 import { replaceRemaining } from "./replacement"
 import { isMainSet, isWarmup, updateSetLog, type Effort, type SetType } from "./sets"
 import { syncUnfinishedPlan } from "./history"
+import { sessionStorage } from "./storage"
 
 export type SetLog = {
   reps?: number
@@ -155,14 +156,21 @@ export const useSessionStore = create<State>()(
           })),
         updateSet: (i, j, patch) => editEx(i, (e) => ({ ...e, sets: e.sets.map((x, k) => (k === j ? updateSetLog(x, patch) : x)) })),
         toggleSet: (i, j) => {
-          const e = get().active?.exercises[i]
-          if (!e) return
-          const done = !e.sets[j].done
-          get().updateSet(i, j, { done })
-          const { exercises } = get().active!
+          const active = get().active
+          const e = active?.exercises[i]
+          const current = e?.sets[j]
+          if (!active || !e || !current) return
+          const done = !current.done
+          const exercises = active.exercises.map((exercise, k) => k === i ? {
+            ...exercise, sets: exercise.sets.map((s, n) => n === j ? updateSetLog(s, { done }) : s),
+          } : exercise)
           const isLastOfWorkout = exercises.every((x) => x.sets.every((s) => s.done))
           const rest = restAfter(exercises, i)
-          if (done && rest > 0 && !isLastOfWorkout && !isWarmup(e.sets[j])) get().startRest(rest)
+          const startRest = done && rest > 0 && !isLastOfWorkout && !isWarmup(current)
+          set({
+            active: { ...active, exercises },
+            ...(startRest ? { rest: { endsAt: Date.now() + rest * 1000, total: rest } } : {}),
+          })
         },
         addSet: (i) =>
           editEx(i, (e) => {
@@ -233,6 +241,9 @@ export const useSessionStore = create<State>()(
           }),
       }
     },
-    { name: "fitnoss:sessions", version: 1 },
+    {
+      name: "fitnoss:workout", version: 1, storage: sessionStorage(),
+      partialize: ({ active, history, rest }) => ({ active, history, rest }),
+    },
   ),
 )

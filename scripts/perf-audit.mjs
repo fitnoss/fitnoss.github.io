@@ -26,7 +26,12 @@ const measure = (fn, iterations = 100) => {
 const html = read("dist/index.html").toString()
 const initialFiles = [...html.matchAll(/(?:src|href)="\/(assets\/[^" ]+\.(?:js|css))"/g)].map((m) => `dist/${m[1]}`)
 const assets = initialFiles.map(size)
-const dataFiles = ["dist/data/exercises.json", "dist/data/videos.json", "dist/locales/index.json", ...["en", "ru"].flatMap((lang) => ["ui", "exercises"].map((file) => `dist/locales/${lang}/${file}.json`))]
+const precacheUrls = [...read("dist/sw.js").toString().matchAll(/\{url:"([^"]+)"/g)].map((match) => match[1])
+const precached = new Set(precacheUrls)
+const offlineAssets = fs.readdirSync(path.join(root, "dist/assets")).filter((file) => /\.(js|css|woff2)$/.test(file) && !file.startsWith("TwemojiCountryFlags-"))
+const missingOffline = [...offlineAssets.map((file) => `assets/${file}`), "index.html", "data/exercises.json", "data/videos.json", ...["en", "ru"].flatMap((lang) => ["ui", "exercise-names", "exercises"].map((file) => `locales/${lang}/${file}.json`))].filter((file) => !precached.has(file))
+if (missingOffline.length) throw new Error(`Missing precache resources: ${missingOffline.join(", ")}`)
+const dataFiles = ["dist/data/exercises.json", "dist/data/videos.json", "dist/locales/index.json", ...["en", "ru"].flatMap((lang) => ["ui", "exercise-names", "exercises"].map((file) => `dist/locales/${lang}/${file}.json`))]
 const exercises = json("dist/data/exercises.json")
 const en = json("dist/locales/en/exercises.json")
 const ru = json("dist/locales/ru/exercises.json")
@@ -54,7 +59,9 @@ const historySerialization = [0, 100, 500, 1000].map((count) => {
   const state = { state: { history, active: { ...active, id: "active" }, rest: { endsAt: 1793354490000, total: 90 } }, version: 1 }
   const serialize = () => JSON.stringify(state)
   const serialized = serialize()
-  return { sessions: count, bytes: Buffer.byteLength(serialized), utf16CodeUnits: serialized.length, stringify: measure(serialize) }
+  const live = { state: { active: state.state.active, rest: state.state.rest }, version: 1 }
+  const serializeLive = () => JSON.stringify(live)
+  return { sessions: count, bytes: Buffer.byteLength(serialized), utf16CodeUnits: serialized.length, stringify: measure(serialize), liveSnapshot: { bytes: Buffer.byteLength(serializeLive()), stringify: measure(serializeLive) } }
 })
 const images = ["s", "l"].map((kind) => {
   const dir = `dist/img/ex/${kind}`
@@ -65,6 +72,7 @@ console.log(JSON.stringify({
   environment: { node: process.version, platform: process.platform, arch: process.arch },
   initialAssets: assets,
   initialTotal: { bytes: assets.reduce((n, a) => n + a.bytes, 0), gzipBytes: assets.reduce((n, a) => n + a.gzipBytes, 0) },
+  offline: { precacheEntries: precacheUrls.length, missingResources: missingOffline },
   data: dataFiles.map(size),
   ruNamesOnlyExperiment: { bytes: namesBuffer.length, gzipBytes: gzipSync(namesBuffer).length },
   images,
