@@ -513,5 +513,17 @@
     "scheduleHint": "Assign weekdays to your program days, and today's workout starts with one tap.",
     "setsCount_one": "{{count}} set",
     "setsCount_other": "{{count}} sets"
+  },
+  "muscleMap": {
+    "title": "Muscles this week",
+    "front": "Front",
+    "back": "Back",
+    "legend": "Direct sets per muscle",
+    "choose": "Muscle group",
+    "primary": "Direct sets",
+    "secondary": "Indirect sets",
+    "hint": "Color shows completed sets where the muscle is a primary mover. Indirect sets are listed separately; warmups are excluded.",
+    "empty": "No sets logged this week yet. Save a workout to see your muscle volume here.",
+    "credit": "Body diagram: GV79 · MIT"
   }
 }

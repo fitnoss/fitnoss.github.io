@@ -12,6 +12,7 @@ import { e1rm, sessionVolume, sessionSetCount } from "@/entities/session/stats"
 import { isCountedSet } from "@/entities/session/sets"
 import { sessionDuration } from "@/entities/session/history"
 import { parseReps } from "@/entities/program/types"
+import { WeeklyMuscleMap } from "./WeeklyMuscleMap"
 
 const DAY = 86_400_000
 
@@ -105,6 +106,8 @@ export function JournalPage() {
             ))}
           </div>
         </Panel>
+
+        <WeeklyMuscleMap history={history} exercises={byCode} />
 
         <div className="space-y-3">
           <Segmented
