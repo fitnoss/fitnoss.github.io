@@ -15,6 +15,7 @@ import { exerciseEquipment, key } from "@/entities/exercise/types"
 import { useSessionStore } from "@/entities/session/store"
 import { VideoPlayer, YoutubeSearchButton } from "@/features/video/VideoPlayer"
 import { AddToProgramDrawer } from "@/features/programs/AddToProgramDrawer"
+import { ExerciseMuscles } from "./ExerciseMuscles"
 
 const tile = "h-auto flex-col gap-1.5 py-3.5 text-[13px] leading-tight whitespace-normal"
 
@@ -120,16 +121,7 @@ export function ExercisePage() {
         </div>
 
         <Section title={t("exercise.muscles")} hint={`${t("exercise.equipment")}: ${exerciseEquipment(ex).map((item) => t(`equipment.${item}`)).join(", ")}`}>
-          <div className="flex flex-wrap gap-1.5">
-            {ex.pm.map((m) => (
-              <Tag key={m} strong>
-                {t(`muscle.${key(m)}`)}
-              </Tag>
-            ))}
-            {ex.sm.map((m) => (
-              <Tag key={m}>{t(`muscle.${key(m)}`)}</Tag>
-            ))}
-          </div>
+          <ExerciseMuscles exercise={ex} />
         </Section>
 
         <Section

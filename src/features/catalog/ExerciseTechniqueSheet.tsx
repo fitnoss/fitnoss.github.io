@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next"
 import { useExercises } from "@/entities/exercise/store"
-import { type Exercise, exerciseEquipment, key } from "@/entities/exercise/types"
+import { type Exercise, exerciseEquipment } from "@/entities/exercise/types"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { Button } from "@/shared/ui/button"
 import { Tag } from "@/shared/ui/chip"
 import { Sheet } from "@/shared/ui/sheet"
+import { ExerciseMuscles } from "./ExerciseMuscles"
 
 /** Nested preview keeps the underlying selection and scroll position mounted. */
 export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }: {
@@ -26,8 +27,11 @@ export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }
       <ExerciseImage ex={exercise} alt="" size="l" className="aspect-video w-full rounded-xl object-contain" />
       <div className="flex flex-wrap gap-1.5">
         {exerciseEquipment(exercise).map((item) => <Tag key={item}>{t(`equipment.${item}`)}</Tag>)}
-        {exercise.pm.map((muscle) => <Tag key={muscle}>{t(`muscle.${key(muscle)}`)}</Tag>)}
       </div>
+      <section className="space-y-3">
+        <h3 className="font-semibold">{t("exercise.muscles")}</h3>
+        <ExerciseMuscles exercise={exercise} />
+      </section>
       <h3 className="font-semibold">{t("exercise.technique")}</h3>
       <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed">
         {description.steps.filter((step) => step.trim()).map((step, i) => <li key={i}>{step}</li>)}

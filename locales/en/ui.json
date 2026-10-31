@@ -127,7 +127,9 @@
     "muscles": "Muscles",
     "equipment": "Equipment",
     "technique": "Technique",
-    "machineTranslation": "Machine translation. You can help improve it on GitHub."
+    "machineTranslation": "Machine translation. You can help improve it on GitHub.",
+    "primaryMuscles": "Primary muscles",
+    "secondaryMuscles": "Secondary muscles"
   },
   "video": {
     "title": "Video",

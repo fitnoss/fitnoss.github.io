@@ -131,7 +131,9 @@
     "muscles": "Мышцы",
     "equipment": "Инвентарь",
     "technique": "Техника",
-    "machineTranslation": "Машинный перевод. Его можно улучшить на GitHub."
+    "machineTranslation": "Машинный перевод. Его можно улучшить на GitHub.",
+    "primaryMuscles": "Основная нагрузка",
+    "secondaryMuscles": "Косвенная нагрузка"
   },
   "video": {
     "title": "Видео",

@@ -21,7 +21,7 @@ export function WeeklyMuscleMap({ history, exercises }: { history: Session[]; ex
         <h2 className="font-semibold">{t("muscleMap.title")}</h2>
         <p className="text-muted text-xs">{date.format(start)} – {date.format(end - 1)}</p>
       </div>
-      <MuscleMap volume={volume} selected={selected} onSelect={setSelected} />
+      <MuscleMap colorFor={(muscle) => muscleColor(volume[muscle]?.primary ?? 0)} selected={selected} onSelect={setSelected} />
       <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs text-muted" aria-label={t("muscleMap.legend")}>
         {[0, 1, 5, 10].map((sets, i) => (
           <span key={sets} className="flex items-center gap-1.5">
