@@ -39,7 +39,10 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
       >
         {t("workout.noRest")}
       </Chip>
-      <label className="bg-surface hairline rounded-control hover:bg-surface-hover focus-within:bg-page flex h-11 w-[5.5rem] items-center gap-1 px-3.5 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]">
+      <label className={cn(
+        "bg-surface hairline rounded-control hover:bg-surface-hover focus-within:bg-page flex h-11 w-[5.5rem] items-center gap-1 px-3.5 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]",
+        value > 0 && "shadow-[inset_0_0_0_1.5px_var(--fg)]",
+      )}>
         <input
           inputMode="numeric"
           placeholder="90"
