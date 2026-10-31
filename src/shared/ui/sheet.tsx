@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from "react"
+import { useEffect, useId, useRef, type ReactNode, type Ref } from "react"
 import { useTranslation } from "react-i18next"
 import { X } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
@@ -15,20 +15,26 @@ type Props = {
   footer?: ReactNode
   className?: string
   bodyClassName?: string
+  bodyRef?: Ref<HTMLDivElement>
   children: ReactNode
 }
 
 /** Modal built on <dialog>: bottom sheet on phones, centered panel on wider screens. */
-export function Sheet({ open, onOpenChange, title, description, actions, footer, className, bodyClassName, children }: Props) {
+export function Sheet({ open, onOpenChange, title, description, actions, footer, className, bodyClassName, bodyRef, children }: Props) {
   const { t } = useTranslation()
   const titleId = useId()
   const descriptionId = useId()
   const ref = useRef<HTMLDialogElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
     const d = ref.current
     if (!d) return
-    if (open && !d.open) d.showModal()
+    if (open && !d.open) {
+      d.showModal()
+      // Start with the title, so opening a sheet neither highlights Close nor opens a mobile keyboard.
+      titleRef.current?.focus({ preventScroll: true })
+    }
     if (!open && d.open) d.close()
   }, [open])
 
@@ -53,7 +59,7 @@ export function Sheet({ open, onOpenChange, title, description, actions, footer,
         <>
           <div className="flex shrink-0 items-start gap-2 px-4 pt-4 pb-3">
             <div className="min-w-0 flex-1 pt-1.5">
-              {title && <h2 id={titleId} className="text-lg leading-tight font-semibold tracking-tight">{title}</h2>}
+              {title && <h2 ref={titleRef} tabIndex={-1} id={titleId} className="text-lg leading-tight font-semibold tracking-tight outline-none">{title}</h2>}
               {description && <p id={descriptionId} className="text-muted mt-1 text-sm">{description}</p>}
             </div>
             {actions}
@@ -61,7 +67,7 @@ export function Sheet({ open, onOpenChange, title, description, actions, footer,
               <X />
             </Button>
           </div>
-          <div className={cn("min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4", bodyClassName)}>{children}</div>
+          <div ref={bodyRef} className={cn("min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4", bodyClassName)}>{children}</div>
           {footer && <div className="shrink-0 border-t px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">{footer}</div>}
         </>
       )}

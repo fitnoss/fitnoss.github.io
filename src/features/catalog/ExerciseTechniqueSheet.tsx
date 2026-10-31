@@ -6,9 +6,9 @@ import { Button } from "@/shared/ui/button"
 import { Tag } from "@/shared/ui/chip"
 import { Sheet } from "@/shared/ui/sheet"
 
-/** Nested preview leaves the picker's filters, selection and scroll container mounted. */
+/** Nested preview keeps the underlying selection and scroll position mounted. */
 export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }: {
-  exercise: Exercise; onClose: () => void; selected: boolean; onToggle: () => void
+  exercise: Exercise; onClose: () => void; selected?: boolean; onToggle?: () => void
 }) {
   const { t } = useTranslation()
   const { text } = useExercises()
@@ -18,9 +18,9 @@ export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }
       bodyClassName="space-y-4" footer={
         <div className="flex flex-wrap gap-2">
           <Button onClick={onClose}>{t("common.back")}</Button>
-          <Button variant={selected ? "default" : "primary"} className="flex-1" onClick={onToggle}>
+          {onToggle && <Button variant={selected ? "default" : "primary"} className="flex-1" onClick={onToggle}>
             {t(selected ? "picker.unselect" : "picker.select")}
-          </Button>
+          </Button>}
         </div>
       }>
       <ExerciseImage ex={exercise} alt="" size="l" className="aspect-video w-full rounded-xl object-contain" />

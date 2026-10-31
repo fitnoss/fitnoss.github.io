@@ -1,13 +1,14 @@
 import { useState } from "react"
 import { Button } from "@/shared/ui/button"
-import { exerciseEquipment, key } from "@/entities/exercise/types"
+import { exerciseEquipment, key, type Exercise } from "@/entities/exercise/types"
 import { useTranslation } from "react-i18next"
-import { Link, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
 import { ChevronRight, Plus } from "lucide-react"
 import { Sheet } from "@/shared/ui/sheet"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { useExercises } from "@/entities/exercise/store"
 import { useProgramStore } from "@/entities/program/store"
+import { ExerciseTechniqueSheet } from "@/features/catalog/ExerciseTechniqueSheet"
 import { TEMPLATES } from "./templates"
 import { dayName, formatScheme, formatWeekdays } from "./format"
 
@@ -22,6 +23,7 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
   const create = useProgramStore((s) => s.create)
   const { byCode, text } = useExercises()
   const [preview, setPreview] = useState<(typeof TEMPLATES)[number] | null>(null)
+  const [exercisePreview, setExercisePreview] = useState<Exercise | null>(null)
   const lang = i18n.resolvedLanguage === "ru" ? "ru" : "en"
 
   const go = (id: string) => {
@@ -30,14 +32,32 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
   }
 
   return (
-    <Sheet open={open} onOpenChange={(o) => { setPreview(null); onOpenChange(o) }} title={preview ? preview.name[lang] : t("programs.newTitle")} bodyClassName="space-y-5" footer={preview && <div className="flex gap-2"><Button onClick={() => setPreview(null)}>{t("common.back")}</Button><Button variant="primary" className="flex-1" onClick={() => { const tpl = preview; setPreview(null); go(create({ name: tpl.name[lang], days: structuredClone(tpl.days) }).id) }}>{t("programs.useTemplate")}</Button></div>}>
+    <Sheet open={open} onOpenChange={(o) => { setPreview(null); setExercisePreview(null); onOpenChange(o) }} title={preview ? preview.name[lang] : t("programs.newTitle")} bodyClassName="space-y-5" footer={preview && <div className="flex gap-2"><Button onClick={() => setPreview(null)}>{t("common.back")}</Button><Button variant="primary" className="flex-1" onClick={() => { const tpl = preview; setPreview(null); go(create({ name: tpl.name[lang], days: structuredClone(tpl.days) }).id) }}>{t("programs.useTemplate")}</Button></div>}>
       {preview ? <div className="space-y-5">
         <p className="text-muted text-sm">{preview.description[lang]}</p>
         <p className="text-sm">{t("exercise.equipment")}: {[...new Set(preview.days.flatMap((d) => d.items.flatMap((it) => {
           const exercise = byCode.get(it.ex)
           return exercise ? exerciseEquipment(exercise) : []
         })))].map((eq) => t("equipment." + key(eq))).join(", ")}</p>
-        {preview.days.map((d, i) => <section key={i} className="space-y-2"><h3 className="font-semibold">{dayName(t, d.name, i)} · {formatWeekdays(d.weekdays ?? [])}</h3>{d.items.map((it, j) => <div key={j} className="border-b py-2"><div className="text-sm">{text(byCode.get(it.ex)).name}</div><div className="text-muted text-xs">{formatScheme(t, it)}</div></div>)}</section>)}
+        {preview.days.map((d, i) => <section key={i} className="space-y-2">
+          <h3 className="font-semibold">{dayName(t, d.name, i)} · {formatWeekdays(d.weekdays ?? [])}</h3>
+          {d.items.map((it, j) => {
+            const ex = byCode.get(it.ex)
+            return ex ? <button key={j} type="button" onClick={() => setExercisePreview(ex)}
+              className="hover:bg-surface flex w-full items-center gap-3 rounded-xl p-2 text-left"
+              aria-label={`${t("exercise.technique")}: ${text(ex).name}`}>
+              <ExerciseImage ex={ex} alt="" className="hairline size-16 shrink-0 rounded-[10px]" />
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-medium">{text(ex).name}</span>
+                <span className="text-muted mt-1 block text-xs">{formatScheme(t, it)}</span>
+              </span>
+              <ChevronRight className="text-muted size-4 shrink-0" />
+            </button> : <div key={j} className="border-b py-2">
+              <div className="text-sm">{text(ex).name}</div>
+              <div className="text-muted text-xs">{formatScheme(t, it)}</div>
+            </div>
+          })}
+        </section>)}
       </div> : <>
       <button
         type="button"
@@ -86,9 +106,9 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
                 </button>
                 <span className="mt-3 flex gap-1">
                   {shown.map((ex, i) => (
-                    <Link key={i} to={`/ex/${ex.s}`} className="relative shrink-0" aria-label={text(ex).name}>
+                    <button key={i} type="button" onClick={() => setExercisePreview(ex)} className="relative shrink-0" aria-label={`${t("exercise.technique")}: ${text(ex).name}`}>
                       <ExerciseImage ex={ex} alt="" animate={false} className="hairline size-9 rounded-[8px]" />
-                    </Link>
+                    </button>
                   ))}
                   {items.length > shown.length && (
                     <span className="bg-page hairline text-muted flex size-9 shrink-0 items-center justify-center rounded-[8px] text-xs font-semibold tabular-nums">
@@ -103,6 +123,7 @@ export function NewProgramSheet({ open, onOpenChange }: Props) {
         })}
       </div>
       </> }
+      {exercisePreview && <ExerciseTechniqueSheet exercise={exercisePreview} onClose={() => setExercisePreview(null)} />}
     </Sheet>
   )
 }

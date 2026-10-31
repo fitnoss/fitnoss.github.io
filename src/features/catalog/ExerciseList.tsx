@@ -1,4 +1,4 @@
-import { useRef, type ReactNode, type RefObject } from "react"
+import { useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react"
 import { useTranslation } from "react-i18next"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import { Check, Info } from "lucide-react"
@@ -62,6 +62,8 @@ type ListProps = {
   onPreview?: (ex: Exercise) => void
   /** Scroll container; omitted means the page scroller. */
   scrollRef?: RefObject<HTMLElement | null>
+  /** Content that scrolls together with the element list. */
+  header?: ReactNode
 }
 
 export function ExerciseList(props: ListProps) {
@@ -97,24 +99,39 @@ function PageList({ items, text, onSelect, isSelected, onPreview }: ListProps) {
   )
 }
 
-function ElementList({ items, text, onSelect, isSelected, scrollRef, onPreview }: ListProps & { scrollRef: RefObject<HTMLElement | null> }) {
+function ElementList({ items, text, onSelect, isSelected, scrollRef, onPreview, header }: ListProps & { scrollRef: RefObject<HTMLElement | null> }) {
+  const headerRef = useRef<HTMLDivElement>(null)
+  const [scrollMargin, setScrollMargin] = useState(0)
+  useLayoutEffect(() => {
+    const element = headerRef.current
+    if (!element) return
+    const measure = () => setScrollMargin(element.getBoundingClientRect().height)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
   const v = useVirtualizer({
     count: items.length,
     estimateSize: () => ROW,
     overscan: 6,
     getScrollElement: () => scrollRef.current,
+    scrollMargin,
   })
   return (
-    <div className="relative" style={{ height: v.getTotalSize() }}>
-      {v.getVirtualItems().map((row) => {
-        const ex = items[row.index]
-        return (
-          <div key={ex.c} className="absolute inset-x-0" style={{ transform: `translateY(${row.start}px)` }}>
-            <ExerciseRow ex={ex} text={text(ex)} selected={isSelected?.(ex)} onClick={() => onSelect(ex)}
-              onPreview={onPreview ? () => onPreview(ex) : undefined} />
-          </div>
-        )
-      })}
-    </div>
+    <>
+      <div ref={headerRef}>{header}</div>
+      <div className="relative" style={{ height: v.getTotalSize() }}>
+        {v.getVirtualItems().map((row) => {
+          const ex = items[row.index]
+          return (
+            <div key={ex.c} className="absolute inset-x-0" style={{ transform: `translateY(${row.start - scrollMargin}px)` }}>
+              <ExerciseRow ex={ex} text={text(ex)} selected={isSelected?.(ex)} onClick={() => onSelect(ex)}
+                onPreview={onPreview ? () => onPreview(ex) : undefined} />
+            </div>
+          )
+        })}
+      </div>
+    </>
   )
 }

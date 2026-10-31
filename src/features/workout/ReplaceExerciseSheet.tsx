@@ -33,28 +33,28 @@ export function ReplaceExerciseSheet({ source, onClose, onPick }: {
       title={t("workout.replaceExercise")}
       description={t("workout.replaceHint")}
       className="h-[94dvh] sm:h-[85dvh] sm:max-w-xl"
-      bodyClassName="flex flex-col px-0 pb-0"
+      bodyClassName="px-2 pb-0"
+      bodyRef={setScrollEl}
     >
-      <div className="space-y-3 px-4 pb-3">
-        <p className="text-muted text-sm">{text(source).name} · {source.pm.map((m) => t(`muscle.${key(m)}`)).join(", ")}</p>
-        <fieldset>
-          <legend className="mb-2 text-sm font-semibold">{t("workout.availableEquipment")}</legend>
-          <div className="flex flex-wrap gap-1.5">
-            {EQUIPMENT.map((eq) => (
-              <Chip key={eq} active={equipment.includes(eq)} onClick={() => setEquipment((current) =>
-                current.includes(eq) ? current.filter((e) => e !== eq) : [...current, eq],
-              )}>{t(`equipment.${eq}`)}</Chip>
-            ))}
-          </div>
-        </fieldset>
-        <Input type="search" value={query} onChange={(e) => setQuery(e.target.value)}
-          placeholder={t("catalog.search")} aria-label={t("catalog.search")} enterKeyHint="search" />
-        <p className="text-muted text-xs" role="status">{t("catalog.count", { count: items.length })}</p>
-      </div>
-      <div ref={setScrollEl} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2">
-        {!items.length && <p className="text-muted px-4 py-8 text-center text-sm">{t("workout.noReplacement")}</p>}
-        {scrollEl && <ExerciseList items={items} text={text} scrollRef={scrollRef} onSelect={(ex) => onPick(ex.c)} />}
-      </div>
+      {scrollEl && <ExerciseList items={items} text={text} scrollRef={scrollRef} onSelect={(ex) => onPick(ex.c)} header={
+        <div className="space-y-3 px-2 pb-3">
+          <p className="text-muted text-sm">{text(source).name} · {source.pm.map((m) => t(`muscle.${key(m)}`)).join(", ")}</p>
+          <fieldset>
+            <legend className="mb-2 text-sm font-semibold">{t("workout.availableEquipment")}</legend>
+            <div className="flex flex-wrap gap-1.5">
+              {EQUIPMENT.map((eq) => (
+                <Chip key={eq} active={equipment.includes(eq)} onClick={() => setEquipment((current) =>
+                  current.includes(eq) ? current.filter((e) => e !== eq) : [...current, eq],
+                )}>{t(`equipment.${eq}`)}</Chip>
+              ))}
+            </div>
+          </fieldset>
+          <Input type="search" value={query} onChange={(e) => setQuery(e.target.value)}
+            placeholder={t("catalog.search")} aria-label={t("catalog.search")} enterKeyHint="search" />
+          <p className="text-muted text-xs" role="status">{t("catalog.count", { count: items.length })}</p>
+        </div>
+      } />}
+      {!items.length && <p className="text-muted px-4 py-8 text-center text-sm">{t("workout.noReplacement")}</p>}
     </Sheet>
   )
 }
