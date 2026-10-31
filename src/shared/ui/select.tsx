@@ -140,7 +140,7 @@ export function Select<T extends string>({ value, onChange, options, label, disa
       <div ref={popup} id={id} popover="auto" role="listbox" aria-label={label}
         onToggle={(event) => { if (event.newState === "closed") setOpen(false) }}
         onMouseDown={(event) => event.preventDefault()}
-        className="bg-page dark:bg-elevated hairline rounded-control fixed inset-auto m-0 overflow-y-auto overscroll-contain border-0 p-1 text-fg shadow-xl shadow-black/15 dark:shadow-black/30 [animation:toast-in_.12s]">
+        className="bg-chrome hairline rounded-control fixed inset-auto m-0 overflow-y-auto overscroll-contain border-0 p-1 text-fg shadow-xl shadow-black/15 dark:shadow-black/30 [animation:toast-in_.12s]">
         {options.map((option, index) => (
           <div key={option.value} id={`${id}-${index}`} role="option" aria-selected={option.value === value}
             onPointerMove={() => setActive(index)} onClick={(event) => { event.preventDefault(); choose(index) }}
