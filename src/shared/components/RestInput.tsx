@@ -46,8 +46,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
           autoFocus={autoFocus}
           value={text}
           aria-label={t("workout.rest")}
-          className="placeholder:text-muted/60 min-w-0 bg-transparent text-left text-base font-semibold tabular-nums outline-none md:text-[15px]"
-          style={{ width: `${(text || "90").length}ch` }}
+          className="placeholder:text-muted/60 min-w-0 flex-1 bg-transparent text-left text-base font-semibold tabular-nums outline-none md:text-[15px]"
           onChange={(e) => {
             const digits = e.target.value.replace(/\D/g, "").replace(/^0+/, "").slice(0, String(max).length)
             const n = Math.min(max, Number(digits) || 0)
