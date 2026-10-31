@@ -58,7 +58,7 @@ under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Other systems s
 The SVG polygon coordinates in `src/shared/components/muscle-map-data.ts` are adapted from
 [react-body-highlighter](https://github.com/giavinh79/react-body-highlighter/blob/d03fcd8740033721a51f5a2682de02ec31df92ba/src/assets/index.ts),
 Copyright (c) 2020 GV79, under the MIT license. The full notice is included in
-`public/licenses/react-body-highlighter.txt` and linked from the diagram.
+`public/licenses/react-body-highlighter.txt` and linked from the About page.
 Adaptations: catalogue muscle names, corrected inner-thigh label, subdivision of upper back
 into middle back and lats, added lateral hip regions, and an expanded back viewBox to retain the soleus.
 

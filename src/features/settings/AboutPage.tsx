@@ -41,6 +41,11 @@ export function AboutPage() {
             </p>
             <p>{t("about.videos")}</p>
             <p>
+              <a className={link} href={`${import.meta.env.BASE_URL}licenses/react-body-highlighter.txt`} target="_blank" rel="noreferrer">
+                {t("about.muscleMapCredit")}
+              </a>
+            </p>
+            <p>
               {t("about.license")}{" "}
               <a className={link} href={`${REPO}/blob/main/THIRD_PARTY_NOTICES.md`} target="_blank" rel="noreferrer">
                 THIRD_PARTY_NOTICES

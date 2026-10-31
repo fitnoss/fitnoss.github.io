@@ -30,7 +30,7 @@ export function WeeklyMuscleMap({ history, exercises }: { history: Session[]; ex
         ))}
       </div>
       <label className="block text-sm">
-        <span className="mb-1.5 block text-muted">{t("muscleMap.choose")}</span>
+        <span className="mb-1.5 flex items-center gap-2 text-muted"><span className="size-3 rounded-sm bg-blue-500" aria-hidden="true" />{t("muscleMap.choose")}</span>
         <select value={selected} onChange={(e) => setSelected(e.target.value)} className="bg-surface hairline h-11 w-full rounded-xl px-3">
           {MUSCLES.map((muscle) => <option key={muscle} value={muscle}>{t(`muscle.${key(muscle)}`)}</option>)}
         </select>
@@ -44,7 +44,6 @@ export function WeeklyMuscleMap({ history, exercises }: { history: Session[]; ex
         ))}
       </div>
       <p className="text-muted text-xs">{t(hasSets ? "muscleMap.hint" : "muscleMap.empty")}</p>
-      <a href={`${import.meta.env.BASE_URL}licenses/react-body-highlighter.txt`} target="_blank" rel="noreferrer" className="text-muted block text-[11px] underline">{t("muscleMap.credit")}</a>
     </Panel>
   )
 }
