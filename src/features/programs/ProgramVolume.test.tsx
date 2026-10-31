@@ -10,10 +10,13 @@ import type { ProgramData } from "@/entities/program/types"
 import { ProgramVolume } from "./ProgramVolume"
 
 vi.mock("@/entities/exercise/store", () => ({
-  useExercises: () => ({ byCode: new Map([[1, { pm: ["chest"], sm: ["triceps"] } as Exercise]]) }),
+  useExercises: () => ({ byCode: new Map([
+    [1, { pm: ["chest"], sm: ["triceps"] } as Exercise],
+    [2, { pm: ["triceps"], sm: [] } as unknown as Exercise],
+  ]) }),
 }))
 
-it("shows translated totals and updates the period and coverage after program edits", async () => {
+it("shows a muscle map and updates uncovered and indirect-only lists after program edits", async () => {
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true)
   const i18n = createInstance()
   await i18n.init({ lng: "ru", resources: { ru: { translation: ru } }, interpolation: { escapeValue: false } })
@@ -23,19 +26,28 @@ it("shows translated totals and updates the period and coverage after program ed
   const render = () => act(() => root.render(<I18nextProvider i18n={i18n}><ProgramVolume program={plan} /></I18nextProvider>))
   try {
     render()
-    expect(container.querySelector("summary")?.textContent).toContain("Подходы по мышцам · неделя")
-    expect(container.querySelector("summary")?.textContent).toContain("2 из 17")
-    const chest = () => [...container.querySelectorAll("tbody tr")].find((row) => row.querySelector("th")?.textContent === ru.muscle.chest)!
-    expect([...chest().querySelectorAll("td")].map((cell) => cell.textContent)).toEqual(["6", "0"])
+    expect(container.querySelector("h2")?.textContent).toBe("Карта мышц · неделя")
+    expect(container.querySelector("table")).toBeNull()
+    expect(container.querySelectorAll("svg")).toHaveLength(2)
+    const list = (label: string) => [...container.querySelectorAll("dt")].find((dt) => dt.textContent === label)?.nextElementSibling?.textContent
+    const fill = (name: string) => [...container.querySelectorAll("g")].find((g) => g.querySelector("title")?.textContent === name)?.querySelector("polygon")?.getAttribute("fill")
+    expect(fill(ru.muscle.chest)).toBe("var(--accent)")
+    expect(fill(ru.muscle.triceps)).toBe("#3b82f6")
+    expect(list(ru.programVolume.indirectOnly)).toBe(ru.muscle.triceps)
+    expect(list(ru.programVolume.uncovered)).toContain(ru.muscle.calves)
+    expect(list(ru.programVolume.uncovered)).not.toContain(ru.muscle.chest)
+    expect(list(ru.programVolume.uncovered)).not.toContain(ru.muscle.triceps)
     plan.days[0].weekdays = undefined
-    plan.days[0].items[0].sets = 4
+    plan.days[0].items.push({ ex: 2, sets: 2, reps: "10", rest: 60 })
     render()
-    expect(container.querySelector("summary")?.textContent).toContain("Подходы по мышцам · цикл")
-    expect(chest().querySelector("td")?.textContent).toBe("4")
+    expect(container.querySelector("h2")?.textContent).toBe("Карта мышц · цикл")
+    expect(list(ru.programVolume.indirectOnly)).toBe(ru.programVolume.none)
+    expect(fill(ru.muscle.triceps)).toBe("var(--accent)")
     plan.days[0].items = []
     render()
-    expect(container.querySelector("summary")?.textContent).toContain("0 из 17")
-    expect(chest().querySelector("td")?.textContent).toBe("0")
+    expect(list(ru.programVolume.uncovered)).toContain(ru.muscle.chest)
+    expect(list(ru.programVolume.uncovered)).toContain(ru.muscle.triceps)
+    expect(fill(ru.muscle.chest)).toBe(fill(ru.muscle.calves))
   } finally {
     act(() => root.unmount())
     vi.unstubAllGlobals()
