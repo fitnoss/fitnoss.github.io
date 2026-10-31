@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useId, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router"
 import { Check, ChevronRight, Flame, History, Trophy } from "lucide-react"
@@ -22,6 +22,7 @@ const DAY = 86_400_000
 
 export function JournalPage() {
   const { t, i18n } = useTranslation()
+  const flameGradient = useId()
   const history = useSessionStore((s) => s.history)
   const { byCode, text } = useExercises()
   const [tab, setTab] = useState<"history" | "records" | "exercises" | "body">("history")
@@ -81,7 +82,15 @@ export function JournalPage() {
             <Stat
               value={
                 <span className="flex items-center gap-1">
-                  <Flame className={cn("size-7", stats.streak ? "text-accent fill-accent/25" : "text-muted")} />
+                  <Flame className={cn("size-7", stats.streak ? "text-orange-500" : "text-muted")}
+                    fill={stats.streak ? `url(#${flameGradient})` : "none"}>
+                    <defs>
+                      <linearGradient id={flameGradient} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#f97316" />
+                        <stop offset="100%" stopColor="#fde047" />
+                      </linearGradient>
+                    </defs>
+                  </Flame>
                   {stats.streak}
                 </span>
               }
