@@ -1,0 +1,161 @@
+{
+  "environment": {
+    "node": "v25.2.1",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "initialAssets": [
+    {
+      "file": "dist/assets/index-BDESEpwQ.js",
+      "bytes": 433239,
+      "gzipBytes": 133483
+    },
+    {
+      "file": "dist/assets/rolldown-runtime-WkwZ5CU-.js",
+      "bytes": 599,
+      "gzipBytes": 368
+    },
+    {
+      "file": "dist/assets/segmented-0u-4WOUR.js",
+      "bytes": 135250,
+      "gzipBytes": 45103
+    },
+    {
+      "file": "dist/assets/index-BZlnwQdW.css",
+      "bytes": 52840,
+      "gzipBytes": 10340
+    }
+  ],
+  "initialTotal": {
+    "bytes": 621928,
+    "gzipBytes": 189294
+  },
+  "data": [
+    {
+      "file": "dist/data/exercises.json",
+      "bytes": 187579,
+      "gzipBytes": 17056
+    },
+    {
+      "file": "dist/data/videos.json",
+      "bytes": 32,
+      "gzipBytes": 52
+    },
+    {
+      "file": "dist/locales/index.json",
+      "bytes": 142,
+      "gzipBytes": 106
+    },
+    {
+      "file": "dist/locales/en/ui.json",
+      "bytes": 19272,
+      "gzipBytes": 6346
+    },
+    {
+      "file": "dist/locales/en/exercises.json",
+      "bytes": 683118,
+      "gzipBytes": 145005
+    },
+    {
+      "file": "dist/locales/ru/ui.json",
+      "bytes": 29001,
+      "gzipBytes": 8532
+    },
+    {
+      "file": "dist/locales/ru/exercises.json",
+      "bytes": 1099023,
+      "gzipBytes": 182554
+    }
+  ],
+  "ruNamesOnlyExperiment": {
+    "bytes": 90808,
+    "gzipBytes": 17214
+  },
+  "images": [
+    {
+      "kind": "s",
+      "count": 1748,
+      "bytes": 19786930,
+      "medianBytes": 10454,
+      "p95Bytes": 18712
+    },
+    {
+      "kind": "l",
+      "count": 1748,
+      "bytes": 75863808,
+      "medianBytes": 41292,
+      "p95Bytes": 75410
+    }
+  ],
+  "search": {
+    "exercises": 968,
+    "buildIndex": {
+      "medianMs": 8.293,
+      "p95Ms": 9.388
+    },
+    "queries": [
+      {
+        "q": "присед",
+        "results": 62,
+        "medianMs": 0.115,
+        "p95Ms": 0.164
+      },
+      {
+        "q": "жим",
+        "results": 118,
+        "medianMs": 0.136,
+        "p95Ms": 0.155
+      },
+      {
+        "q": "подтягивания",
+        "results": 26,
+        "medianMs": 0.163,
+        "p95Ms": 0.335
+      },
+      {
+        "q": "squat",
+        "results": 61,
+        "medianMs": 0.062,
+        "p95Ms": 0.135
+      }
+    ]
+  },
+  "historySerialization": [
+    {
+      "sessions": 0,
+      "bytes": 1680,
+      "utf16CodeUnits": 1662,
+      "stringify": {
+        "medianMs": 0.004,
+        "p95Ms": 0.005
+      }
+    },
+    {
+      "sessions": 100,
+      "bytes": 163369,
+      "utf16CodeUnits": 161551,
+      "stringify": {
+        "medianMs": 0.536,
+        "p95Ms": 1.361
+      }
+    },
+    {
+      "sessions": 500,
+      "bytes": 810569,
+      "utf16CodeUnits": 801551,
+      "stringify": {
+        "medianMs": 2.665,
+        "p95Ms": 3.5
+      }
+    },
+    {
+      "sessions": 1000,
+      "bytes": 1619569,
+      "utf16CodeUnits": 1601551,
+      "stringify": {
+        "medianMs": 5.351,
+        "p95Ms": 6.461
+      }
+    }
+  ]
+}
