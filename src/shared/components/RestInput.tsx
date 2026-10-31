@@ -39,14 +39,14 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
       >
         {t("workout.noRest")}
       </Chip>
-      <label className="bg-surface hairline rounded-control hover:bg-surface-hover focus-within:bg-page flex h-11 w-[5.5rem] items-center justify-center gap-1 px-3 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]">
+      <label className="bg-surface hairline rounded-control hover:bg-surface-hover focus-within:bg-page flex h-11 w-[5.5rem] items-center gap-1 px-3.5 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]">
         <input
           inputMode="numeric"
           placeholder="90"
           autoFocus={autoFocus}
           value={text}
           aria-label={t("workout.rest")}
-          className="placeholder:text-muted/60 min-w-0 bg-transparent text-center text-base font-semibold tabular-nums outline-none md:text-[15px]"
+          className="placeholder:text-muted/60 min-w-0 bg-transparent text-left text-base font-semibold tabular-nums outline-none md:text-[15px]"
           style={{ width: `${(text || "90").length}ch` }}
           onChange={(e) => {
             const digits = e.target.value.replace(/\D/g, "").replace(/^0+/, "").slice(0, String(max).length)
