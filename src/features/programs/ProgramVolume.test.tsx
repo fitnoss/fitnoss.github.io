@@ -31,8 +31,8 @@ it("shows a muscle map and updates uncovered and indirect-only lists after progr
     expect(container.querySelectorAll("svg")).toHaveLength(2)
     const list = (label: string) => [...container.querySelectorAll("dt")].find((dt) => dt.textContent === label)?.nextElementSibling?.textContent
     const fill = (name: string) => [...container.querySelectorAll("g")].find((g) => g.querySelector("title")?.textContent === name)?.querySelector("polygon")?.getAttribute("fill")
-    expect(fill(ru.muscle.chest)).toBe("var(--accent)")
-    expect(fill(ru.muscle.triceps)).toBe("#3b82f6")
+    expect(fill(ru.muscle.chest)).toBe("#ef4444")
+    expect(fill(ru.muscle.triceps)).toBe("#facc15")
     expect(list(ru.programVolume.indirectOnly)).toBe(ru.muscle.triceps)
     expect(list(ru.programVolume.uncovered)).toContain(ru.muscle.calves)
     expect(list(ru.programVolume.uncovered)).not.toContain(ru.muscle.chest)
@@ -42,7 +42,7 @@ it("shows a muscle map and updates uncovered and indirect-only lists after progr
     render()
     expect(container.querySelector("h2")?.textContent).toBe("Карта мышц · цикл")
     expect(list(ru.programVolume.indirectOnly)).toBe(ru.programVolume.none)
-    expect(fill(ru.muscle.triceps)).toBe("var(--accent)")
+    expect(fill(ru.muscle.triceps)).toBe("#ef4444")
     plan.days[0].items = []
     render()
     expect(list(ru.programVolume.uncovered)).toContain(ru.muscle.chest)

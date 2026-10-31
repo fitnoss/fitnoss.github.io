@@ -13,7 +13,7 @@ export function ProgramVolume({ program }: { program: ProgramData }) {
   const uncovered = MUSCLES.filter((muscle) => !volume[muscle].primary && !volume[muscle].secondary)
   const indirect = MUSCLES.filter((muscle) => !volume[muscle].primary && volume[muscle].secondary > 0)
   const direct = MUSCLES.filter((muscle) => volume[muscle].primary > 0)
-  const colors = { direct: "var(--accent)", indirect: "#3b82f6", uncovered: muscleColor(0) }
+  const colors = { direct: "#ef4444", indirect: "#facc15", uncovered: muscleColor(0) }
   const muscleNames = (muscles: string[]) => muscles.map((muscle) => t(`muscle.${key(muscle)}`)).join(", ") || t("programVolume.none")
   return (
     <Panel className="mt-4 space-y-4 p-4">
