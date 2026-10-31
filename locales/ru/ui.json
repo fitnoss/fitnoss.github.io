@@ -539,6 +539,13 @@
     "setsCount_many": "{{count}} подходов",
     "setsCount_other": "{{count}} подхода"
   },
+  "datePicker": {
+    "today": "Сегодня",
+    "previousMonth": "Предыдущий месяц",
+    "nextMonth": "Следующий месяц",
+    "month": "Месяц",
+    "year": "Год"
+  },
   "body": {
     "tab": "Замеры",
     "title": "Вес и замеры",

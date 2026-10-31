@@ -6,7 +6,8 @@ import { deleteMeasurement, listMeasurements, saveMeasurement } from "@/entities
 import { uid } from "@/shared/lib/id"
 import { Button } from "@/shared/ui/button"
 import { confirmAction } from "@/shared/ui/confirm"
-import { Field, Input } from "@/shared/ui/field"
+import { Field } from "@/shared/ui/field"
+import { DatePicker } from "@/shared/ui/date-picker"
 import { NumberInput } from "@/shared/ui/number-input"
 import { Empty, Panel } from "@/shared/ui/panel"
 import { PaginatedList } from "@/shared/ui/paginated-list"
@@ -132,7 +133,7 @@ function MeasurementEditor({ entry, onClose, onSaved, onDeleted }: {
         catch { setError(t("body.saveFailed")); setSaving(false) }
       }}>
         <fieldset disabled={busy} className="space-y-4">
-          <Field label={t("body.date")}><Input type="date" required value={date} onChange={(event) => setDate(event.target.value)} /></Field>
+          <DatePicker label={t("body.date")} value={date} onChange={setDate} disabled={busy} />
           <div className="grid grid-cols-2 gap-3">
             {BODY_METRICS.map((key) => <Field key={key} label={`${t(`body.metrics.${key}`)}, ${t(key === "weight" ? "workout.kg" : "body.cm")}`}>
               <NumberInput aria-label={t(`body.metrics.${key}`)} placeholder="—" value={values[key]} onValueChange={(value) => {

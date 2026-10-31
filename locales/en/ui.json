@@ -523,6 +523,13 @@
     "setsCount_one": "{{count}} set",
     "setsCount_other": "{{count}} sets"
   },
+  "datePicker": {
+    "today": "Today",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "month": "Month",
+    "year": "Year"
+  },
   "body": {
     "tab": "Body",
     "title": "Weight and measurements",
