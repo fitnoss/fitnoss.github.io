@@ -56,6 +56,8 @@ export function MorePage() {
   const fileRef = useRef<HTMLInputElement>(null)
   const [dl, setDl] = useState<{ done: number; total: number } | null>(null)
   const [pendingBackup, setPendingBackup] = useState<Backup | null>(null)
+  const [pendingSummary, setPendingSummary] = useState<Awaited<ReturnType<typeof backupSummary>> | null>(null)
+  const [backupBusy, setBackupBusy] = useState(false)
   const [lastExport, setLastExport] = useState(() => localStorage.getItem(LAST_EXPORT))
   const [offlineResult, setOfflineResult] = useState<{ downloaded: number; failed: number; total: number; at: string } | null>(() => {
     try { return JSON.parse(localStorage.getItem(OFFLINE_STATUS) ?? "null") } catch { return null }
@@ -131,10 +133,15 @@ export function MorePage() {
 
         <Section id="settings-data" className="scroll-mt-20" title={t("more.data")} hint={t("more.dataHint")}>
           <div className="grid grid-cols-2 gap-2">
-            <Button onClick={() => { exportBackup(); setLastExport(localStorage.getItem(LAST_EXPORT)) }}>
+            <Button disabled={backupBusy} onClick={async () => {
+              setBackupBusy(true)
+              try { await exportBackup(); setLastExport(localStorage.getItem(LAST_EXPORT)) }
+              catch { toast.error(t("more.exportFailed")) }
+              finally { setBackupBusy(false) }
+            }}>
               <Download /> {t("more.export")}
             </Button>
-            <Button onClick={() => fileRef.current?.click()}>
+            <Button disabled={backupBusy} onClick={() => fileRef.current?.click()}>
               <Upload /> {t("more.import")}
             </Button>
           </div>
@@ -149,11 +156,14 @@ export function MorePage() {
               const file = e.target.files?.[0]
               e.target.value = ""
               if (!file) return
+              setBackupBusy(true)
               try {
-                setPendingBackup(await readBackup(file))
+                const data = await readBackup(file)
+                setPendingSummary(await backupSummary(data))
+                setPendingBackup(data)
               } catch {
                 toast.error(t("more.importFailed"))
-              }
+              } finally { setBackupBusy(false) }
             }}
           />
         </Section>
@@ -189,14 +199,18 @@ export function MorePage() {
           )}
         </Section>
       </div>
-      <Sheet open={!!pendingBackup} onOpenChange={(o) => !o && setPendingBackup(null)} title={t("more.import")} footer={
-        <div className="flex gap-2"><Button onClick={() => setPendingBackup(null)}>{t("common.cancel")}</Button><Button variant="primary" onClick={() => {
+      <Sheet open={!!pendingBackup} onOpenChange={(o) => !o && !backupBusy && setPendingBackup(null)} title={t("more.import")} footer={
+        <div className="flex gap-2"><Button disabled={backupBusy} onClick={() => setPendingBackup(null)}>{t("common.cancel")}</Button><Button variant="primary" disabled={backupBusy} onClick={async () => {
           if (!pendingBackup) return
-          const result = mergeBackup(pendingBackup)
-          setPendingBackup(null)
-          toast.success(t("more.imported", result))
+          setBackupBusy(true)
+          try {
+            const result = await mergeBackup(pendingBackup)
+            setPendingBackup(null)
+            toast.success(t("more.imported", result))
+          } catch { toast.error(t("more.mergeFailed")) }
+          finally { setBackupBusy(false) }
         }}>{t("more.merge")}</Button></div>
-      }>{pendingBackup && <div className="space-y-3"><p>{t("more.mergeHint")}</p><p>{t("more.importPreview", backupSummary(pendingBackup))}</p><p className="text-muted text-sm">{t("more.backupContents")}</p></div>}</Sheet>
+      }>{pendingBackup && pendingSummary && <div className="space-y-3"><p>{t("more.mergeHint")}</p><p>{t("more.importPreview", pendingSummary)}</p><p className="text-muted text-sm">{t("more.backupContents")}</p></div>}</Sheet>
     </>
   )
 }

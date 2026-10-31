@@ -1,3 +1,4 @@
+import { IDBFactory } from "fake-indexeddb"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.hoisted(() => {
@@ -17,27 +18,46 @@ import { useExerciseStore, useFavorites } from "@/entities/exercise/store"
 import { useProgramStore } from "@/entities/program/store"
 import { useSessionStore } from "@/entities/session/store"
 import { backupSummary, downloadAllImages, mergeBackup, readBackup, type Backup } from "./backup"
+import { listMeasurements, saveMeasurement } from "@/entities/body/storage"
+import { serializeMeasurements } from "@/entities/body/backup"
 
 beforeEach(() => {
+  vi.stubGlobal("indexedDB", new IDBFactory())
   useProgramStore.setState({ programs: [] })
   useSessionStore.setState({ history: [], active: undefined, rest: undefined })
   useFavorites.setState({ codes: [] })
 })
 
-const backup = (): Backup => ({ app: "fitnoss", version: 1, exportedAt: "2026-10-31", programs: [], history: [], favorites: [] })
+const backup = (): Backup => ({ app: "fitnoss", version: 2, exportedAt: "2026-10-31", programs: [], history: [], favorites: [], measurements: [] })
 
 describe("backup merge", () => {
+  it("previews, merges and restores body photo bytes without replacing local measurements", async () => {
+    const local = { id: "local", date: "2026-10-31", values: { weight: 75 }, updatedAt: 1 }
+    const incoming = { ...local, id: "incoming", photo: new Blob(["photo"], { type: "image/jpeg" }) }
+    await saveMeasurement(local)
+    const data = { ...backup(), measurements: await serializeMeasurements([{ ...local, values: { weight: 60 } }, incoming, incoming]) }
+    const parsed = await readBackup(new File([JSON.stringify(data)], "body.json"))
+    expect(await listMeasurements()).toEqual([local])
+    expect(await backupSummary(parsed)).toMatchObject({ measurements: 1, existing: 1 })
+    expect(await mergeBackup(parsed)).toMatchObject({ measurements: 1 })
+    const restored = await listMeasurements()
+    expect(restored.find((entry) => entry.id === "local")?.values.weight).toBe(75)
+    expect(await restored.find((entry) => entry.id === "incoming")?.photo?.text()).toBe("photo")
+    expect(await mergeBackup(parsed)).toMatchObject({ measurements: 0 })
+    const broken = { ...data, measurements: [{ ...data.measurements[0], values: { weight: -10 } }] }
+    await expect(readBackup(new File([JSON.stringify(broken)], "broken.json"))).rejects.toThrow()
+  })
   it("previews without changes, keeps local IDs and counts actual additions including input duplicates", async () => {
     const existing = useProgramStore.getState().create({ name: "Local", days: [{ name: "", items: [] }] })
     const incoming = { ...existing, id: "new", name: "New" }
     const data = { ...backup(), programs: [{ ...existing, name: "Overwrite" }, incoming, incoming], favorites: [1, 1, 2] }
     const parsed = await readBackup(new File([JSON.stringify(data)], "backup.json"))
     expect(useProgramStore.getState().programs).toEqual([existing])
-    expect(backupSummary(parsed)).toEqual({ programs: 1, sessions: 0, existing: 1, favorites: 2 })
-    expect(mergeBackup(parsed).programs).toBe(1)
+    expect(await backupSummary(parsed)).toEqual({ programs: 1, sessions: 0, existing: 1, favorites: 2, measurements: 0 })
+    expect((await mergeBackup(parsed)).programs).toBe(1)
     expect(useProgramStore.getState().programs).toEqual([existing, incoming])
     expect(useFavorites.getState().codes).toEqual([1, 2])
-    expect(mergeBackup(parsed).programs).toBe(0)
+    expect((await mergeBackup(parsed)).programs).toBe(0)
   })
   it("rejects malformed nested data before changing stores", async () => {
     const broken = { ...backup(), history: [{ id: "broken", exercises: null }] }
@@ -51,7 +71,7 @@ describe("backup merge", () => {
     const data = { ...backup(), history: [saved] }
     const parsed = await readBackup(new File([JSON.stringify(data)], "resume.json"))
     useSessionStore.setState({ history: [] })
-    mergeBackup(parsed)
+    await mergeBackup(parsed)
     expect(useSessionStore.getState().resume(saved.id)).toBe(true)
     expect(useSessionStore.getState().active!.exercises[0].sets.map((set) => set.done)).toEqual([true, false])
     expect(useSessionStore.getState().active!.exercises[0].note).toBe("Pause")

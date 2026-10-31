@@ -5,6 +5,7 @@ import { CalendarDays, Check, ChevronRight, Coffee, ListChecks, Play, Plus, Time
 import { PageHeader } from "@/shared/components/PageHeader"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { Logo, Wordmark } from "@/shared/components/Logo"
+import { WeekStrip } from "@/shared/components/WeekStrip"
 import { Button } from "@/shared/ui/button"
 import { Empty, Panel, Section } from "@/shared/ui/panel"
 import { cn } from "@/shared/lib/utils"
@@ -269,25 +270,10 @@ function ProgramRow({ program }: { program: Program }) {
           <ChevronRight className="text-muted size-5 shrink-0" />
         </div>
         {scheduled && (
-          <div className="grid grid-cols-7 gap-1">
-            {[0, 1, 2, 3, 4, 5, 6].map((wd) => {
-              const day = program.days.findIndex((d) => d.weekdays?.includes(wd))
-              return (
-                <div key={wd} className="flex flex-col items-center gap-1">
-                  <span className={cn("text-[11px] font-medium", wd === today ? "text-fg" : "text-muted")}>{weekdayName(wd, "short")}</span>
-                  <span
-                    className={cn(
-                      "flex h-7 w-full items-center justify-center rounded-lg text-xs font-semibold tabular-nums",
-                      day >= 0 ? "bg-inverse text-inverse-fg" : "bg-page",
-                      wd === today && "ring-accent ring-2 ring-offset-0",
-                    )}
-                  >
-                    {day >= 0 ? day + 1 : ""}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
+          <WeekStrip today={today} days={Array.from({ length: 7 }, (_, wd) => {
+            const day = program.days.findIndex((d) => d.weekdays?.includes(wd))
+            return { active: day >= 0, content: day >= 0 ? day + 1 : "" }
+          })} />
         )}
       </Panel>
     </Link>

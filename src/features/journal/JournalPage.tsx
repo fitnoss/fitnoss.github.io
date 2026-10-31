@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router"
-import { ChevronRight, Flame, History, Trophy } from "lucide-react"
+import { Check, ChevronRight, Flame, History, Trophy } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
+import { WeekStrip } from "@/shared/components/WeekStrip"
 import { Empty, Panel } from "@/shared/ui/panel"
 import { Segmented } from "@/shared/ui/segmented"
 import { PaginatedList } from "@/shared/ui/paginated-list"
@@ -12,45 +13,21 @@ import { useSessionStore, type Session } from "@/entities/session/store"
 import { e1rm, sessionVolume, sessionSetCount } from "@/entities/session/stats"
 import { isCountedSet } from "@/entities/session/sets"
 import { sessionDuration } from "@/entities/session/history"
-import { parseReps } from "@/entities/program/types"
+import { parseReps, weekdayOf } from "@/entities/program/types"
+import { weeklyActivity } from "@/entities/session/activity"
 import { WeeklyMuscleMap } from "./WeeklyMuscleMap"
+import { BodyProgress } from "@/features/body/BodyProgress"
 
 const DAY = 86_400_000
-
-function startOfDay(t: number) {
-  const d = new Date(t)
-  d.setHours(0, 0, 0, 0)
-  return d.getTime()
-}
 
 export function JournalPage() {
   const { t, i18n } = useTranslation()
   const history = useSessionStore((s) => s.history)
   const { byCode, text } = useExercises()
-  const [tab, setTab] = useState<"history" | "records" | "exercises">("history")
+  const [tab, setTab] = useState<"history" | "records" | "exercises" | "body">("history")
   const fmtDate = new Intl.DateTimeFormat(i18n.language, { weekday: "short", day: "numeric", month: "short" })
 
-  const stats = useMemo(() => {
-    const today = startOfDay(Date.now())
-    const days = new Set(history.map((s) => startOfDay(s.startedAt)))
-    const week = Array.from({ length: 7 }, (_, i) => today - (6 - i) * DAY)
-    // Streak in weeks with at least one workout.
-    let streak = 0
-    const weekStart = (ts: number) => {
-      const d = new Date(ts)
-      return startOfDay(ts - ((d.getDay() + 6) % 7) * DAY)
-    }
-    const weeks = new Set(history.map((s) => weekStart(s.startedAt)))
-    // The current week without a workout yet doesn't break the streak.
-    let w = weekStart(Date.now())
-    if (!weeks.has(w)) w -= 7 * DAY
-    for (; weeks.has(w); w -= 7 * DAY) streak++
-    return {
-      week: week.map((d) => ({ d, on: days.has(d) })),
-      thisWeek: history.filter((s) => s.startedAt >= weekStart(Date.now())).length,
-      streak,
-    }
-  }, [history])
+  const stats = useMemo(() => weeklyActivity(history, Date.now()), [history])
 
   const records = useMemo(() => {
     if (tab !== "records") return []
@@ -80,12 +57,24 @@ export function JournalPage() {
   }, [history, tab])
   const recent = history.filter((s) => s.startedAt >= Date.now() - 28 * DAY).length
   const prior = history.filter((s) => s.startedAt >= Date.now() - 56 * DAY && s.startedAt < Date.now() - 28 * DAY).length
-  const weekday = new Intl.DateTimeFormat(i18n.language, { weekday: "narrow" })
 
   return (
     <>
       <PageHeader title={t("journal.title")} />
       <div className="space-y-6 px-4 pb-8">
+        <Segmented
+          size="sm"
+          label={t("journal.title")}
+          value={tab}
+          onChange={setTab}
+          options={[
+            { value: "history", label: t("journal.history") },
+            { value: "records", label: t("journal.records") },
+            { value: "exercises", label: t("journal.myExercises") },
+            { value: "body", label: t("body.tab") },
+          ]}
+        />
+        {tab === "body" ? <BodyProgress /> : <>
         <Panel className="space-y-4 p-4">
           <div className="grid grid-cols-2 gap-4">
             <Stat value={stats.thisWeek} label={t("journal.thisWeek")} />
@@ -100,28 +89,16 @@ export function JournalPage() {
             />
           </div>
           <p className="text-muted text-sm">{t("journal.periodCompare", { recent: t("progress.sample", { count: recent }), change: recent - prior > 0 ? `+${recent - prior}` : recent - prior })}</p>
-          <div className="grid grid-cols-7 gap-1.5">
-            {stats.week.map(({ d, on }) => (
-              <div key={d} className="flex flex-col items-center gap-1.5">
-                <div className={cn("h-9 w-full rounded-lg", on ? "bg-accent" : "bg-page hairline")} />
-                <span className="text-muted text-[11px] font-medium">{weekday.format(d)}</span>
-              </div>
-            ))}
-          </div>
+          <WeekStrip today={weekdayOf(new Date())} days={stats.week.map(({ d, on }) => ({
+            active: on,
+            content: on ? <Check aria-hidden="true" className="size-4" /> : "",
+            label: fmtDate.format(d),
+          }))} />
         </Panel>
 
         <WeeklyMuscleMap history={history} exercises={byCode} />
 
         <div className="space-y-3">
-          <Segmented
-            value={tab}
-            onChange={setTab}
-            options={[
-              { value: "history", label: t("journal.history") },
-              { value: "records", label: t("journal.records") },
-              { value: "exercises", label: t("journal.myExercises") },
-            ]}
-          />
           {tab === "exercises" ? <div className="space-y-3">
             <input type="search" aria-label={t("catalog.search")} placeholder={t("catalog.search")} value={query} onChange={(e) => setQuery(e.target.value)} className="bg-surface hairline h-11 w-full rounded-xl px-3" />
             <PaginatedList key={`exercises-${query}`} items={mine.filter(([code]) => text(byCode.get(code)).name.toLowerCase().includes(query.toLowerCase()))}>
@@ -159,6 +136,7 @@ export function JournalPage() {
             </PaginatedList>
           )}
         </div>
+        </>}
       </div>
     </>
   )

@@ -4,27 +4,31 @@ import { useProgramStore } from "@/entities/program/store"
 import type { Program, ProgramItem } from "@/entities/program/types"
 import { useSessionStore, type Session, type SessionExercise, type SetLog } from "@/entities/session/store"
 import { SET_TYPES, validEffort } from "@/entities/session/sets"
+import { listMeasurements, mergeMeasurements } from "@/entities/body/storage"
+import { deserializeMeasurements, serializeMeasurements, type BodyBackupEntry } from "@/entities/body/backup"
 
 export type Backup = {
   app: "fitnoss"
-  version: 1
+  version: 2
   exportedAt: string
   programs: Program[]
   history: Session[]
   favorites: number[]
+  measurements: BodyBackupEntry[]
 }
 
 export const LAST_EXPORT = "fitnoss:last-export"
 export const OFFLINE_STATUS = "fitnoss:offline-images"
 
-export function exportBackup() {
+export async function exportBackup() {
   const data: Backup = {
     app: "fitnoss",
-    version: 1,
+    version: 2,
     exportedAt: new Date().toISOString(),
     programs: useProgramStore.getState().programs,
     history: useSessionStore.getState().history,
     favorites: useFavorites.getState().codes,
+    measurements: await serializeMeasurements(await listMeasurements()),
   }
   const blob = new Blob([JSON.stringify(data)], { type: "application/json" })
   const a = document.createElement("a")
@@ -38,12 +42,13 @@ export function exportBackup() {
 /** Validate and preview without changing local data. */
 export async function readBackup(file: File): Promise<Backup> {
   const data = JSON.parse(await file.text()) as Backup
-  if (data?.app !== "fitnoss" || data.version !== 1 || !Array.isArray(data.programs) || !Array.isArray(data.history) ||
+  if (data?.app !== "fitnoss" || data.version !== 2 || !Array.isArray(data.programs) || !Array.isArray(data.history) ||
       !data.programs.every((p) => typeof p?.id === "string" && typeof p.name === "string" &&
         Array.isArray(p.days) && p.days.length > 0 && p.days.every((d) =>
           typeof d?.name === "string" && Array.isArray(d.items) && d.items.every(validItem))) ||
       !data.history.every(validSession) ||
       (data.favorites !== undefined && (!Array.isArray(data.favorites) || !data.favorites.every(Number.isFinite)))) throw new Error("not a fitnoss backup")
+  deserializeMeasurements(data.measurements)
   return data
 }
 
@@ -75,29 +80,34 @@ function validSession(session: Session) {
     (session.unfinishedPlan === undefined || (Array.isArray(session.unfinishedPlan) && session.unfinishedPlan.every(validExercise)))
 }
 
-export function backupSummary(data: Backup) {
+export async function backupSummary(data: Backup) {
   const programs = new Set(useProgramStore.getState().programs.map((p) => p.id))
   const sessions = new Set(useSessionStore.getState().history.map((s) => s.id))
   const incomingPrograms = new Set(data.programs.map((p) => p.id))
   const incomingSessions = new Set(data.history.map((s) => s.id))
+  const measurements = new Set(data.measurements.length ? (await listMeasurements()).map((entry) => entry.id) : [])
+  const incomingMeasurements = new Set(data.measurements.map((entry) => entry.id))
   return {
     programs: [...incomingPrograms].filter((id) => !programs.has(id)).length,
     sessions: [...incomingSessions].filter((id) => !sessions.has(id)).length,
-    existing: [...incomingPrograms].filter((id) => programs.has(id)).length + [...incomingSessions].filter((id) => sessions.has(id)).length,
+    measurements: [...incomingMeasurements].filter((id) => !measurements.has(id)).length,
+    existing: [...incomingPrograms].filter((id) => programs.has(id)).length + [...incomingSessions].filter((id) => sessions.has(id)).length + [...incomingMeasurements].filter((id) => measurements.has(id)).length,
     favorites: new Set(data.favorites ?? []).size,
   }
 }
 
 /** Existing IDs are preserved; report actual additions. */
-export function mergeBackup(data: Backup) {
-  const summary = backupSummary(data)
+export async function mergeBackup(data: Backup) {
+  const summary = await backupSummary(data)
+  // Commit photo data first, so a quota error leaves the existing localStorage stores alone.
+  const measurements = data.measurements.length ? await mergeMeasurements(deserializeMeasurements(data.measurements)) : 0
   const programs = useProgramStore.getState().programs
   const ids = new Set(programs.map((p) => p.id))
   const added = data.programs.filter((p) => { if (ids.has(p.id)) return false; ids.add(p.id); return true })
   useProgramStore.setState({ programs: [...programs, ...added] })
   useSessionStore.getState().importHistory([...new Map(data.history.map((s) => [s.id, s])).values()])
   useFavorites.setState({ codes: [...new Set([...useFavorites.getState().codes, ...(data.favorites ?? [])])] })
-  return summary
+  return { ...summary, measurements }
 }
 
 export async function importBackup(file: File) { return mergeBackup(await readBackup(file)) }

@@ -21,7 +21,8 @@ function niceTicks(min: number, max: number) {
 
 /** Small dependency-free line chart; tap a point to read its value. */
 export function LineChart({ data, unit = "", label }: { data: Point[]; unit?: string; label?: string }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const number = new Intl.NumberFormat(i18n.language, { maximumFractionDigits: 2 })
   const [active, setActive] = useState(data.length - 1)
   const values = data.map((d) => d.value)
   const lo = Math.min(...values)
@@ -48,7 +49,7 @@ export function LineChart({ data, unit = "", label }: { data: Point[]; unit?: st
         <div aria-live="polite" className="flex flex-1 flex-wrap items-baseline justify-between gap-2">
         <span className="text-muted text-xs">{cur.label}</span>
         <span className="text-lg font-semibold tabular-nums">
-          {cur.value}
+          {number.format(cur.value)}
           {unit && <span className="text-muted ml-1 text-xs font-normal">{unit}</span>}
         </span>
         </div>
@@ -66,7 +67,7 @@ export function LineChart({ data, unit = "", label }: { data: Point[]; unit?: st
           <g key={v}>
             <line x1={PAD.left} x2={W - PAD.right} y1={y(v)} y2={y(v)} stroke="var(--line)" />
             <text x={PAD.left - 6} y={y(v)} dy="0.32em" textAnchor="end" fill="var(--muted)" className="tabular-nums">
-              {v}
+              {number.format(v)}
             </text>
           </g>
         ))}
