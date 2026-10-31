@@ -7,6 +7,7 @@ import { Chip } from "@/shared/ui/chip"
 import { Field } from "@/shared/ui/field"
 import { Segmented } from "@/shared/ui/segmented"
 import { Sheet } from "@/shared/ui/sheet"
+import { Select } from "@/shared/ui/select"
 
 export function SetDetailsSheet({ set, onChange, onClose, onPlates }: {
   onPlates?: () => void
@@ -41,11 +42,9 @@ export function SetDetailsSheet({ set, onChange, onClose, onPlates }: {
         {scale !== "none" && <>
           <p className="text-muted text-sm">{t(scale === "rpe" ? "workout.rpeHint" : "workout.rirHint")}</p>
           <Field label={scale.toUpperCase()}>
-            <select className="bg-surface hairline rounded-control h-11 w-full px-3 text-base" value={set.effort?.value ?? ""}
-              onChange={(e) => onChange({ effort: e.target.value === "" ? undefined : { scale, value: Number(e.target.value) } })}>
-              <option value="">{t("workout.noEffort")}</option>
-              {values.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
+            <Select label={scale.toUpperCase()} value={String(set.effort?.value ?? "")}
+              onChange={(value) => onChange({ effort: value === "" ? undefined : { scale, value: Number(value) } })}
+              options={[{ value: "", label: t("workout.noEffort") }, ...values.map((value) => ({ value: String(value), label: String(value) }))]} />
           </Field>
         </>}
       </section>

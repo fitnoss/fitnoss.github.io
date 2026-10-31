@@ -5,6 +5,7 @@ import type { Session } from "@/entities/session/store"
 import { calendarWeek, weeklyMuscleVolume } from "@/entities/session/muscles"
 import { MuscleMap, muscleColor } from "@/shared/components/MuscleMap"
 import { Panel } from "@/shared/ui/panel"
+import { Select } from "@/shared/ui/select"
 
 export function WeeklyMuscleMap({ history, exercises }: { history: Session[]; exercises: ReadonlyMap<number, Exercise> }) {
   const { t, i18n } = useTranslation()
@@ -29,12 +30,11 @@ export function WeeklyMuscleMap({ history, exercises }: { history: Session[]; ex
           </span>
         ))}
       </div>
-      <label className="block text-sm">
+      <div className="text-sm">
         <span className="mb-1.5 flex items-center gap-2 text-muted"><span className="size-3 rounded-sm bg-blue-500" aria-hidden="true" />{t("muscleMap.choose")}</span>
-        <select value={selected} onChange={(e) => setSelected(e.target.value)} className="bg-surface hairline h-11 w-full rounded-xl px-3">
-          {MUSCLES.map((muscle) => <option key={muscle} value={muscle}>{t(`muscle.${key(muscle)}`)}</option>)}
-        </select>
-      </label>
+        <Select label={t("muscleMap.choose")} value={selected} onChange={setSelected}
+          options={MUSCLES.map((muscle) => ({ value: muscle, label: t(`muscle.${key(muscle)}`) }))} />
+      </div>
       <div className="grid grid-cols-2 gap-3" aria-live="polite" aria-atomic="true">
         {(["primary", "secondary"] as const).map((kind) => (
           <div key={kind} className="bg-surface rounded-xl p-3">
