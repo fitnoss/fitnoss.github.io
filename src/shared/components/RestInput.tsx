@@ -39,14 +39,15 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
       >
         {t("workout.noRest")}
       </Chip>
-      <label className="bg-surface hairline rounded-control hover:bg-surface-hover focus-within:bg-page flex h-11 w-[5.5rem] items-center gap-1 pr-3 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]">
+      <label className="bg-surface hairline rounded-control hover:bg-surface-hover focus-within:bg-page flex h-11 w-[5.5rem] items-center justify-center gap-1 px-3 transition-colors focus-within:shadow-[inset_0_0_0_1.5px_var(--fg)]">
         <input
           inputMode="numeric"
           placeholder="90"
           autoFocus={autoFocus}
           value={text}
           aria-label={t("workout.rest")}
-          className="placeholder:text-muted/60 w-full min-w-0 bg-transparent pl-3 text-right text-base font-semibold tabular-nums outline-none md:text-[15px]"
+          className="placeholder:text-muted/60 min-w-0 bg-transparent text-center text-base font-semibold tabular-nums outline-none md:text-[15px]"
+          style={{ width: `${(text || "90").length}ch` }}
           onChange={(e) => {
             const digits = e.target.value.replace(/\D/g, "").replace(/^0+/, "").slice(0, String(max).length)
             const n = Math.min(max, Number(digits) || 0)
@@ -60,7 +61,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
             onDone?.()
           }}
         />
-        <span className="text-muted text-[13px] font-medium">{t("workout.seconds")}</span>
+        <span className="text-muted shrink-0 text-[13px] font-medium">{t("workout.seconds")}</span>
       </label>
     </div>
   )
