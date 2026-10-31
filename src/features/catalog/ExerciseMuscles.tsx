@@ -14,7 +14,7 @@ export function ExerciseMuscles({ exercise }: { exercise: Pick<Exercise, "pm" | 
   return (
     <div className="space-y-4">
       <MuscleMap colorFor={(muscle) => primary.includes(muscle) ? PRIMARY : secondary.includes(muscle) ? SECONDARY : muscleColor(0)} />
-      <dl className="space-y-3 text-sm">
+      <dl className="grid grid-cols-2 gap-4 text-sm">
         {[
           { muscles: primary, color: PRIMARY, title: t("exercise.primaryMuscles") },
           { muscles: secondary, color: SECONDARY, title: t("exercise.secondaryMuscles") },
