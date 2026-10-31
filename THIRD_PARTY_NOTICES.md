@@ -62,6 +62,14 @@ Copyright (c) 2020 GV79, under the MIT license. The full notice is included in
 Adaptations: catalogue muscle names, corrected inner-thigh label, subdivision of upper back
 into middle back and lats, added lateral hip regions, and an expanded back viewBox to retain the soleus.
 
+## Workout field icons
+
+The filled kettlebell and timer icons in `src/shared/components/WorkoutIcons.tsx` come from
+[Material Design Icons by Pictogrammers](https://github.com/Templarian/MaterialDesign-SVG)
+(`svg/kettlebell.svg` and `svg/timer.svg`), under Apache-2.0.
+Their path data is unchanged; they are wrapped as React components using `currentColor`.
+The license is included in `public/licenses/material-design-icons.txt`.
+
 ## Fonts
 
 [Onest](https://github.com/simpals/onest) and [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) are

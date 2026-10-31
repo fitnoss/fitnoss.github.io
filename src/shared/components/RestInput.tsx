@@ -28,7 +28,7 @@ export function RestInput({ value, onChange, onDone, max = 3600, autoFocus, clas
   }, [value])
 
   return (
-    <div className={cn("flex items-center gap-1.5", className)}>
+    <div className={cn("flex items-center gap-3", className)}>
       <Chip
         active={value === 0}
         className="h-11"

@@ -4,6 +4,7 @@ import { NumberInput } from "@/shared/ui/number-input"
 import { Segmented } from "@/shared/ui/segmented"
 import { RestInput } from "@/shared/components/RestInput"
 import { Stepper } from "@/shared/components/Stepper"
+import { KettlebellIcon, RestTimerIcon } from "@/shared/components/WorkoutIcons"
 import { Switch } from "@/shared/ui/switch"
 import { canProgress, formatReps, parseReps, type ParsedReps, type ProgramItem } from "@/entities/program/types"
 import { DELOAD, DELOAD_AFTER } from "@/entities/session/progression"
@@ -74,14 +75,14 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
           <p className="text-muted w-full text-xs">{t("programs.supersetRest")}</p>
         ) : (
           <div className="flex flex-col items-start gap-1.5">
-            <span className="text-muted text-xs font-medium">{t("scheme.rest")}</span>
+            <span className="text-muted flex items-center gap-1 text-xs font-medium"><RestTimerIcon className="size-4" />{t("scheme.rest")}</span>
             <RestInput value={item.rest} onChange={(rest) => onChange({ ...item, rest })} />
           </div>
         )}
       </div>
 
       <div className="grid grid-cols-[6.5rem_1fr] gap-2">
-        <Field label={t("scheme.weight")}>
+        <Field label={<span className="flex items-center gap-1"><KettlebellIcon className="size-4" />{t("scheme.weight")}</span>}>
           <NumberInput
             inputMode="decimal"
             placeholder="—"
@@ -99,7 +100,6 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
         </Field>
       </div>
 
-      <details><summary className="min-h-11 cursor-pointer py-3 text-sm font-medium">{t("scheme.advanced")}</summary>
       {(reps.kind === "reps" || reps.kind === "range") && (
         <div className="bg-page rounded-control space-y-3 p-3">
           <label className="flex cursor-pointer items-center justify-between gap-3">
@@ -130,7 +130,6 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
           )}
         </div>
       )}
-      </details>
     </div>
   )
 }
