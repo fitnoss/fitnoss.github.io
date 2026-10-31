@@ -77,12 +77,14 @@ export function JournalPage() {
         {tab === "body" ? <BodyProgress /> : <>
         <Panel className="space-y-4 p-4">
           <div className="flex items-center gap-3 sm:gap-5">
-            <div className="grid min-w-0 flex-1 grid-cols-2 items-start gap-3 sm:gap-4">
+            <div className="min-w-0 flex-1">
               <Stat value={stats.thisWeek} label={t("journal.thisWeek")} />
+            </div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <img src={`${import.meta.env.BASE_URL}icons/streak-cat.png`} alt="" width={96} height={96}
+                className={cn("size-24 shrink-0 object-contain", !stats.streak && "grayscale opacity-50")} />
               <Stat value={stats.streak} label={t("journal.weekStreak")} />
             </div>
-            <img src={`${import.meta.env.BASE_URL}icons/streak-cat.png`} alt="" width={96} height={96}
-              className={cn("size-24 shrink-0 object-contain", !stats.streak && "grayscale opacity-50")} />
           </div>
           <p className="text-muted text-sm">{t("journal.periodCompare", { recent: t("progress.sample", { count: recent }), change: recent - prior > 0 ? `+${recent - prior}` : recent - prior })}</p>
           <WeekStrip today={weekdayOf(new Date())} days={stats.week.map(({ d, on }) => ({
