@@ -19,7 +19,7 @@ export const MuscleMap = memo(function MuscleMap({ colorFor, selected, onSelect 
     <div className="grid grid-cols-2 gap-4">
       {[front, back].map((regions, side) => (
         <figure key={side} className="min-w-0">
-          <svg viewBox={side ? "-15 -15 1030 2230" : "-15 -15 1030 2010"} className="mx-auto h-64 w-full max-w-44" aria-hidden="true">
+          <svg viewBox={side ? "-115 -15 1230 2340" : "-115 -15 1230 2140"} className="mx-auto h-64 w-full max-w-44" aria-hidden="true">
             {regions.map(({ muscle, points }, index) => (
               <g key={index}
                 className={muscle && onSelect ? "cursor-pointer" : undefined}

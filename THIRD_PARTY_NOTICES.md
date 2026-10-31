@@ -60,7 +60,8 @@ The SVG polygon coordinates in `src/shared/components/muscle-map-data.ts` are ad
 Copyright (c) 2020 GV79, under the MIT license. The full notice is included in
 `public/licenses/react-body-highlighter.txt` and linked from the About page.
 Adaptations: catalogue muscle names, corrected inner-thigh label, subdivision of upper back
-into middle back and lats, added lateral hip regions, and an expanded back viewBox to retain the soleus.
+into middle back and lats, added lateral hip regions, original neutral hand and foot polygons,
+and expanded viewBoxes to retain the complete silhouettes.
 
 ## Workout field icons
 
