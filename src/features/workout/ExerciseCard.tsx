@@ -110,8 +110,8 @@ export const ExerciseCard = memo(function ExerciseCard({ e, i, last, restsAfter,
           <div className={cn("line-clamp-2 leading-snug font-semibold", big ? "text-[20px] font-bold tracking-tight" : "text-[15px]")}>
             {ex ? text(ex).name : t("exercise.unknown")}
           </div>
-          <div className="text-muted mt-0.5 flex items-center gap-1 text-[13px]">
-            {t("workout.target")}: {formatRepsLabel(t, e.reps)}
+          <div className="text-muted mt-0.5 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[13px]">
+            <span>{t("workout.target")}: {formatRepsLabel(t, e.reps)}{(reps.kind === "reps" || reps.kind === "range") && <> {t("workout.repetitionUnit", { count: reps.kind === "reps" ? reps.n : reps.b })}</>}</span>
             {e.progression && (
               <span className={cn("inline-flex items-center gap-0.5 font-medium", e.progression === "up" ? "text-accent-ink" : "text-fg")}>
                 {" "}·{" "}
@@ -121,18 +121,18 @@ export const ExerciseCard = memo(function ExerciseCard({ e, i, last, restsAfter,
               </span>
             )}
             {restsAfter && (
-              <>
-                {" "}·
+              <span className="inline-flex items-center gap-1">
+                <span aria-hidden="true">·</span>
                 <button
                   type="button"
                   onClick={() => setRestOpen((o) => !o)}
                   aria-expanded={restOpen}
                   aria-label={t("workout.changeRest")}
-                  className="hover:text-fg inline-flex items-center gap-1 underline decoration-dotted underline-offset-4"
+                  className="hover:text-fg inline-flex items-center gap-1 whitespace-nowrap underline decoration-dotted underline-offset-4"
                 >
-                  <Clock className="size-3.5" /> {e.rest ? formatDuration(t, e.rest) : t("workout.noRest")}
+                  <Clock className="size-3.5 shrink-0" /> {e.rest ? `${t("workout.rest")}: ${formatDuration(t, e.rest)}` : t("workout.noRest")}
                 </button>
-              </>
+              </span>
             )}
           </div>
         </div>

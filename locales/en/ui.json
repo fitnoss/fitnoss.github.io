@@ -390,7 +390,9 @@
     "addWeight": "Add resistance",
     "addedWeight": "Added resistance, kg",
     "addedKg": "Added kg",
-    "skipRestShort": "Skip"
+    "skipRestShort": "Skip",
+    "repetitionUnit_one": "repetition",
+    "repetitionUnit_other": "repetitions"
   },
   "journal": {
     "title": "Progress",

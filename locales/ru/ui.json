@@ -406,7 +406,11 @@
     "addWeight": "Добавить отягощение",
     "addedWeight": "Доп. отягощение, кг",
     "addedKg": "Доп. кг",
-    "skipRestShort": "Пропустить"
+    "skipRestShort": "Пропустить",
+    "repetitionUnit_one": "повторение",
+    "repetitionUnit_few": "повторения",
+    "repetitionUnit_many": "повторений",
+    "repetitionUnit_other": "повторения"
   },
   "journal": {
     "title": "Прогресс",
