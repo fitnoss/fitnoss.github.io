@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { NavLink, Outlet, useLocation, useNavigationType } from "react-router"
 import { ChartNoAxesColumn, Dumbbell, Ellipsis, ListChecks, Moon, Sun } from "lucide-react"
 import { cn } from "@/shared/lib/utils"
-import { useSessionStore } from "@/entities/session/store"
 import { isDark, useSettings } from "@/shared/storage/settings"
 
 import { RestTimerBar } from "@/features/workout/RestTimerBar"
@@ -54,7 +53,6 @@ export function Layout() {
   const { t } = useTranslation()
   const { pathname, search, key } = useLocation()
   const navigationType = useNavigationType()
-  const active = useSessionStore((s) => !!s.active)
   const main = useRef<HTMLElement>(null)
 
   useLayoutEffect(() => {
@@ -99,28 +97,29 @@ export function Layout() {
   // makes the sticky header shake.
   return (
     <div className="fixed inset-0 flex flex-col md:flex-row">
-      <div className="relative min-h-0 flex-1 md:order-last">
-        <main
-          ref={main}
-          id="page-scroll"
-          className="bg-page absolute inset-0 isolate overflow-x-hidden overflow-y-auto overscroll-y-none [scrollbar-gutter:stable] [overflow-anchor:none]"
-        >
-          <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(34rem,70svh)] wash" />
-          <div className={cn("mx-auto max-w-2xl", active && "pb-32")}>
-            <Suspense fallback={<div role="status" className="text-muted px-4 py-8 text-center text-sm">{t("common.loading")}</div>}>
-              <Outlet />
-            </Suspense>
-          </div>
-        </main>
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col md:order-last">
+        <div className="relative min-h-0 flex-1">
+          <main
+            ref={main}
+            id="page-scroll"
+            className="bg-page absolute inset-0 isolate overflow-x-hidden overflow-y-auto overscroll-y-none [scrollbar-gutter:stable] [overflow-anchor:none]"
+          >
+            <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[min(34rem,70svh)] wash" />
+            <div className={cn("mx-auto", pathname === "/exercises" ? "max-w-6xl" : "max-w-2xl")}>
+              <Suspense fallback={<div role="status" className="text-muted px-4 py-8 text-center text-sm">{t("common.loading")}</div>}>
+                <Outlet />
+              </Suspense>
+            </div>
+          </main>
 
-        {/* Mobile: rounded bottom of the sheet above the tab bar. Desktop: rounded left side next to the sidebar. */}
-        <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-30 size-[18px] md:hidden" style={corner("100% 0")} />
-        <div aria-hidden className="pointer-events-none absolute right-0 bottom-0 z-30 size-[18px] md:hidden" style={corner("0 0")} />
-        <div aria-hidden className="pointer-events-none absolute top-0 left-0 z-30 hidden size-[18px] md:block" style={corner("100% 100%")} />
-        <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-30 hidden size-[18px] md:block" style={corner("100% 0")} />
+          {/* Mobile: rounded bottom of the sheet above the tab bar. Desktop: rounded left side next to the sidebar. */}
+          <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-30 size-[18px] md:hidden" style={corner("100% 0")} />
+          <div aria-hidden className="pointer-events-none absolute right-0 bottom-0 z-30 size-[18px] md:hidden" style={corner("0 0")} />
+          <div aria-hidden className="pointer-events-none absolute top-0 left-0 z-30 hidden size-[18px] md:block" style={corner("100% 100%")} />
+          <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 z-30 hidden size-[18px] md:block" style={corner("100% 0")} />
+        </div>
+        <RestTimerBar />
       </div>
-
-      <RestTimerBar />
       <nav
         className={cn(
           "bg-chrome z-40 shrink-0",

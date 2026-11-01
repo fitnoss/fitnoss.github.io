@@ -133,11 +133,11 @@ function ProgramEditor({ id }: { id: string }) {
   return (
     <>
       <PageHeader
-        title={program.name || t("programs.untitled")}
+        title={<span className="block min-w-0"><span className="block truncate">{program.name || t("programs.untitled")}</span><span className="text-muted block truncate text-xs font-normal">{dayName(t, current.name, d)}</span></span>}
         back="/"
         actions={
           <>
-            <Button
+            {editing ? <Button variant="primary" size="sm" onClick={() => setEditing(false)}>{t("common.done")}</Button> : <Button
               variant="ghost"
               size="icon"
               onClick={() => setShareOpen(true)}
@@ -145,7 +145,7 @@ function ProgramEditor({ id }: { id: string }) {
               aria-label={t("share.title")}
             >
               <Share />
-            </Button>
+            </Button>}
             <Menu>
               <MenuItem
                 onClick={() => {
@@ -168,7 +168,8 @@ function ProgramEditor({ id }: { id: string }) {
             </Menu>
           </>
         }
-      >
+      />
+      <div className="pt-2">
         {editing && <div className="px-4 pb-2.5">
           <Input
             aria-label={t("programs.namePlaceholder")}
@@ -214,12 +215,12 @@ function ProgramEditor({ id }: { id: string }) {
           <CalendarDays className="size-4" />
           {t(current.weekdays?.length ? "programs.editWeekdays" : "programs.setWeekdays")}
         </button>}
-      </PageHeader>
+      </div>
 
       <div className="space-y-2 px-4 pt-1 pb-8">
         <div className="flex flex-wrap items-center gap-2 pb-2">
-          <Button className="flex-1" onClick={() => setEditing(!editing)}>{t(editing ? "common.done" : "programs.edit")}</Button>
-          {current.items.length > 0 && <Button variant="primary" className="flex-1" onClick={() => startDay(program, d)}><Play className="size-4" />{t("home.start")}</Button>}
+          {!editing && <Button className="flex-1" onClick={() => setEditing(true)}>{t("programs.edit")}</Button>}
+          {!editing && current.items.length > 0 && <Button variant="primary" className="flex-1" onClick={() => startDay(program, d)}><Play className="size-4" />{t("home.start")}</Button>}
           {editing && <p role="status" className="text-muted w-full text-xs">{t("programs.autosaved")}</p>}
         </div>
         {groups(current.items).map((g) => (g.length > 1 ? <SupersetGroup key={`g${g[0]}`}>{g.map(card)}</SupersetGroup> : card(g[0])))}

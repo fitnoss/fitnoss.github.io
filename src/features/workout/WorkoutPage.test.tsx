@@ -73,3 +73,18 @@ describe.each(["list", "cards"] as const)("workout render isolation (%s)", (view
     expect(renders).toEqual([])
   })
 })
+
+it("makes added resistance explicit for bodyweight exercises and retains existing loads", () => {
+  useSettings.setState({ workoutView: "list" })
+  act(() => root.render(<MemoryRouter><WorkoutPage /></MemoryRouter>))
+  expect(container.querySelector('[aria-label*="scheme.weight"]')).toBeNull()
+  const add = [...container.querySelectorAll("button")].find((button) => button.textContent === "workout.addWeight")!
+  act(() => add.click())
+  expect(container.querySelector('[aria-label*="workout.addedWeight"]')).not.toBeNull()
+  act(() => useSessionStore.getState().updateSet(0, 0, { weight: 5 }))
+  act(() => root.unmount())
+  root = createRoot(container)
+  act(() => root.render(<MemoryRouter><WorkoutPage /></MemoryRouter>))
+  expect((container.querySelector('[aria-label*="workout.addedWeight"]') as HTMLInputElement).value).toBe("5")
+  expect(container.querySelector('a[aria-label="exercise.technique: exercise-1"]')).not.toBeNull()
+})

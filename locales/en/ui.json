@@ -115,7 +115,26 @@
     "count_one": "{{count}} exercise",
     "count_other": "{{count}} exercises",
     "empty": "Nothing found. Try another search or fewer filters.",
-    "removeFilter": "Remove filter: {{name}}"
+    "removeFilter": "Remove filter: {{name}}",
+    "searchWithoutFilters": "Search for “{{query}}” without filters",
+    "clearFilters": "Remove filters",
+    "clearSearch": "Clear search",
+    "resetAll": "Reset everything",
+    "quickFilters": "Places and equipment — scroll for all options",
+    "bodyRegion": "Body area",
+    "individualMuscles": "Choose individual muscles ▾",
+    "moreEquipment": "Other equipment ▾",
+    "filterLogic": "Any selected option within a group can match. All groups must match. Muscles refer to the primary load.",
+    "equipmentLogic": "Equipment: exercises using at least one selected item. Other equipment may also be needed — check the exercise details.",
+    "regions": {
+      "chest": "Chest",
+      "back": "Back",
+      "shoulders": "Shoulders",
+      "arms": "Arms",
+      "core": "Abs",
+      "legs": "Legs and glutes",
+      "neck": "Neck"
+    }
   },
   "exercise": {
     "notFound": "Exercise not found",
@@ -133,13 +152,22 @@
     "technique": "Technique",
     "machineTranslation": "Machine translation. You can help improve it on GitHub.",
     "primaryMuscles": "Primary muscles",
-    "secondaryMuscles": "Secondary muscles"
+    "secondaryMuscles": "Secondary muscles",
+    "translationMachine": "Machine translation",
+    "catalogText": "Catalog text",
+    "reviewNotRecorded": "Editorial review not recorded",
+    "reportIssue": "Report an inaccuracy",
+    "issueDescription": "What needs correcting?",
+    "issueHint": "Opens a GitHub form with the exercise name and your description. A GitHub account is required; review the form before submitting.",
+    "openIssue": "Open form on GitHub"
   },
   "video": {
     "title": "Video",
     "play": "Play video",
     "search": "Find on YouTube",
-    "searchSuffix": "exercise technique"
+    "searchSuffix": "exercise technique",
+    "searchTitle": "Find a video",
+    "externalSearch": " — YouTube search, opens in a new tab"
   },
   "programs": {
     "title": "Programs",
@@ -189,7 +217,18 @@
     "edit": "Edit",
     "autosaved": "Changes are saved automatically on this device",
     "useTemplate": "Use program",
-    "choose": "Choose a program"
+    "choose": "Choose a program",
+    "pickTemplate": "Choose a template",
+    "createFromScratch": "Create from scratch",
+    "experience": "Experience",
+    "durationRange": "≈ {{min}}–{{max}} min per session",
+    "durationHint": "Includes rest, excludes warm-up. Estimate: 3–5 seconds per rep; 20–45 seconds for open-ended sets.",
+    "restIncluded": "with rest, without warm-up",
+    "templateAdapt": "A starting point: after adding, adjust the exercises, sets and targets to your experience.",
+    "workoutTypes_one": "{{count}} workout type",
+    "workoutTypes_other": "{{count}} workout types",
+    "sessionsPerWeek_one": "{{count}} session/week",
+    "sessionsPerWeek_other": "{{count}} sessions/week"
   },
   "dayPreset": {
     "upper": "Upper",
@@ -234,7 +273,8 @@
     "explain": {
       "amrap": "AMRAP — as many quality reps as possible while maintaining form.",
       "max": "Max — maximum reps in a set; log the actual result."
-    }
+    },
+    "goalType": "Target type"
   },
   "reps": {
     "max": "max"
@@ -339,7 +379,18 @@
     "unmarkSet": "Mark incomplete",
     "previousSet": "Last time: {{weight}} × {{reps}} {{unit}}",
     "confirmRemoveSet": "This set is completed. Delete its result?",
-    "confirmFinishEmpty": "None of {{total}} sets completed. Finish without a history record? The current plan will be removed."
+    "confirmFinishEmpty": "None of {{total}} sets completed. Finish without a history record? The current plan will be removed.",
+    "freeHint": "Add exercises as you go. No prepared plan needed.",
+    "restControls": "Current workout and rest",
+    "adjustRest": "Rest {{time}} — adjust time",
+    "restMinus": "Shorten rest by 15 seconds",
+    "restPlus": "Extend rest by 15 seconds",
+    "bodyweightHint": "Bodyweight — no need to enter your body mass.",
+    "addedWeightHint": "Weight here means added resistance, excluding body mass.",
+    "addWeight": "Add resistance",
+    "addedWeight": "Added resistance, kg",
+    "addedKg": "Added kg",
+    "skipRestShort": "Skip"
   },
   "journal": {
     "title": "Progress",
@@ -369,7 +420,9 @@
     "resumeSession": "Resume plan",
     "reopenSession": "Reopen workout",
     "confirmResume": "Reopen this workout? Completed sets are preserved. Until you finish again, the record will be available in the active workout.",
-    "resumeUnavailable": "Finish or discard the current workout first."
+    "resumeUnavailable": "Finish or discard the current workout first.",
+    "firstTitle": "Your progress starts here",
+    "firstHint": "Finish your first workout to see your history, muscle load and changes in performance."
   },
   "progress": {
     "e1rm": "1RM est.",

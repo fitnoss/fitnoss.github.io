@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate, useParams } from "react-router"
-import { ChartNoAxesColumn, Languages, ListPlus, Star, Timer } from "lucide-react"
+import { ChartNoAxesColumn, ListPlus, Star, Timer } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { Button, buttonClass } from "@/shared/ui/button"
@@ -16,6 +16,7 @@ import { useSessionStore } from "@/entities/session/store"
 import { VideoPlayer, YoutubeSearchButton } from "@/features/video/VideoPlayer"
 import { AddToProgramDrawer } from "@/features/programs/AddToProgramDrawer"
 import { ExerciseMuscles } from "./ExerciseMuscles"
+import { TechniqueFeedback } from "./TechniqueFeedback"
 
 const tile = "h-auto flex-col gap-1.5 py-3.5 text-[13px] leading-tight whitespace-normal"
 
@@ -53,7 +54,7 @@ export function ExercisePage() {
         back
         actions={
           <Button variant="ghost" size="icon" onClick={() => fav.toggle(ex.c)} aria-label={t("catalog.favorites")} aria-pressed={isFav}>
-            <Star className={cn("size-[22px]", isFav && "fill-accent text-accent")} />
+            <Star className={cn("size-[22px]", isFav && "fill-accent text-accent-ink")} />
           </Button>
         }
       />
@@ -126,30 +127,22 @@ export function ExercisePage() {
           <ExerciseMuscles exercise={ex} />
         </Section>
 
-        <Section
-          title={t("exercise.technique")}
-          hint={
-            tx.machine && (
-              <span className="flex items-center gap-1.5">
-                <Languages className="size-3.5" /> {t("exercise.machineTranslation")}
-              </span>
-            )
-          }
-        >
+        <Section title={t("exercise.technique")}>
           {tx.loading && <p role="status" className="text-muted text-sm">{t("common.loading")}</p>}
           <ol className="space-y-3.5">
             {tx.steps.filter((s) => s.trim()).map((s, i) => (
               <li key={i} className="flex gap-3">
-                <span className="bg-surface hairline text-accent flex size-7 shrink-0 items-center justify-center rounded-lg text-[13px] font-bold tabular-nums">
+                <span className="bg-surface hairline text-accent-ink flex size-7 shrink-0 items-center justify-center rounded-lg text-[13px] font-bold tabular-nums">
                   {i + 1}
                 </span>
                 <span className="pt-0.5 text-[15px] leading-relaxed">{s}</span>
               </li>
             ))}
           </ol>
+          {!tx.loading && <TechniqueFeedback key={ex.s} name={tx.name} slug={ex.s} machine={tx.machine} />}
         </Section>
 
-        <Section title={t("video.title")}>
+        <Section title={t(video ? "video.title" : "video.searchTitle")}>
           {video ? <VideoPlayer video={video} lang={lang} title={tx.name} /> : null}
           <YoutubeSearchButton query={lang === "ru" ? tx.name : (en[ex.s]?.name ?? tx.name)} />
         </Section>

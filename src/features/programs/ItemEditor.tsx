@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Field, Input } from "@/shared/ui/field"
 import { NumberInput } from "@/shared/ui/number-input"
@@ -6,6 +7,10 @@ import { RestInput } from "@/shared/components/RestInput"
 import { Stepper } from "@/shared/components/Stepper"
 import { KettlebellIcon, RestTimerIcon } from "@/shared/components/WorkoutIcons"
 import { Switch } from "@/shared/ui/switch"
+import { Select } from "@/shared/ui/select"
+import { Button } from "@/shared/ui/button"
+import { useExercises } from "@/entities/exercise/store"
+import { usesBodyweight } from "@/entities/exercise/types"
 import { canProgress, formatReps, parseReps, type ParsedReps, type ProgramItem } from "@/entities/program/types"
 import { DELOAD, DELOAD_AFTER } from "@/entities/session/progression"
 import { formatDuration } from "./format"
@@ -31,6 +36,10 @@ const KIND_DEFAULTS: Record<ParsedReps["kind"], ParsedReps> = {
 
 export function ItemEditor({ item, onChange, inSuperset }: Props) {
   const { t } = useTranslation()
+  const { byCode } = useExercises()
+  const bodyweight = usesBodyweight(byCode.get(item.ex))
+  const [addLoad, setAddLoad] = useState(false)
+  const showWeight = !bodyweight || addLoad || item.weight !== undefined
   const reps = parseReps(item.reps)
   const setReps = (p: ParsedReps) => {
     const next = { ...item, reps: formatReps(p) }
@@ -40,12 +49,15 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
 
   return (
     <div className="space-y-4">
-      <Segmented
-        size="sm"
+      <div className="space-y-1.5">
+      <p className="text-muted text-xs font-medium">{t("scheme.goalType")}</p>
+      <Select
+        label={t("scheme.goalType")}
         value={reps.kind}
         onChange={(k) => setReps(KIND_DEFAULTS[k])}
         options={(["reps", "range", "time", "amrap", "max"] as const).map((k) => ({ value: k, label: t(`scheme.kind.${k}`) }))}
       />
+      </div>
 
       {(reps.kind === "amrap" || reps.kind === "max") && <p className="text-muted text-xs">{t(`scheme.explain.${reps.kind}`)}</p>}
       <div className="flex flex-wrap gap-x-4 gap-y-3">
@@ -81,15 +93,19 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
         )}
       </div>
 
-      <div className="grid grid-cols-[6.5rem_1fr] gap-2">
-        <Field label={<span className="flex items-center gap-1"><KettlebellIcon className="size-4" />{t("scheme.weight")}</span>}>
+      {bodyweight && <div className="space-y-2">
+        <p className="text-muted text-sm">{t(showWeight ? "workout.addedWeightHint" : "workout.bodyweightHint")}</p>
+        {!showWeight && <Button size="sm" onClick={() => setAddLoad(true)}>{t("workout.addWeight")}</Button>}
+      </div>}
+      <div className={showWeight ? "grid grid-cols-[minmax(7rem,1fr)_2fr] gap-2" : "space-y-2"}>
+        {showWeight && <Field label={<span className="flex items-center gap-1"><KettlebellIcon className="size-4" />{t(bodyweight ? "workout.addedWeight" : "scheme.weight")}</span>}>
           <NumberInput
             inputMode="decimal"
             placeholder="—"
             value={item.weight}
             onValueChange={(weight) => onChange({ ...item, weight })}
           />
-        </Field>
+        </Field>}
         <Field label={t("scheme.note")}>
           <Input
             placeholder={t("scheme.notePlaceholder")}

@@ -6,6 +6,7 @@ import { Button } from "@/shared/ui/button"
 import { Tag } from "@/shared/ui/chip"
 import { Sheet } from "@/shared/ui/sheet"
 import { ExerciseMuscles } from "./ExerciseMuscles"
+import { TechniqueFeedback } from "./TechniqueFeedback"
 
 /** Nested preview keeps the underlying selection and scroll position mounted. */
 export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }: {
@@ -36,7 +37,7 @@ export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }
       <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed">
         {description.steps.filter((step) => step.trim()).map((step, i) => <li key={i}>{step}</li>)}
       </ol>
-      {description.machine && <p className="text-muted text-xs">{t("exercise.machineTranslation")}</p>}
+      {!description.loading && <TechniqueFeedback key={exercise.s} name={description.name} slug={exercise.s} machine={description.machine} />}
     </Sheet>
   )
 }

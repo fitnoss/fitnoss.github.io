@@ -40,6 +40,11 @@ export function exerciseEquipment(exercise: Pick<Exercise, "eq" | "eqExtra">) {
   return [...new Set([exercise.eq, ...(exercise.eqExtra ?? [])])]
 }
 
+/** For these movements a logged load means added resistance, never body mass. */
+export function usesBodyweight(exercise: Pick<Exercise, "eq"> | undefined) {
+  return !!exercise && ["body", "pullupbar", "parallelbars", "rings", "suspension"].includes(exercise.eq)
+}
+
 export const CATEGORIES = ["strength", "stretching", "plyometrics", "powerlifting", "olympic weightlifting", "strongman", "cardio"]
 
 export const LEVELS: Level[] = ["beginner", "intermediate", "expert"]

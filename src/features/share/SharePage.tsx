@@ -85,7 +85,7 @@ export function SharePage() {
                     )}
                     <div className="min-w-0">
                       <div className="text-[15px] leading-snug font-medium">
-                        <span className={cn("mr-1.5 tabular-nums", /[a-z]/.test(label) ? "text-accent" : "text-muted")}>{label}</span>
+                        <span className={cn("mr-1.5 tabular-nums", /[a-z]/.test(label) ? "text-accent-ink" : "text-muted")}>{label}</span>
                         {ready ? (ex ? text(ex).name : t("exercise.unknown")) : "…"}
                       </div>
                       <div className="text-muted text-[13px]">

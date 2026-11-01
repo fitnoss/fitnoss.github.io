@@ -34,9 +34,9 @@ export function Section({
   )
 }
 
-export function Empty({ icon, title, children }: { icon?: ReactNode; title: ReactNode; children?: ReactNode }) {
+export function Empty({ icon, title, children, className }: { icon?: ReactNode; title: ReactNode; children?: ReactNode; className?: string }) {
   return (
-    <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
+    <div className={cn("flex flex-col items-center gap-2 px-6 py-12 text-center", className)}>
       {icon && <div className="bg-surface hairline text-muted mb-1 flex size-12 items-center justify-center rounded-2xl [&_svg]:size-6">{icon}</div>}
       <p className="font-semibold">{title}</p>
       {children && <div className="text-muted max-w-xs text-sm">{children}</div>}

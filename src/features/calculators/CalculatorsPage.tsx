@@ -67,7 +67,7 @@ function OneRepMax() {
       </div>
       <Panel className="flex flex-col items-center gap-2 p-6">
         <div className="text-muted text-sm">{t("calc.yourMax")}</div>
-        <div className={cn(big, "text-accent")}>{round(res.avg)}</div>
+        <div className={cn(big, "text-accent-ink")}>{round(res.avg)}</div>
         <div className="text-muted text-xs tabular-nums">
           Epley {round(res.epley)} · Brzycki {round(res.brzycki)}
         </div>
@@ -153,7 +153,7 @@ function Bmi() {
       </div>
       <Panel className="flex flex-col items-center gap-2 p-6">
         <div className={big}>{v ? v.toFixed(1) : "—"}</div>
-        {v > 0 && <div className={cn("font-semibold", cls === "normal" ? "text-success" : "text-accent")}>{t(`calc.bmiClass.${cls}`)}</div>}
+        {v > 0 && <div className={cn("font-semibold", cls === "normal" ? "text-success" : "text-accent-ink")}>{t(`calc.bmiClass.${cls}`)}</div>}
         <div className="text-muted mt-1 text-center text-xs">{t("calc.bmiNote")}</div>
       </Panel>
     </div>

@@ -1,7 +1,6 @@
 import { useCallback, useDeferredValue, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Chip } from "@/shared/ui/chip"
-import { Empty } from "@/shared/ui/panel"
 import { Button } from "@/shared/ui/button"
 import { Sheet } from "@/shared/ui/sheet"
 import { useExercises, useFavorites } from "@/entities/exercise/store"
@@ -10,6 +9,7 @@ import { FilterBar } from "@/features/catalog/FilterBar"
 import { EMPTY_FILTERS, applyFilters, getSearchIndex, type Filters } from "@/features/catalog/filters"
 import type { Exercise } from "@/entities/exercise/types"
 import { ExerciseTechniqueSheet } from "@/features/catalog/ExerciseTechniqueSheet"
+import { EmptySearchResults } from "@/features/catalog/EmptySearchResults"
 
 type Props = {
   open: boolean
@@ -65,7 +65,7 @@ function OpenExercisePicker({ onOpenChange, onPick }: Omit<Props, "open">) {
         <Button size="sm" onClick={() => setShowSelected(!showSelected)} aria-expanded={showSelected}>{t("picker.selected", { count: selected.length })}</Button>
         {showSelected && <div className="flex max-h-32 flex-wrap gap-1 overflow-y-auto">{selected.map((code) => <Chip key={code} onClick={() => setSelected((s) => s.filter((c) => c !== code))}>{text(list.find((ex) => ex.c === code)).name} ×</Chip>)}</div>}
       </div>}
-      {items.length === 0 && <Empty title={t("catalog.empty")}><Button onClick={() => setFilters(EMPTY_FILTERS)}>{t("common.reset")}</Button></Empty>}
+      {items.length === 0 && <EmptySearchResults filters={filters} onChange={setFilters} />}
       <div ref={setScrollEl} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2">
         {scrollEl && (
           <ExerciseList

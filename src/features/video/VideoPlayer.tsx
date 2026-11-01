@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Play, SquarePlay } from "lucide-react"
+import { ExternalLink, Play, SquarePlay } from "lucide-react"
 import { buttonClass } from "@/shared/ui/button"
 import type { Video } from "@/entities/exercise/types"
 
@@ -56,6 +56,7 @@ export function YoutubeSearchButton({ query }: { query: string }) {
     >
       <SquarePlay className="text-[#ff0033]" />
       {t("video.search")}
+      <span className="sr-only">{t("video.externalSearch")}</span><ExternalLink className="size-4" aria-hidden="true" />
     </a>
   )
 }

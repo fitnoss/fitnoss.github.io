@@ -8,6 +8,7 @@ import { Empty, Panel } from "@/shared/ui/panel"
 import { Segmented } from "@/shared/ui/segmented"
 import { LineChart } from "@/shared/ui/line-chart"
 import { useExercises } from "@/entities/exercise/store"
+import { usesBodyweight } from "@/entities/exercise/types"
 import { useSessionStore } from "@/entities/session/store"
 import { exercisePoints, metricPeriod, type Metric, type Period } from "./progress"
 
@@ -35,6 +36,7 @@ export function ExerciseProgressPage() {
     <>
       <PageHeader title={exercise ? text(exercise).name : t("exercise.unknown")} back="/progress" wrapTitle />
       <div className="space-y-4 px-4 pb-8">
+        {usesBodyweight(exercise) && <p className="text-muted text-sm">{t("workout.addedWeightHint")}</p>}
         {exercise && <Link to={`/ex/${exercise.s}`} className="text-muted hover:text-fg inline-flex min-h-11 items-center gap-1 px-1 text-sm font-medium">
           {t("progress.openExercise")} <ArrowUpRight className="size-4" />
         </Link>}
@@ -63,7 +65,7 @@ export function ExerciseProgressPage() {
                 <div key={point.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
                   <div className="text-muted shrink-0 text-[13px]">{fmt.format(point.at)}</div>
                   <div className="flex flex-1 flex-wrap gap-1.5">
-                    {point.sets.map(({ set, timed }, j) => <LoggedSet key={j} set={set} timed={timed} />)}
+                    {point.sets.map(({ set, timed }, j) => <LoggedSet key={j} set={set} timed={timed} bodyweight={usesBodyweight(exercise)} />)}
                   </div>
                 </div>
               ))}

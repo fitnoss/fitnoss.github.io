@@ -11,6 +11,7 @@ import { Button } from "@/shared/ui/button"
 import { Panel } from "@/shared/ui/panel"
 import { toast } from "@/shared/ui/toast"
 import { useExercises } from "@/entities/exercise/store"
+import { usesBodyweight } from "@/entities/exercise/types"
 import { useProgramStore } from "@/entities/program/store"
 import { useSessionStore } from "@/entities/session/store"
 import { sessionVolume, sessionSetCount } from "@/entities/session/stats"
@@ -92,9 +93,10 @@ export function SessionPage() {
                 <div className="text-[15px] font-semibold">{text(ex).name}</div>
               </Link>
               <ExerciseNote note={e.note} />
+              {usesBodyweight(ex) && e.sets.some((set) => set.weight !== undefined) && <p className="text-muted text-sm">{t("workout.addedWeightHint")}</p>}
               <div className="flex flex-wrap gap-1.5">
                 {e.sets.map((x, j) => (
-                  <LoggedSet key={j} set={x} timed={parseReps(e.reps).kind === "time"} />
+                  <LoggedSet key={j} set={x} timed={parseReps(e.reps).kind === "time"} bodyweight={usesBodyweight(ex)} />
                 ))}
               </div>
             </Panel>

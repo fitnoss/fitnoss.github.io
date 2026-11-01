@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { Check, ChevronRight, History, Trophy } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { WeekStrip } from "@/shared/components/WeekStrip"
 import { Empty, Panel } from "@/shared/ui/panel"
+import { Button, buttonClass } from "@/shared/ui/button"
+import { primeAudio } from "@/features/workout/RestTimerBar"
 import { Segmented } from "@/shared/ui/segmented"
 import { PaginatedList } from "@/shared/ui/paginated-list"
 import { cn } from "@/shared/lib/utils"
@@ -23,6 +25,8 @@ const DAY = 86_400_000
 export function JournalPage() {
   const { t, i18n } = useTranslation()
   const history = useSessionStore((s) => s.history)
+  const active = useSessionStore((s) => !!s.active)
+  const navigate = useNavigate()
   const { byCode, text } = useExercises()
   const [tab, setTab] = useState<"history" | "records" | "exercises" | "body">("history")
   const fmtDate = new Intl.DateTimeFormat(i18n.language, { weekday: "short", day: "numeric", month: "short" })
@@ -74,7 +78,18 @@ export function JournalPage() {
             { value: "body", label: t("body.tab") },
           ]}
         />
-        {tab === "body" ? <BodyProgress /> : <>
+        {tab === "body" ? <BodyProgress /> : history.length === 0 ? <Panel className="p-5">
+          <Empty icon={<History />} title={t("journal.firstTitle")}>
+            <p>{t("journal.firstHint")}</p>
+            <div className="mt-5 flex flex-wrap justify-center gap-2">
+              <Button variant="primary" onClick={() => {
+                if (!active) { primeAudio(); useSessionStore.getState().start({ title: t("workout.free") }) }
+                navigate("/workout")
+              }}>{t(active ? "home.continue" : "workout.startFree")}</Button>
+              {!active && <Link to="/" state={{ newProgram: true, templatesOnly: true }} className={buttonClass()}>{t("programs.pickTemplate")}</Link>}
+            </div>
+          </Empty>
+        </Panel> : <>
         <Panel className="space-y-4 p-4">
           <div className="flex items-center gap-3 sm:gap-5">
             <div className="min-w-0 flex-1">

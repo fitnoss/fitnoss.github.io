@@ -15,6 +15,7 @@ import { toast } from "@/shared/ui/toast"
 import { cn } from "@/shared/lib/utils"
 import { useSettings } from "@/shared/storage/settings"
 import { useExercises } from "@/entities/exercise/store"
+import { usesBodyweight } from "@/entities/exercise/types"
 import { parseReps } from "@/entities/program/types"
 import { beatsRecord } from "@/entities/session/stats"
 import { lastSets, useSessionStore, type SessionExercise, type SetLog } from "@/entities/session/store"
@@ -58,6 +59,9 @@ export const ExerciseCard = memo(function ExerciseCard({ e, i, last, restsAfter,
   const [restOpen, setRestOpen] = useState(false)
   const [replaceOpen, setReplaceOpen] = useState(false)
   const ex = byCode.get(e.ex)
+  const bodyweight = usesBodyweight(ex)
+  const [addLoad, setAddLoad] = useState(false)
+  const showWeight = !bodyweight || addLoad || e.sets.some((set) => set.weight !== undefined)
   const reps = parseReps(e.reps)
   const timed = reps.kind === "time"
   const allDone = e.sets.length > 0 && e.sets.every((s) => s.done)
@@ -87,19 +91,19 @@ export const ExerciseCard = memo(function ExerciseCard({ e, i, last, restsAfter,
   return (
     <Panel className={cn("space-y-3 p-2.5", allDone && "shadow-[inset_0_0_0_1.5px_var(--accent)]")}>
       {big && ex && (
-        <Link to={`/ex/${ex.s}`} className="block">
+        <Link to={`/ex/${ex.s}`} className="block" aria-label={`${t("exercise.technique")}: ${text(ex).name}`}>
           <ExerciseImage ex={ex} alt="" size="l" animate className="hairline aspect-[3/2] w-full rounded-[12px]" />
         </Link>
       )}
       <div className={cn("flex items-center gap-3", big && "px-1")}>
         {ex && !big && (
-          <Link to={`/ex/${ex.s}`} className="shrink-0">
+          <Link to={`/ex/${ex.s}`} className="shrink-0" aria-label={`${t("exercise.technique")}: ${text(ex).name}`}>
             <ExerciseImage ex={ex} alt="" className="hairline size-14 rounded-[10px]" />
           </Link>
         )}
         <div className="min-w-0 flex-1">
           {big && supersetLabel && (
-            <div className="text-accent mb-0.5 flex items-center gap-1 text-[13px] font-semibold">
+            <div className="text-accent-ink mb-0.5 flex items-center gap-1 text-[13px] font-semibold">
               <Link2 className="size-3.5" /> {t("programs.superset")} · {supersetLabel}
             </div>
           )}
@@ -109,7 +113,7 @@ export const ExerciseCard = memo(function ExerciseCard({ e, i, last, restsAfter,
           <div className="text-muted mt-0.5 flex items-center gap-1 text-[13px]">
             {t("workout.target")}: {formatRepsLabel(t, e.reps)}
             {e.progression && (
-              <span className={cn("inline-flex items-center gap-0.5 font-medium", e.progression === "up" ? "text-accent" : "text-fg")}>
+              <span className={cn("inline-flex items-center gap-0.5 font-medium", e.progression === "up" ? "text-accent-ink" : "text-fg")}>
                 {" "}·{" "}
                 {e.progression === "up" ? <TrendingUp className="size-3.5" /> : <TrendingDown className="size-3.5" />}
                 {t(e.progression === "up" ? "workout.progressionUp" : "workout.progressionDeload")}
@@ -171,9 +175,13 @@ export const ExerciseCard = memo(function ExerciseCard({ e, i, last, restsAfter,
       <Sheet open={removeSetOpen} onOpenChange={setRemoveSetOpen} title={t("workout.removeSet")} footer={<div className="flex gap-2"><Button onClick={() => setRemoveSetOpen(false)}>{t("common.cancel")}</Button><Button variant="danger" onClick={() => { removeSet(i, e.sets.length - 1); setRemoveSetOpen(false) }}>{t("common.delete")}</Button></div>}><p>{t("workout.confirmRemoveSet")}</p></Sheet>
       {restOpen && restsAfter && <RestInput autoFocus value={e.rest} onChange={(s) => setRest(i, s)} onDone={() => setRestOpen(false)} />}
 
-      <div className="bg-page rounded-control grid grid-cols-[3rem_1fr_1fr_2.75rem] items-center gap-x-2 gap-y-1.5 p-2 text-center">
+      {bodyweight && <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-muted text-sm">{t(showWeight ? "workout.addedWeightHint" : "workout.bodyweightHint")}</p>
+        {!showWeight && <Button size="sm" onClick={() => setAddLoad(true)}><Plus className="size-4" />{t("workout.addWeight")}</Button>}
+      </div>}
+      <div className={cn("bg-page rounded-control grid items-center gap-x-2 gap-y-1.5 p-2 text-center", showWeight ? "grid-cols-[3rem_1fr_1fr_2.75rem]" : "grid-cols-[3rem_1fr_2.75rem]")}>
         <span className="text-muted text-[11px] font-medium">#</span>
-        <span className="text-muted text-[11px] font-medium">{t("workout.kg")}</span>
+        {showWeight && <span className="text-muted text-xs font-medium">{t(bodyweight ? "workout.addedKg" : "workout.kg")}</span>}
         <span className="text-muted text-[11px] font-medium">{timed ? t("workout.seconds") : t("workout.reps")}</span>
         <span />
         {e.sets.map((s, j) => (
@@ -183,6 +191,8 @@ export const ExerciseCard = memo(function ExerciseCard({ e, i, last, restsAfter,
             exerciseName={ex ? text(ex).name : t("exercise.unknown")}
             number={j + 1}
             timed={timed}
+            showWeight={showWeight}
+            bodyweight={bodyweight}
             previous={isWarmup(s) ? undefined : previous?.[n - 1]}
             onPlates={ex?.eq === "barbell" ? () => navigate("/more/calc?tab=plates&weight=" + (s.weight ?? 20)) : undefined}
             set={s}
@@ -237,6 +247,8 @@ function SetRow(props: {
   exerciseName: string
   number: number
   timed: boolean
+  showWeight: boolean
+  bodyweight: boolean
   previous?: SetLog
   onPlates?: () => void
   set: SetLog
@@ -248,7 +260,7 @@ function SetRow(props: {
   onReps: (v?: number) => void
   onToggle: () => void
 }) {
-  const { label, exerciseName, number, timed, previous, onPlates, set, onChange, weight, reps, done, onWeight, onReps, onToggle } = props
+  const { label, exerciseName, number, timed, showWeight, bodyweight, previous, onPlates, set, onChange, weight, reps, done, onWeight, onReps, onToggle } = props
   const { t } = useTranslation()
   const [detailsOpen, setDetailsOpen] = useState(false)
   const context = t("workout.setContext", { name: exerciseName, n: number })
@@ -258,11 +270,11 @@ function SetRow(props: {
     <>
       <button type="button" onClick={() => setDetailsOpen(true)}
         aria-label={`${context}, ${t("workout.setDetails")}, ${t(`setType.${setType(set)}`)}`}
-        className={cn("hover:bg-surface flex min-h-11 flex-col items-center justify-center rounded-lg text-sm font-semibold tabular-nums", done ? "text-accent" : "text-muted")}>
+        className={cn("hover:bg-surface flex min-h-11 flex-col items-center justify-center rounded-lg text-sm font-semibold tabular-nums", done ? "text-accent-ink" : "text-muted")}>
         <span className="underline decoration-dotted underline-offset-4">{label} ⋯</span>
         {set.effort && <span className="mt-1 text-[10px] leading-none">{set.effort.scale.toUpperCase()} {set.effort.value}</span>}
       </button>
-      <NumberInput aria-label={`${context}, ${t("scheme.weight")}`} className={field} value={weight} placeholder="—" onValueChange={onWeight} />
+      {showWeight && <NumberInput aria-label={`${context}, ${t(bodyweight ? "workout.addedWeight" : "scheme.weight")}`} className={field} value={weight} placeholder="—" onValueChange={onWeight} />}
       <NumberInput aria-label={`${context}, ${t(timed ? "workout.seconds" : "scheme.reps")}`} inputMode="numeric" className={field} value={reps} placeholder="—" onValueChange={onReps} />
       <button
         type="button"
@@ -276,7 +288,7 @@ function SetRow(props: {
       >
         <Check className="size-5" strokeWidth={done ? 3 : 2} />
       </button>
-      {previous && <p className="col-span-4 px-1 text-left text-xs text-muted">{t("workout.previousSet", { weight: previous.weight ?? "—", reps: previous.reps ?? "—", unit: t(timed ? "workout.seconds" : "workout.reps") })}</p>}
+      {previous && <p className={cn("px-1 text-left text-xs text-muted", showWeight ? "col-span-4" : "col-span-3")}>{bodyweight && previous.weight !== undefined ? t("workout.addedWeight") + ": " : ""}{t("workout.previousSet", { weight: previous.weight ?? "—", reps: previous.reps ?? "—", unit: t(timed ? "workout.seconds" : "workout.reps") })}</p>}
       {detailsOpen && <SetDetailsSheet set={set} onChange={onChange} onClose={() => setDetailsOpen(false)} onPlates={onPlates ? () => { setDetailsOpen(false); onPlates() } : undefined} />}
     </>
   )

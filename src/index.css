@@ -40,7 +40,7 @@
   --chrome: #f4f4f5;
   --page: #ffffff;
   --fg: #1c1c1f;
-  --muted: #686870;
+  --muted: #62626a;
   --surface: #f4f4f5;
   --surface-hover: #ececee;
   --surface-press: #e4e4e7;
@@ -52,6 +52,7 @@
   --inverse-fg: #ffffff;
   --accent: #25262c;
   --accent-fg: #ffffff;
+  --accent-ink: #25262c;
   --danger: #d61c2e;
   --success: #15803d;
   --backdrop: rgb(255 255 255 / 0.5);
@@ -63,7 +64,7 @@
   --chrome: #0f0f10;
   --page: #000000;
   --fg: #e6e6e6;
-  --muted: #85858b;
+  --muted: #929299;
   --surface: #191919;
   --surface-hover: #222223;
   --surface-press: #2a2a2b;
@@ -74,6 +75,7 @@
   --inverse-fg: #000000;
   --accent: #ffffff;
   --accent-fg: #000000;
+  --accent-ink: #ffffff;
   --danger: #ff4d5e;
   --success: #30d158;
   --backdrop: rgb(0 0 0 / 0.55);
@@ -110,6 +112,7 @@ html.dark[data-accent] {
   --color-inverse-fg: var(--inverse-fg);
   --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
+  --color-accent-ink: var(--accent-ink);
   --color-danger: var(--danger);
   --color-success: var(--success);
 }
@@ -141,7 +144,7 @@ html.dark[data-accent] {
     font-size: 15px;
   }
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--accent-ink);
     outline-offset: -2px;
   }
   ::selection {

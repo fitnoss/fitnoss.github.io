@@ -73,9 +73,19 @@ export function ExerciseList(props: ListProps) {
 /** The list further down the page: rows are offset by everything above it in the page scroller. */
 function PageList({ items, text, onSelect, isSelected, onPreview }: ListProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const getItemKey = useCallback((index: number) => items[index].c, [items])
+  const [columns, setColumns] = useState(1)
+  useLayoutEffect(() => {
+    const element = ref.current
+    if (!element) return
+    const measure = () => setColumns(element.clientWidth >= 800 ? 2 : 1)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
+  const getItemKey = useCallback((index: number) => items[index * columns].c, [items, columns])
   const v = useVirtualizer({
-    count: items.length,
+    count: Math.ceil(items.length / columns),
     getItemKey,
     estimateSize: () => ROW,
     overscan: 6,
@@ -85,14 +95,14 @@ function PageList({ items, text, onSelect, isSelected, onPreview }: ListProps) {
   return (
     <div ref={ref} className="relative" style={{ height: v.getTotalSize() }}>
       {v.getVirtualItems().map((row) => {
-        const ex = items[row.index]
+        const exercises = items.slice(row.index * columns, (row.index + 1) * columns)
         return (
           <div
-            key={ex.c}
-            className="absolute inset-x-2"
-            style={{ transform: `translateY(${row.start - v.options.scrollMargin}px)` }}
+            key={exercises[0].c}
+            className="absolute inset-x-2 grid gap-x-4"
+            style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, transform: `translateY(${row.start - v.options.scrollMargin}px)` }}
           >
-            <ExerciseRow ex={ex} name={text(ex).name} selected={isSelected?.(ex)} onSelect={onSelect} onPreview={onPreview} />
+            {exercises.map((ex) => <ExerciseRow key={ex.c} ex={ex} name={text(ex).name} selected={isSelected?.(ex)} onSelect={onSelect} onPreview={onPreview} />)}
           </div>
         )
       })}

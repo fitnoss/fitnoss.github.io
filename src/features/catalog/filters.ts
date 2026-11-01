@@ -23,6 +23,16 @@ export const EMPTY_FILTERS: Filters = {
   favorites: false,
 }
 
+export const MUSCLE_REGIONS = {
+  chest: ["chest"],
+  back: ["lats", "middle back", "lower back", "traps"],
+  shoulders: ["shoulders"],
+  arms: ["biceps", "triceps", "forearms"],
+  core: ["abdominals"],
+  legs: ["quadriceps", "hamstrings", "glutes", "calves", "adductors", "abductors"],
+  neck: ["neck"],
+} as const
+
 const list = (v: string | null) => (v ? v.split(",").filter(Boolean) : [])
 
 export function countAdvanced(f: Filters) {

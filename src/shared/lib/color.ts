@@ -49,3 +49,16 @@ function luminance(hex: string) {
 export function contrastText(hex: string) {
   return 1.05 / (luminance(hex) + 0.05) >= 4.5 ? "#ffffff" : "#000000"
 }
+
+/** Preserve an accent's hue while making small text readable on neutral UI surfaces. */
+export function accentInk(hex: string, dark: boolean) {
+  const background = luminance(dark ? "#2a2a2b" : "#e6e6e9")
+  const channels = rgb(hex)
+  const end = dark ? 255 : 0
+  for (let step = 0; step <= 100; step++) {
+    const candidate = "#" + channels.map((channel) => Math.round(channel + (end - channel) * step / 100).toString(16).padStart(2, "0")).join("")
+    const value = luminance(candidate)
+    if ((Math.max(value, background) + 0.05) / (Math.min(value, background) + 0.05) >= 4.5) return candidate
+  }
+  return dark ? "#ffffff" : "#000000"
+}

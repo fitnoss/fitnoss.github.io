@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useExercises } from "@/entities/exercise/store"
+import { usesBodyweight } from "@/entities/exercise/types"
 import { parseReps } from "@/entities/program/types"
 import { updateSetLog } from "@/entities/session/sets"
 import { useSessionStore, type Session, type SetLog } from "@/entities/session/store"
@@ -50,18 +51,20 @@ export function SessionEditor({ session, onClose }: { session: Session; onClose:
       </Field>
       {draft.exercises.map((exercise, i) => {
         const name = text(byCode.get(exercise.ex)).name
+        const bodyweight = usesBodyweight(byCode.get(exercise.ex))
         const timed = parseReps(exercise.reps).kind === "time"
         return (
           <Panel key={i} className="space-y-3 p-3">
             <h3 className="font-semibold">{name}</h3>
+            {bodyweight && <p className="text-muted text-sm">{t("workout.addedWeightHint")}</p>}
             <div className="grid grid-cols-[3rem_1fr_1fr] items-center gap-2">
               <span className="text-muted text-xs">#</span>
-              <span className="text-muted text-xs">{t("scheme.weight")}</span>
+              <span className="text-muted text-xs">{t(bodyweight ? "workout.addedWeight" : "scheme.weight")}</span>
               <span className="text-muted text-xs">{t(timed ? "workout.seconds" : "scheme.reps")}</span>
               {exercise.sets.map((set, j) => {
                 const context = t("workout.setContext", { name, n: j + 1 })
                 return <SetFields key={j} set={set} context={context} index={j}
-                  timed={timed} onDetails={() => setDetails({ exercise: i, set: j })}
+                  timed={timed} bodyweight={bodyweight} onDetails={() => setDetails({ exercise: i, set: j })}
                   onChange={(patch) => changeSet(i, j, patch)} />
               })}
             </div>
@@ -79,14 +82,14 @@ export function SessionEditor({ session, onClose }: { session: Session; onClose:
   )
 }
 
-function SetFields({ set, context, index, timed, onChange, onDetails }: {
-  set: SetLog; context: string; index: number; timed: boolean
+function SetFields({ set, context, index, timed, bodyweight, onChange, onDetails }: {
+  set: SetLog; context: string; index: number; timed: boolean; bodyweight: boolean
   onChange: (patch: Partial<SetLog>) => void; onDetails: () => void
 }) {
   const { t } = useTranslation()
   return <>
     <Button size="icon" variant="ghost" onClick={onDetails} aria-label={`${context}, ${t("workout.setDetails")}`}>{index + 1} ⋯</Button>
-    <NumberInput aria-label={`${context}, ${t("scheme.weight")}`} value={set.weight}
+    <NumberInput aria-label={`${context}, ${t(bodyweight ? "workout.addedWeight" : "scheme.weight")}`} value={set.weight}
       onValueChange={(weight) => onChange({ weight })} />
     <NumberInput aria-label={`${context}, ${t(timed ? "workout.seconds" : "scheme.reps")}`} inputMode="numeric" value={set.reps}
       onValueChange={(reps) => onChange({ reps })} />

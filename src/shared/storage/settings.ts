@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import { contrastText } from "@/shared/lib/color"
+import { accentInk, contrastText } from "@/shared/lib/color"
 
 export type Theme = "system" | "light" | "dark"
 /** How a running workout is laid out: all exercises in a list, or one full-screen card at a time. */
@@ -59,6 +59,8 @@ export function applyTheme(theme: Theme) {
   } catch {}
   const dark = isDark(theme)
   document.documentElement.classList.toggle("dark", dark)
+  const accent = useSettings.getState().accent
+  if (accent) document.documentElement.style.setProperty("--accent-ink", accentInk(accent, dark))
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#000000" : "#ffffff")
 }
 
@@ -75,10 +77,12 @@ export function applyAccent(accent: string | null) {
   if (accent) {
     root.style.setProperty("--accent", accent)
     root.style.setProperty("--accent-fg", contrastText(accent))
+    root.style.setProperty("--accent-ink", accentInk(accent, root.classList.contains("dark")))
     root.dataset.accent = ""
   } else {
     root.style.removeProperty("--accent")
     root.style.removeProperty("--accent-fg")
+    root.style.removeProperty("--accent-ink")
     delete root.dataset.accent
   }
 }

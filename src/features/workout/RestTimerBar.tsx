@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useLocation } from "react-router"
-import { X } from "lucide-react"
+import { ChevronDown, ChevronUp } from "lucide-react"
 import { useSessionStore } from "@/entities/session/store"
 import { toast } from "@/shared/ui/toast"
 import { useSettings } from "@/shared/storage/settings"
@@ -48,7 +48,10 @@ export function RestTimerBar() {
   const sound = useSettings((s) => s.sound)
   const vibration = useSettings((s) => s.vibration)
   const [now, setNow] = useState(Date.now())
+  const [expanded, setExpanded] = useState(false)
   const fired = useRef<number | null>(null)
+
+  useEffect(() => setExpanded(false), [pathname])
 
   useEffect(() => {
     setNow(Date.now())
@@ -73,34 +76,37 @@ export function RestTimerBar() {
   const progress = rest ? Math.max(0, Math.min(1, 1 - (rest.endsAt - now) / (rest.total * 1000))) : 0
   const mm = Math.floor(left / 60)
   const ss = String(left % 60).padStart(2, "0")
-  const pill = "h-11 rounded-full px-3.5 text-sm font-semibold tabular-nums bg-surface hairline hover:bg-surface-hover active:bg-surface-press"
+  const pill = "h-11 rounded-control px-3 text-sm font-semibold tabular-nums bg-surface hairline hover:bg-surface-hover active:bg-surface-press"
 
   return (
-    <div className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom))] z-40 transform-gpu px-3 pb-3 md:bottom-0 md:left-[6rem] md:pb-5">
-      <div className="bg-page/85 hairline rounded-panel relative mx-auto max-w-md overflow-hidden shadow-2xl shadow-black/15 backdrop-blur-xl [animation:toast-in_.2s_ease-out] dark:shadow-black/50">
+    <section aria-label={t("workout.restControls")} className="bg-chrome z-40 shrink-0 border-t px-3 py-2">
+      <div className="bg-page hairline rounded-panel relative mx-auto max-w-2xl overflow-hidden">
         <div className="bg-accent absolute inset-y-0 left-0 opacity-15 dark:opacity-25 transition-[width] duration-300 ease-linear" style={{ width: `${progress * 100}%` }} />
-        <div className="relative flex items-center gap-1.5 p-2 pl-4">
-          {away && <Link to="/workout" className="min-w-0 flex-1 py-2">
+        <div className="relative flex flex-wrap items-center gap-2 p-2 pl-3">
+          {away && <Link to="/workout" className="min-w-0 flex-1 py-1">
             <div className="truncate text-sm font-semibold">{activeTitle}</div>
-            <div className="text-accent text-sm">{rest ? t("workout.rest") + " " + mm + ":" + ss + " · " : ""}{t("home.continue")}</div>
+            <div className="text-accent-ink text-sm">{t("home.continue")}</div>
           </Link>}
-          {rest && <><div className={away ? "hidden" : "flex-1"}>
+          {away && rest && <button type="button" className={pill + " flex items-center gap-1"} aria-expanded={expanded} aria-label={t("workout.adjustRest", { time: `${mm}:${ss}` })} onClick={() => setExpanded((value) => !value)}>
+            {mm}:{ss} {expanded ? <ChevronDown className="size-4" /> : <ChevronUp className="size-4" />}
+          </button>}
+          {rest && (!away || expanded) && <div className={away ? "flex w-full flex-wrap items-center gap-2" : "contents"}>
+          {!away && <div className="min-w-16 flex-1">
             <div className="text-muted text-[11px] font-medium">{left > 0 ? t("workout.rest") : t("workout.restDone")}</div>
             <div className="text-[26px] leading-tight font-bold tabular-nums">
               {mm}:{ss}
             </div>
-          </div>
-          <button type="button" className={pill} onClick={() => adjustRest(-15)}>
+          </div>}
+          <button type="button" className={pill} onClick={() => adjustRest(-15)} aria-label={t("workout.restMinus")}>
             −15
           </button>
-          <button type="button" className={pill} onClick={() => adjustRest(15)}>
+          <button type="button" className={pill} onClick={() => adjustRest(15)} aria-label={t("workout.restPlus")}>
             +15
           </button>
-          <button type="button" className={`${pill} flex w-11 items-center justify-center px-0`} onClick={stopRest} aria-label={t("workout.skipRest")}>
-            <X className="size-5" />
-          </button></>}
+          <button type="button" className={pill} onClick={stopRest} aria-label={t("workout.skipRest")}>{t("workout.skipRestShort")}</button>
+          </div>}
         </div>
       </div>
-    </div>
+    </section>
   )
 }

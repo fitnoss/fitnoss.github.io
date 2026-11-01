@@ -36,6 +36,8 @@ export function ProgramsPage() {
   const historyCount = useSessionStore((s) => s.history.length)
   const location = useLocation()
   const navigate = useNavigate()
+  const create = useProgramStore((s) => s.create)
+  const [templatesOnly, setTemplatesOnly] = useState(() => !!(location.state as { templatesOnly?: boolean } | null)?.templatesOnly)
   // Other screens link here with { newProgram: true } to open the sheet right away.
   const [newOpen, setNewOpen] = useState(() => !!(location.state as { newProgram?: boolean } | null)?.newProgram)
   useEffect(() => {
@@ -53,7 +55,7 @@ export function ProgramsPage() {
           </span>
         }
         actions={
-          programs.length > 0 && <Button variant="primary" size="sm" className="h-11" onClick={() => setNewOpen(true)}>
+          programs.length > 0 && <Button variant="primary" size="sm" className="h-11" onClick={() => { setTemplatesOnly(false); setNewOpen(true) }}>
             <Plus /> {t("programs.new")}
           </Button>
         }
@@ -61,21 +63,22 @@ export function ProgramsPage() {
       <div className="space-y-8 px-4 pb-8">
         {historyCount >= 5 && !localStorage.getItem("fitnoss:last-export") && <Link to="/more?section=data" className="text-muted block text-sm underline underline-offset-4">{t("more.backupReminder")}</Link>}
         <Today programs={programs} />
-        {!active && <Button size="lg" className="h-14 w-full" onClick={() => {
+        {!active && <div className="space-y-2"><Button size="lg" className="h-14 w-full" onClick={() => {
           primeAudio()
           useSessionStore.getState().start({ title: t("workout.free") })
           navigate("/workout")
-        }}><Play className="size-5" />{t("workout.startFree")}</Button>}
+        }}><Play className="size-5" />{t("workout.startFree")}</Button><p className="text-muted px-1 text-sm">{t("workout.freeHint")}</p></div>}
 
         {programs.length === 0 ? (
           <Panel className="pb-6">
             <Empty icon={<ListChecks />} title={t("programs.emptyTitle")}>
               {t("programs.emptyText")}
             </Empty>
-            <div className="flex justify-center">
-              <Button variant="primary" onClick={() => setNewOpen(true)}>
-                <Plus /> {t("programs.choose")}
+            <div className="flex flex-wrap justify-center gap-2 px-4">
+              <Button variant="primary" onClick={() => { setTemplatesOnly(true); setNewOpen(true) }}>
+                <Plus /> {t("programs.pickTemplate")}
               </Button>
+              <Button onClick={() => navigate(`/programs/${create().id}`)}>{t("programs.createFromScratch")}</Button>
             </div>
           </Panel>
         ) : (
@@ -89,7 +92,7 @@ export function ProgramsPage() {
         )}
       </div>
       {newOpen && <Suspense fallback={<p role="status" className="text-muted px-4 py-3 text-sm">{t("common.loading")}</p>}>
-        <NewProgramSheet open onOpenChange={setNewOpen} />
+        <NewProgramSheet open templatesOnly={templatesOnly} onOpenChange={setNewOpen} />
       </Suspense>}
     </>
   )
@@ -111,7 +114,7 @@ function Today({ programs }: { programs: Program[] }) {
     return (
       <Panel className="space-y-4 p-4">
         <div>
-          <div className="text-accent flex items-center gap-1.5 text-[13px] font-semibold">
+          <div className="text-accent-ink flex items-center gap-1.5 text-[13px] font-semibold">
             <Timer className="size-4" /> {t("home.inProgress")}
           </div>
           <div className="mt-1 text-[20px] leading-tight font-bold tracking-tight">{active.title}</div>
@@ -207,7 +210,7 @@ function TodayCard({
     <Panel className="space-y-4 p-4">
       <Link to={`/programs/${program.id}`} className="block">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-accent text-[13px] font-semibold">{label}</span>
+          <span className="text-accent-ink text-[13px] font-semibold">{label}</span>
           {done && (
             <span className="text-success flex items-center gap-1 text-[13px] font-semibold">
               <Check className="size-4" strokeWidth={3} /> {t("home.doneToday")}

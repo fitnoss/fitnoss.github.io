@@ -8,7 +8,7 @@ export function SupersetGroup({ children }: { children: ReactNode }) {
   return (
     <div className="relative space-y-1.5 pl-3">
       <div aria-hidden className="bg-accent absolute top-[30px] bottom-0 left-0 w-[3px] rounded-full" />
-      <div className="text-accent flex h-6 items-center gap-1.5 text-[13px] font-semibold">
+      <div className="text-accent-ink flex h-6 items-center gap-1.5 text-[13px] font-semibold">
         <Link2 className="size-3.5" /> {t("programs.superset")}
       </div>
       {children}

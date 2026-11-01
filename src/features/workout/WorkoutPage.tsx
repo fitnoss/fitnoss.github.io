@@ -8,7 +8,6 @@ import { SupersetGroup } from "@/shared/components/SupersetGroup"
 import { Button } from "@/shared/ui/button"
 import { Menu, MenuItem } from "@/shared/ui/menu"
 import { toast } from "@/shared/ui/toast"
-import { cn } from "@/shared/lib/utils"
 import { useSettings } from "@/shared/storage/settings"
 import { groups } from "@/entities/program/types"
 import { useSessionStore, type Session } from "@/entities/session/store"
@@ -37,7 +36,7 @@ function ElapsedTime({ since, pausedMs = 0 }: { since: number; pausedMs?: number
   const s = Math.max(0, Math.floor((now - since - pausedMs) / 1000))
   const h = Math.floor(s / 3600)
   const m = String(Math.floor((s % 3600) / 60)).padStart(h ? 2 : 1, "0")
-  return <span className="text-accent">{`${h ? `${h}:` : ""}${m}:${String(s % 60).padStart(2, "0")}`}</span>
+  return <span className="text-accent-ink">{`${h ? `${h}:` : ""}${m}:${String(s % 60).padStart(2, "0")}`}</span>
 }
 
 function ActiveWorkout({ session }: { session: Session }) {
@@ -51,7 +50,6 @@ function ActiveWorkout({ session }: { session: Session }) {
   const [showHint, setShowHint] = useState(() => !localStorage.getItem("fitnoss:set-details-seen"))
   const [pickerOpen, setPickerOpen] = useState(false)
   const view = useSettings((s) => s.workoutView)
-  const hasRest = useSessionStore((s) => !!s.rest)
   const setSettings = useSettings((s) => s.set)
   const carousel = useCarousel(session.exercises)
   useWakeLock(true)
@@ -100,7 +98,7 @@ function ActiveWorkout({ session }: { session: Session }) {
                 <MenuItem key={v} onClick={() => setSettings({ workoutView: v })} aria-checked={view === v} role="menuitemradio">
                   {v === "list" ? <LayoutList /> : <GalleryHorizontalEnd />}
                   <span className="flex-1">{t(v === "list" ? "workout.viewList" : "workout.viewCards")}</span>
-                  {view === v && <Check className="text-accent" />}
+                  {view === v && <Check className="text-accent-ink" />}
                 </MenuItem>
               ))}
               <div className="bg-line mx-2 my-1 h-px" />
@@ -117,7 +115,7 @@ function ActiveWorkout({ session }: { session: Session }) {
       {view === "cards" ? (
         <CardsView session={session} carousel={carousel} onAdd={() => setPickerOpen(true)} />
       ) : (
-        <div className={cn("space-y-2 px-4 pt-3", hasRest ? "pb-24" : "pb-8")}>
+        <div className="space-y-2 px-4 pt-3 pb-8">
           {groups(session.exercises).map((g) => {
             const cards = g.map((i) => {
               const e = session.exercises[i]

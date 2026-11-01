@@ -1,15 +1,13 @@
 import { useCallback, useDeferredValue, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
-import { SearchX } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
-import { Button } from "@/shared/ui/button"
-import { Empty } from "@/shared/ui/panel"
 import { useExercises, useFavorites } from "@/entities/exercise/store"
 import type { Exercise } from "@/entities/exercise/types"
 import { ExerciseList } from "./ExerciseList"
 import { FilterBar } from "./FilterBar"
-import { EMPTY_FILTERS, applyFilters, getSearchIndex, useUrlFilters } from "./filters"
+import { applyFilters, getSearchIndex, useUrlFilters } from "./filters"
+import { EmptySearchResults } from "./EmptySearchResults"
 
 export function CatalogPage() {
   const { t } = useTranslation()
@@ -43,7 +41,7 @@ export function CatalogPage() {
           ))}
         </div>
       ) : items.length === 0 ? (
-        <Empty icon={<SearchX />} title={t("catalog.empty")}><Button onClick={() => setFilters(EMPTY_FILTERS)}>{t("common.reset")}</Button></Empty>
+        <EmptySearchResults filters={filters} onChange={setFilters} />
       ) : (
         <ExerciseList items={items} text={text} onSelect={select} />
       )}

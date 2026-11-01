@@ -6,7 +6,7 @@ import { Chip } from "@/shared/ui/chip"
 import { Sheet } from "@/shared/ui/sheet"
 import { cn } from "@/shared/lib/utils"
 import { CATEGORIES, EQUIPMENT, LEVELS, MUSCLES, PLACES, key } from "@/entities/exercise/types"
-import { EMPTY_FILTERS, countAdvanced, type Filters } from "./filters"
+import { EMPTY_FILTERS, MUSCLE_REGIONS, countAdvanced, type Filters } from "./filters"
 
 function toggle<T>(list: T[], v: T) {
   return list.includes(v) ? list.filter((x) => x !== v) : [...list, v]
@@ -54,7 +54,7 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
           {advanced > 0 && <span className="text-sm tabular-nums">{advanced}</span>}
         </Button>
       </div>
-      <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4">
+      <div role="group" aria-label={t("catalog.quickFilters")} className="no-scrollbar flex gap-1.5 overflow-x-auto pr-10 pl-4 [mask-image:linear-gradient(to_right,#000_calc(100%-1.5rem),transparent)] lg:[mask-image:none]">
         <Chip active={filters.favorites} onClick={() => onChange({ ...filters, favorites: !filters.favorites })}><Star className="size-4" />{t("catalog.favorites")}</Chip>
         {PLACES.map((p) => (
           <Chip key={p} active={filters.places.includes(p)} onClick={() => onChange({ ...filters, places: toggle(filters.places, p) })}>
@@ -69,7 +69,7 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
             {t((group === "muscles" ? "muscle." : group === "levels" ? "level." : group === "categories" ? "category." : "equipment.") + key(value))}<X className="size-3" />
           </Chip>
         )))}
-        <Button variant="ghost" size="sm" onClick={() => onChange(EMPTY_FILTERS)}>{t("common.reset")}</Button>
+        <Button variant="ghost" size="sm" onClick={() => onChange({ ...EMPTY_FILTERS, q: filters.q })}>{t("catalog.clearFilters")}</Button>
       </div>}
       {open && <Sheet
         open
@@ -78,7 +78,7 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
         actions={
           advanced > 0 && (
             <Button variant="ghost" size="sm" className="mt-1" onClick={() => onChange({ ...EMPTY_FILTERS, q: filters.q, places: filters.places })}>
-              {t("common.reset")}
+              {t("catalog.clearFilters")}
             </Button>
           )
         }
@@ -89,6 +89,18 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
         }
         bodyClassName="space-y-5"
       >
+        <p className="text-muted text-sm">{t("catalog.filterLogic")}</p>
+        <Group title={t("catalog.bodyRegion")}>
+          {Object.entries(MUSCLE_REGIONS).map(([region, muscles]) => {
+            const selected = muscles.filter((muscle) => filters.muscles.includes(muscle)).length
+            const active = selected === muscles.length
+            return <Chip key={region} active={active} onClick={() => onChange({ ...filters, muscles: active ? filters.muscles.filter((muscle) => !(muscles as readonly string[]).includes(muscle)) : [...new Set([...filters.muscles, ...muscles])] })}>
+              {t(`catalog.regions.${region}`)}{selected > 0 && !active && ` · ${selected}/${muscles.length}`}
+            </Chip>
+          })}
+        </Group>
+        <details className="rounded-control border px-3">
+        <summary className="flex min-h-11 cursor-pointer items-center text-sm font-medium">{t("catalog.individualMuscles")}</summary>
         <Group title={t("catalog.muscle")}>
           {MUSCLES.map((m) => (
             <Chip key={m} active={filters.muscles.includes(m)} onClick={() => onChange({ ...filters, muscles: toggle(filters.muscles, m) })}>
@@ -96,13 +108,7 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
             </Chip>
           ))}
         </Group>
-        <Group title={t("catalog.equipment")}>
-          {EQUIPMENT.map((e) => (
-            <Chip key={e} active={filters.equipment.includes(e)} onClick={() => onChange({ ...filters, equipment: toggle(filters.equipment, e) })}>
-              {t(`equipment.${e}`)}
-            </Chip>
-          ))}
-        </Group>
+        </details>
         <Group title={t("catalog.level")}>
           {LEVELS.map((l) => (
             <Chip key={l} active={filters.levels.includes(l)} onClick={() => onChange({ ...filters, levels: toggle(filters.levels, l) })}>
@@ -110,6 +116,24 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
             </Chip>
           ))}
         </Group>
+        <p className="text-muted text-sm">{t("catalog.equipmentLogic")}</p>
+        <Group title={t("catalog.equipment")}>
+          {EQUIPMENT.filter((e) => ["body", "dumbbell", "barbell", "kettlebell", "bands", "pullupbar", "parallelbars", "bench"].includes(e)).map((e) => (
+            <Chip key={e} active={filters.equipment.includes(e)} onClick={() => onChange({ ...filters, equipment: toggle(filters.equipment, e) })}>
+              {t(`equipment.${e}`)}
+            </Chip>
+          ))}
+        </Group>
+        <details className="rounded-control border px-3">
+          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-medium">{t("catalog.moreEquipment")}</summary>
+          <div className="flex flex-wrap gap-1.5 pb-3">
+          {EQUIPMENT.filter((e) => !["body", "dumbbell", "barbell", "kettlebell", "bands", "pullupbar", "parallelbars", "bench"].includes(e)).map((e) => (
+            <Chip key={e} active={filters.equipment.includes(e)} onClick={() => onChange({ ...filters, equipment: toggle(filters.equipment, e) })}>
+              {t(`equipment.${e}`)}
+            </Chip>
+          ))}
+          </div>
+        </details>
         <Group title={t("catalog.category")}>
           {CATEGORIES.map((c) => (
             <Chip key={c} active={filters.categories.includes(c)} onClick={() => onChange({ ...filters, categories: toggle(filters.categories, c) })}>
