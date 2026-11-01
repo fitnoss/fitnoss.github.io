@@ -32,7 +32,7 @@ export function countAdvanced(f: Filters) {
 /** Filters stored in the URL so a filtered catalog can be shared. */
 export function useUrlFilters(): [Filters, (f: Filters) => void] {
   const [params, setParams] = useSearchParams()
-  const filters: Filters = {
+  const filters = useMemo<Filters>(() => ({
     q: params.get("q") ?? "",
     places: list(params.get("pl")) as Place[],
     muscles: list(params.get("m")),
@@ -40,7 +40,7 @@ export function useUrlFilters(): [Filters, (f: Filters) => void] {
     levels: list(params.get("lvl")) as Level[],
     categories: list(params.get("cat")),
     favorites: params.get("fav") === "1",
-  }
+  }), [params])
   const set = (f: Filters) => {
     const p = new URLSearchParams()
     if (f.q) p.set("q", f.q)

@@ -71,8 +71,8 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
         )))}
         <Button variant="ghost" size="sm" onClick={() => onChange(EMPTY_FILTERS)}>{t("common.reset")}</Button>
       </div>}
-      <Sheet
-        open={open}
+      {open && <Sheet
+        open
         onOpenChange={setOpen}
         title={t("catalog.filters")}
         actions={
@@ -122,7 +122,7 @@ export function FilterBar({ filters, onChange, total, className }: Props) {
             <Star className={cn("size-4", filters.favorites && "fill-current")} /> {t("catalog.favorites")}
           </Chip>
         </Group>
-      </Sheet>
+      </Sheet>}
     </div>
   )
 }

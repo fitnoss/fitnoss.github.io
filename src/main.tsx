@@ -20,11 +20,15 @@ applyTheme(useSettings.getState().theme)
 applyAccent(useSettings.getState().accent)
 
 initI18n().then(() => {
-  createRoot(document.getElementById("root")!).render(
+  const app = (
     <StrictMode>
       <Suspense fallback={null}>
         <App />
       </Suspense>
-    </StrictMode>,
+    </StrictMode>
   )
+  const root = createRoot(document.getElementById("root")!)
+  if (import.meta.env.DEV && new URLSearchParams(location.search).has("profile")) {
+    void import("@/features/dev/profiler").then(({ profileApp }) => root.render(profileApp(app)))
+  } else root.render(app)
 })
