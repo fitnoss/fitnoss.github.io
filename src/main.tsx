@@ -28,7 +28,5 @@ initI18n().then(() => {
     </StrictMode>
   )
   const root = createRoot(document.getElementById("root")!)
-  if (import.meta.env.DEV && new URLSearchParams(location.search).has("profile")) {
-    void import("@/features/dev/profiler").then(({ profileApp }) => root.render(profileApp(app)))
-  } else root.render(app)
+  root.render(app)
 })

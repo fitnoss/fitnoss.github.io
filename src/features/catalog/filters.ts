@@ -86,7 +86,6 @@ export function stem(term: string) {
 export function getSearchIndex(list: Exercise[], en: Names, local: Names) {
   const cached = searchIndexes.get(list)
   if (cached && cached.en === en && cached.local === local) return cached.index
-  const start = import.meta.env.DEV ? performance.now() : 0
   const index = new MiniSearch<{ id: number; name: string; en: string }>({
     fields: ["name", "en"],
     processTerm: stem,
@@ -100,9 +99,6 @@ export function getSearchIndex(list: Exercise[], en: Names, local: Names) {
   })
   index.addAll(list.map((ex) => ({ id: ex.c, name: local[ex.s]?.name || en[ex.s]?.name || ex.s, en: en[ex.s]?.name ?? "" })))
   searchIndexes.set(list, { en, local, index })
-  if (import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).has("profile")) {
-    performance.measure("fitnoss:search-index:build", { start, detail: { exercises: list.length } })
-  }
   return index
 }
 
