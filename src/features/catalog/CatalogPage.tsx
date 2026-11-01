@@ -9,16 +9,16 @@ import { useExercises, useFavorites } from "@/entities/exercise/store"
 import type { Exercise } from "@/entities/exercise/types"
 import { ExerciseList } from "./ExerciseList"
 import { FilterBar } from "./FilterBar"
-import { EMPTY_FILTERS, applyFilters, useSearchIndex, useUrlFilters } from "./filters"
+import { EMPTY_FILTERS, applyFilters, getSearchIndex, useUrlFilters } from "./filters"
 
 export function CatalogPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const select = useCallback((ex: Exercise) => navigate(`/ex/${ex.s}`), [navigate])
-  const { list, ready, text, en, lang } = useExercises()
+  const { list, ready, text, en, local } = useExercises()
   const favorites = useFavorites((s) => s.codes)
   const [filters, setFilters] = useUrlFilters()
-  const index = useSearchIndex(list, text, en, lang)
+  const index = getSearchIndex(list, en, local)
   const deferred = useDeferredValue(filters)
   const items = useMemo(() => applyFilters(list, deferred, index, favorites), [list, deferred, index, favorites])
 

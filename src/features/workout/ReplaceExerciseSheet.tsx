@@ -4,7 +4,7 @@ import { useExercises } from "@/entities/exercise/store"
 import { EQUIPMENT, exerciseEquipment, key, type Exercise } from "@/entities/exercise/types"
 import { replacementCandidates } from "@/entities/session/replacement"
 import { ExerciseList } from "@/features/catalog/ExerciseList"
-import { applyFilters, EMPTY_FILTERS, useSearchIndex } from "@/features/catalog/filters"
+import { applyFilters, EMPTY_FILTERS, getSearchIndex } from "@/features/catalog/filters"
 import { Chip } from "@/shared/ui/chip"
 import { Input } from "@/shared/ui/field"
 import { Sheet } from "@/shared/ui/sheet"
@@ -16,11 +16,11 @@ export function ReplaceExerciseSheet({ source, onClose, onPick }: {
 }) {
   const { t } = useTranslation()
   const select = useCallback((ex: Exercise) => onPick(ex.c), [onPick])
-  const { list, text, en, lang } = useExercises()
+  const { list, text, en, local } = useExercises()
   const [equipment, setEquipment] = useState(exerciseEquipment(source))
   const [query, setQuery] = useState("")
   const q = useDeferredValue(query)
-  const index = useSearchIndex(list, text, en, lang)
+  const index = getSearchIndex(list, en, local)
   const items = useMemo(() => applyFilters(
     replacementCandidates(list, source, equipment), { ...EMPTY_FILTERS, q }, index, [],
   ), [list, source, equipment, q, index])

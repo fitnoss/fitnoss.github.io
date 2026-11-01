@@ -20,13 +20,15 @@ export function profileApp(app: ReactNode) {
   const snapshot = () => {
     if (recording) longTasks.push(...observer.takeRecords().map((e) => e.toJSON()))
     recording = false
-    report.textContent = JSON.stringify({ environment: { userAgent: navigator.userAgent, mode: "development (StrictMode)", cpuThrottle: "none" }, commits, longTasks }, null, 2)
+    const searchIndexBuilds = performance.getEntriesByName("fitnoss:search-index:build").map((e) => e.toJSON())
+    report.textContent = JSON.stringify({ environment: { userAgent: navigator.userAgent, mode: "development (StrictMode)", cpuThrottle: "none" }, commits, longTasks, searchIndexBuilds }, null, 2)
   }
   panel.querySelectorAll("button")[0].onclick = snapshot
   panel.querySelectorAll("button")[1].onclick = () => {
     commits.length = 0
     longTasks.length = 0
     observer.takeRecords()
+    performance.clearMeasures("fitnoss:search-index:build")
     report.textContent = "Recording…"
     recording = true
   }

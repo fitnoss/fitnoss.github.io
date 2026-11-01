@@ -55,7 +55,11 @@ export function useUrlFilters(): [Filters, (f: Filters) => void] {
   return [filters, set]
 }
 
-type TextFn = (ex: Exercise) => ExerciseName
+type Names = Record<string, ExerciseName>
+type SearchIndex = MiniSearch<{ id: number; name: string; en: string }>
+// Keep only the latest name dictionaries for each catalog snapshot. A language
+// change/retry invalidates it; an obsolete exercise list can be garbage-collected.
+const searchIndexes = new WeakMap<Exercise[], { en: Names; local: Names; index: SearchIndex }>()
 
 const RU_ENDING = /(иями|ями|ами|иях|ание|ания|ение|ения|ого|его|ому|ему|ыми|ими|ой|ей|ий|ый|ая|яя|ое|ее|ые|ие|ов|ев|ам|ям|ах|ях|ом|ем|ую|юю|а|я|ы|и|у|ю|е|о|ь)$/
 const EN_ENDING = /(ings|ing|es|s)$/
@@ -68,22 +72,28 @@ export function stem(term: string) {
   return cut.length >= 3 ? cut : t
 }
 
-export function useSearchIndex(list: Exercise[], text: TextFn, en: Record<string, ExerciseName>, lang: string) {
-  return useMemo(() => {
-    const ms = new MiniSearch<{ id: number; name: string; en: string }>({
-      fields: ["name", "en"],
-      processTerm: stem,
-      searchOptions: {
-        prefix: true,
-        fuzzy: 0.2,
-        boost: { name: 2 },
-        // Codes are ordered by popularity: the basics outrank rare variations.
-        boostDocument: (id) => 1 + 1 / (1 + Number(id) / 40),
-      },
-    })
-    ms.addAll(list.map((ex) => ({ id: ex.c, name: text(ex).name, en: en[ex.s]?.name ?? "" })))
-    return ms
-  }, [list, lang]) // eslint-disable-line react-hooks/exhaustive-deps
+/** Shared by the catalog, picker and replacement sheet, including remounts. */
+export function getSearchIndex(list: Exercise[], en: Names, local: Names) {
+  const cached = searchIndexes.get(list)
+  if (cached && cached.en === en && cached.local === local) return cached.index
+  const start = import.meta.env.DEV ? performance.now() : 0
+  const index = new MiniSearch<{ id: number; name: string; en: string }>({
+    fields: ["name", "en"],
+    processTerm: stem,
+    searchOptions: {
+      prefix: true,
+      fuzzy: 0.2,
+      boost: { name: 2 },
+      // Codes are ordered by popularity: the basics outrank rare variations.
+      boostDocument: (id) => 1 + 1 / (1 + Number(id) / 40),
+    },
+  })
+  index.addAll(list.map((ex) => ({ id: ex.c, name: local[ex.s]?.name || en[ex.s]?.name || ex.s, en: en[ex.s]?.name ?? "" })))
+  searchIndexes.set(list, { en, local, index })
+  if (import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).has("profile")) {
+    performance.measure("fitnoss:search-index:build", { start, detail: { exercises: list.length } })
+  }
+  return index
 }
 
 export function applyFilters(list: Exercise[], f: Filters, index: MiniSearch, favorites: number[]) {

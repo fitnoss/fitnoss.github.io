@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-01",
+  "environment": {
+    "browser": "Chrome 156 on Windows",
+    "mode": "Vite development, React StrictMode",
+    "cpuThrottle": "none",
+    "exercises": 968,
+    "historySessions": 0,
+    "runsPerScenario": 3
+  },
+  "measurement": "Summary of React Profiler actualDuration and performance.measure entries; opening totals exclude closing, home navigation and workout clock commits.",
+  "catalog": {
+    "before": {
+      "openingCommitDurationsMs": [[34, 12.3], [32.7, 11.9], [32, 13.1]],
+      "indexBuildDurationsMs": [12.1, 12, 12.5, 11.7, 10.9, 11.3],
+      "longTaskDurationsMs": []
+    },
+    "after": {
+      "openingCommitDurationsMs": [[12, 12.9], [8.5, 11.4], [8.2, 11.2]],
+      "indexBuildDurationsMs": [],
+      "longTaskDurationsMs": []
+    }
+  },
+  "picker": {
+    "before": {
+      "openingCommitDurationsMs": [[30.5, 2.9, 11], [31.1, 3.3, 11], [27.6, 2.6, 10.9]],
+      "indexBuildDurationsMs": [11.7, 12.3, 12.3, 12, 10, 11.2],
+      "longTaskDurationsMs": [51, 52]
+    },
+    "after": {
+      "openingCommitDurationsMs": [[8.2, 2.8, 10.3], [6.4, 2.8, 11.3], [6.3, 2.7, 11.3]],
+      "indexBuildDurationsMs": [],
+      "longTaskDurationsMs": []
+    }
+  },
+  "limitations": [
+    "Small comparative sample, not production Web Vitals or statistical proof.",
+    "StrictMode duplicates the old per-mount index construction; production previously built once per mount.",
+    "Catalog baseline had no active workout; after recording had an empty active workout and its continue banner. Index build counts are measured directly in both cases."
+  ]
+}

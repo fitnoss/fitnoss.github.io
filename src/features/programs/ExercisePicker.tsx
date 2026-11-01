@@ -7,7 +7,7 @@ import { Sheet } from "@/shared/ui/sheet"
 import { useExercises, useFavorites } from "@/entities/exercise/store"
 import { ExerciseList } from "@/features/catalog/ExerciseList"
 import { FilterBar } from "@/features/catalog/FilterBar"
-import { EMPTY_FILTERS, applyFilters, useSearchIndex, type Filters } from "@/features/catalog/filters"
+import { EMPTY_FILTERS, applyFilters, getSearchIndex, type Filters } from "@/features/catalog/filters"
 import type { Exercise } from "@/entities/exercise/types"
 import { ExerciseTechniqueSheet } from "@/features/catalog/ExerciseTechniqueSheet"
 
@@ -24,7 +24,7 @@ export function ExercisePicker({ open, onOpenChange, onPick }: Props) {
 
 function OpenExercisePicker({ onOpenChange, onPick }: Omit<Props, "open">) {
   const { t } = useTranslation()
-  const { list, text, en, lang } = useExercises()
+  const { list, text, en, local } = useExercises()
   const favorites = useFavorites((s) => s.codes)
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS)
   const [selected, setSelected] = useState<number[]>([])
@@ -32,7 +32,7 @@ function OpenExercisePicker({ onOpenChange, onPick }: Omit<Props, "open">) {
   const [preview, setPreview] = useState<Exercise | null>(null)
   const toggle = useCallback((code: number) => setSelected((current) => current.includes(code) ? current.filter((item) => item !== code) : [...current, code]), [])
   const select = useCallback((ex: Exercise) => toggle(ex.c), [toggle])
-  const index = useSearchIndex(list, text, en, lang)
+  const index = getSearchIndex(list, en, local)
   const deferred = useDeferredValue(filters)
   const items = useMemo(() => applyFilters(list, deferred, index, favorites), [list, deferred, index, favorites])
   // State, not a plain ref: the list must re-render once the scroll container exists.
