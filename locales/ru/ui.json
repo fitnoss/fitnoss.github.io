@@ -168,7 +168,7 @@
   "video": {
     "title": "Видео",
     "play": "Смотреть видео",
-    "search": "Найти на YouTube",
+    "search": "Найти на <youtube>YouTube</youtube>",
     "searchSuffix": "техника выполнения",
     "searchTitle": "Поиск видео",
     "externalSearch": " — поиск YouTube, откроется в новой вкладке"

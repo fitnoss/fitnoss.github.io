@@ -1,6 +1,6 @@
-import { useState } from "react"
-import { useTranslation } from "react-i18next"
-import { ExternalLink, Play, SquarePlay } from "lucide-react"
+import { useState, type ReactNode } from "react"
+import { Trans, useTranslation } from "react-i18next"
+import { ExternalLink, Play } from "lucide-react"
 import { buttonClass } from "@/shared/ui/button"
 import type { Video } from "@/entities/exercise/types"
 
@@ -45,6 +45,16 @@ export function VideoPlayer({ video, lang, title }: { video: Video; lang: string
   )
 }
 
+function YoutubeBrand({ children }: { children?: ReactNode }) {
+  return <span className="inline-flex items-center gap-1">
+    <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true" focusable="false">
+      <rect x="1" y="4" width="22" height="16" rx="4.5" fill="#ff0033" />
+      <path d="m10 8 6 4-6 4Z" fill="#fff" />
+    </svg>
+    {children}
+  </span>
+}
+
 export function YoutubeSearchButton({ query }: { query: string }) {
   const { t } = useTranslation()
   return (
@@ -54,8 +64,7 @@ export function YoutubeSearchButton({ query }: { query: string }) {
       rel="noreferrer"
       className={buttonClass("default", "md", "w-full")}
     >
-      <SquarePlay className="text-[#ff0033]" />
-      {t("video.search")}
+      <Trans t={t} i18nKey="video.search" components={{ youtube: <YoutubeBrand /> }} />
       <span className="sr-only">{t("video.externalSearch")}</span><ExternalLink className="size-4" aria-hidden="true" />
     </a>
   )

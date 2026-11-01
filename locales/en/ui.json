@@ -164,7 +164,7 @@
   "video": {
     "title": "Video",
     "play": "Play video",
-    "search": "Find on YouTube",
+    "search": "Find on <youtube>YouTube</youtube>",
     "searchSuffix": "exercise technique",
     "searchTitle": "Find a video",
     "externalSearch": " — YouTube search, opens in a new tab"
