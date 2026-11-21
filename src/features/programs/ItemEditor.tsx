@@ -24,6 +24,7 @@ type Props = {
   onChange: (item: ProgramItem) => void
   /** The next exercise continues a superset, so this one has no rest of its own. */
   inSuperset?: boolean
+  checklist?: boolean
 }
 
 const KIND_DEFAULTS: Record<ParsedReps["kind"], ParsedReps> = {
@@ -34,13 +35,14 @@ const KIND_DEFAULTS: Record<ParsedReps["kind"], ParsedReps> = {
   max: { kind: "max" },
 }
 
-export function ItemEditor({ item, onChange, inSuperset }: Props) {
+export function ItemEditor({ item, onChange, inSuperset, checklist }: Props) {
   const { t } = useTranslation()
   const { byCode } = useExercises()
   const bodyweight = usesBodyweight(byCode.get(item.ex))
   const [addLoad, setAddLoad] = useState(false)
   const showWeight = !bodyweight || addLoad || item.weight !== undefined
   const reps = parseReps(item.reps)
+  const kind = checklist && !item.reps ? "none" : reps.kind
   const setReps = (p: ParsedReps) => {
     const next = { ...item, reps: formatReps(p) }
     if (!canProgress(next.reps)) delete next.inc
@@ -53,16 +55,19 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
       <p className="text-muted text-xs font-medium">{t("scheme.goalType")}</p>
       <Select
         label={t("scheme.goalType")}
-        value={reps.kind}
-        onChange={(k) => setReps(KIND_DEFAULTS[k])}
-        options={(["reps", "range", "time", "amrap", "max"] as const).map((k) => ({ value: k, label: t(`scheme.kind.${k}`) }))}
+        value={kind}
+        onChange={(k) => k === "none" ? onChange({ ...item, reps: "" }) : setReps(KIND_DEFAULTS[k])}
+        options={[
+          ...(checklist ? [{ value: "none" as const, label: t("schedule.noTarget") }] : []),
+          ...(["reps", "range", "time", "amrap", "max"] as const).map((k) => ({ value: k, label: t(`scheme.kind.${k}`) })),
+        ]}
       />
       </div>
 
       {(reps.kind === "amrap" || reps.kind === "max") && <p className="text-muted text-xs">{t(`scheme.explain.${reps.kind}`)}</p>}
       <div className="flex flex-wrap gap-x-4 gap-y-3">
-        <Stepper className="items-start" label={t("scheme.sets")} value={item.sets} min={1} max={30} onChange={(sets) => onChange({ ...item, sets })} />
-        {reps.kind === "reps" && (
+        {!checklist && <Stepper className="items-start" label={t("scheme.sets")} value={item.sets} min={1} max={30} onChange={(sets) => onChange({ ...item, sets })} />}
+        {kind === "reps" && reps.kind === "reps" && (
           <Stepper className="items-start" label={t("scheme.reps")} value={reps.n} min={1} max={500} onChange={(n) => setReps({ kind: "reps", n })} />
         )}
         {reps.kind === "range" && (
@@ -83,22 +88,22 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
             onChange={(s) => setReps({ kind: "time", s })}
           />
         )}
-        {inSuperset ? (
+        {!checklist && (inSuperset ? (
           <p className="text-muted w-full text-xs">{t("programs.supersetRest")}</p>
         ) : (
           <div className="flex flex-col items-start gap-1.5">
             <span className="text-muted flex items-center gap-1 text-xs font-medium"><RestTimerIcon className="size-4" />{t("scheme.rest")}</span>
             <RestInput value={item.rest} onChange={(rest) => onChange({ ...item, rest })} />
           </div>
-        )}
+        ))}
       </div>
 
-      {bodyweight && <div className="space-y-2">
+      {!checklist && bodyweight && <div className="space-y-2">
         <p className="text-muted text-sm">{t(showWeight ? "workout.addedWeightHint" : "workout.bodyweightHint")}</p>
         {!showWeight && <Button size="sm" onClick={() => setAddLoad(true)}>{t("workout.addWeight")}</Button>}
       </div>}
-      <div className={showWeight ? "grid grid-cols-[minmax(7rem,1fr)_2fr] gap-2" : "space-y-2"}>
-        {showWeight && <Field label={<span className="flex items-center gap-1"><KettlebellIcon className="size-4" />{t(bodyweight ? "workout.addedWeight" : "scheme.weight")}</span>}>
+      <div className={!checklist && showWeight ? "grid grid-cols-[minmax(7rem,1fr)_2fr] gap-2" : "space-y-2"}>
+        {!checklist && showWeight && <Field label={<span className="flex items-center gap-1"><KettlebellIcon className="size-4" />{t(bodyweight ? "workout.addedWeight" : "scheme.weight")}</span>}>
           <NumberInput
             inputMode="decimal"
             placeholder="—"
@@ -116,7 +121,7 @@ export function ItemEditor({ item, onChange, inSuperset }: Props) {
         </Field>
       </div>
 
-      {(reps.kind === "reps" || reps.kind === "range") && (
+      {!checklist && (reps.kind === "reps" || reps.kind === "range") && (
         <div className="bg-page rounded-control space-y-3 p-3">
           <label className="flex cursor-pointer items-center justify-between gap-3">
             <span className="text-[15px] font-medium">{t("scheme.progression")}</span>

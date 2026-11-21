@@ -14,7 +14,6 @@ type Props = {
   className?: string
 }
 
-/** Share links store rest in 5 s steps, so the field snaps to them. */
 const snap = (n: number) => Math.round(n / 5) * 5
 
 /** "No rest" toggle plus a seconds field; typed values round to a multiple of 5 s on blur. */

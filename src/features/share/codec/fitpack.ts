@@ -1,32 +1,49 @@
 /**
- * FitPack — a bit-level format for sharing programs in a URL fragment.
+ * FitPack — a bit-level format for sharing programs, workouts and custom exercises.
  *
- *   header   3b version · 1b hasName · 1b hasWeights · 1b hasNotes · 1b hasSupersets · 1b hasSchedule · 1b hasSteps
+ *   header   3b version · 2b kind
+ *   plan     1b hasName · 1b hasWeights · 1b hasNotes · 1b hasSupersets · 1b hasChecklists · 1b hasSteps
  *   name     text (if hasName)
  *   days     3b (count - 1)
- *   day      4b name (0 = "Day N", 1..14 preset token, 15 = text) · [7b weekdays, bit 0 = Monday] · varint item count
+ *   day      4b name (0 = "Day N", 1..14 preset token, 15 = text) · [1b checklist] · varint item count
  *   item     [1b superset with previous, not on the first item] · exercise code (prefix code) · scheme · [weight] · [step] · [note]
  *   scheme   move-to-front list of recent schemes, initially [3×10 90s]
  *            0 = recent[0] · 10 + 2b = recent[1..4] · 11 + explicit:
  *            sets, reps and rest, each a Huffman code over a table of common values (+ escape)
- *   weight   0 = none · 10 + 6b = n × 2.5 kg (plates; n = 1..63) · 11 + varint (kg × 2)
+ *   weight   0 = none · 10 + 6b = n × 2.5 kg · 11 + varint (kg × 2, zero escapes to text)
  *   step     auto-progression increment: 0 = none · 10 = same as the previous step (initially 2.5 kg) · 11 + varint (kg × 4)
  *   note     0 = none · 10 = same as the previous note · 11 + text
- *   crc6     over everything above, then zero padding to a 6-bit boundary
+ *   custom   definitions for custom codes, in first-use order
+ *   crc16    over everything above, then zero padding to a 6-bit boundary
  *
  * Exercise codes are ordered by popularity (data/id-map.json is append-only), so the
- * top 64 cost 7 bits and new exercises simply get the next code. Version 1 tables below
- * must never change; to re-rank popularity later, add a v2 with its own rank table and
- * keep decoding v1.
+ * top 64 cost 7 bits. Custom exercise codes have their own reserved range.
  */
-import { DEFAULT_SCHEME, type ProgramData, type ProgramDay, type ProgramItem } from "@/entities/program/types"
-import { BitReader, BitWriter, DecodeError, Huffman, base64urlToBits, bitsToBase64url, crc6 } from "./bits"
+import { DEFAULT_SCHEME, type ProgramData, type ProgramItem, type WorkoutData } from "@/entities/program/types"
+import { CUSTOM_INSTRUCTIONS_LIMIT, CUSTOM_NAME_LIMIT, isCustomCode, validCustomExercise, type CustomExercise } from "@/entities/exercise/custom"
+import { CATEGORIES, EQUIPMENT, MUSCLES } from "@/entities/exercise/types"
+import { BitReader, BitWriter, DecodeError, Huffman, base64urlToBits, bitsToBase64url, crc16 } from "./bits"
 import { readText, writeText } from "./text"
 
 export { DecodeError }
 
-const VERSION = 1
+const VERSION = 2
 const MAX_DAYS = 8
+const MAX_ITEMS = 500
+
+export type ShareSource =
+  | { kind: "program"; program: ProgramData }
+  | { kind: "workout"; workout: WorkoutData }
+  | { kind: "exercise"; exercise: CustomExercise }
+
+export type SharedContent =
+  | { kind: "program"; program: ProgramData; exercises: CustomExercise[] }
+  | { kind: "workout"; workout: WorkoutData; exercises: CustomExercise[] }
+  | { kind: "exercise"; exercise: CustomExercise }
+
+function customCodes(days: WorkoutData[]) {
+  return [...new Set(days.flatMap((day) => day.items.map((item) => item.ex)).filter(isCustomCode))]
+}
 
 /** Day name presets; stored as tokens and shown in the viewer's language (dayPreset.* in ui.json). */
 export const DAY_NAMES = [
@@ -118,30 +135,39 @@ function writeRest(w: BitWriter, rest: number) {
   const i = REST.indexOf(rest)
   if (i >= 0) return REST_CODE.write(w, i)
   REST_CODE.write(w, REST.length)
-  w.varint(Math.round(rest / 5))
+  w.varint(rest)
 }
 
 function readRest(r: BitReader) {
   const i = REST_CODE.read(r)
-  return i < REST.length ? REST[i] : r.varint() * 5
+  return i < REST.length ? REST[i] : r.varint()
 }
 
 function writeWeight(w: BitWriter, kg: number | undefined) {
-  const half = Math.round((kg ?? 0) * 2)
-  if (half <= 0) return w.bit(false)
+  if (kg === undefined) return w.bit(false)
+  const half = kg * 2
   const plates = half / 5
-  if (Number.isInteger(plates) && plates < 64) {
+  if (Number.isInteger(plates) && plates > 0 && plates < 64) {
     w.write(0b10, 2)
     w.write(plates, 6)
   } else {
     w.write(0b11, 2)
-    w.varint(half)
+    if (Number.isInteger(half) && half > 0 && half <= 0xFFFFFFFF) w.varint(half)
+    else {
+      w.varint(0)
+      writeText(w, String(kg))
+    }
   }
 }
 
 function readWeight(r: BitReader) {
   if (!r.bit()) return undefined
-  return r.bit() ? r.varint() / 2 : r.read(6) * 2.5
+  if (!r.bit()) return r.read(6) * 2.5
+  const half = r.varint()
+  if (half) return half / 2
+  const weight = Number(readText(r, 32))
+  if (!Number.isFinite(weight) || weight < 0) throw new DecodeError("bad weight")
+  return weight
 }
 
 const FIRST_STEP = 2.5
@@ -163,10 +189,10 @@ function writeReps(w: BitWriter, reps: string) {
   } else if ((m = /^(\d+)s$/.exec(reps))) {
     w.write(2, 2)
     w.varint(Number(m[1]))
-  } else {
+  } else if (reps) {
     w.write(0, 2)
     w.varint(Math.max(0, Math.round(Number(reps)) || 0))
-  }
+  } else w.write(3, 2)
 }
 
 function readReps(r: BitReader) {
@@ -182,28 +208,46 @@ function readReps(r: BitReader) {
     case 2:
       return `${r.varint()}s`
     default:
-      throw new DecodeError("bad reps")
+      return ""
   }
 }
 
-export function encodeProgram(p: ProgramData): string {
+export function encodeShare(source: ShareSource, custom: CustomExercise[] = []): string {
   const w = new BitWriter()
+  w.write(VERSION, 3)
+  w.write(source.kind === "program" ? 0 : source.kind === "workout" ? 1 : 2, 2)
+  if (source.kind === "exercise") {
+    writeExercise(w, source.exercise.code)
+    writeDefinition(w, source.exercise)
+  } else {
+    const program = source.kind === "program" ? source.program : { name: "", days: [source.workout] }
+    writeProgram(w, program)
+    for (const code of customCodes(program.days)) {
+      const definition = custom.find((exercise) => exercise.code === code)
+      if (!definition) throw new RangeError("missing custom exercise")
+      writeDefinition(w, definition)
+    }
+  }
+  w.write(crc16(w.bits), 16)
+  return bitsToBase64url(w.bits)
+}
+
+function writeProgram(w: BitWriter, p: ProgramData) {
   const items = p.days.flatMap((d) => d.items)
   const hasName = p.name.trim().length > 0
-  const hasWeights = items.some((it) => it.weight !== undefined && it.weight > 0)
+  const hasWeights = items.some((it) => it.weight !== undefined)
   const hasNotes = items.some((it) => !!it.note?.trim())
   const hasSupersets = p.days.some((d) => d.items.some((it, i) => i > 0 && it.superset))
-  const hasSchedule = p.days.some((d) => d.weekdays?.length)
+  const hasChecklists = p.days.some((d) => d.mode === "checklist")
   const hasSteps = items.some((it) => quarters(it.inc) > 0)
-  const days = p.days.slice(0, MAX_DAYS)
-  if (days.length === 0) throw new RangeError("program has no days")
+  const days = p.days
+  if (!days.length || days.length > MAX_DAYS || days.some((day) => day.items.length > MAX_ITEMS)) throw new RangeError("program size")
 
-  w.write(VERSION, 3)
   w.bit(hasName)
   w.bit(hasWeights)
   w.bit(hasNotes)
   w.bit(hasSupersets)
-  w.bit(hasSchedule)
+  w.bit(hasChecklists)
   w.bit(hasSteps)
   if (hasName) writeText(w, p.name.trim())
 
@@ -219,7 +263,7 @@ export function encodeProgram(p: ProgramData): string {
       w.write(15, 4)
       writeText(w, day.name.trim())
     }
-    if (hasSchedule) w.write((day.weekdays ?? []).reduce((m, wd) => m | (1 << wd), 0), 7)
+    if (hasChecklists) w.bit(day.mode === "checklist")
     w.varint(day.items.length)
     for (const [i, it] of day.items.entries()) {
       if (hasSupersets && i > 0) w.bit(!!it.superset)
@@ -259,21 +303,36 @@ export function encodeProgram(p: ProgramData): string {
       }
     }
   }
-
-  w.write(crc6(w.bits), 6)
-  return bitsToBase64url(w.bits)
 }
 
-export function decodeProgram(payload: string): ProgramData {
+export function decodeShare(payload: string): SharedContent {
   const bits = base64urlToBits(payload)
   const r = new BitReader(bits)
   const version = r.read(3)
   if (version !== VERSION) throw new DecodeError(`unsupported version ${version}`)
+  const kind = r.read(2)
+  let content: SharedContent
+  if (kind === 2) {
+    content = { kind: "exercise", exercise: readDefinition(r, readExercise(r)) }
+  } else {
+    if (kind > 1) throw new DecodeError("unknown share kind")
+    const program = readProgram(r)
+    const exercises = customCodes(program.days).map((code) => readDefinition(r, code))
+    if (kind === 1 && (program.days.length !== 1 || !program.days[0].items.length)) throw new DecodeError("invalid workout")
+    content = kind === 0 ? { kind: "program", program, exercises } : { kind: "workout", workout: program.days[0], exercises }
+  }
+  const expected = crc16(bits, r.pos)
+  if (r.read(16) !== expected) throw new DecodeError("checksum mismatch")
+  if (bits.length - r.pos >= 6 || bits.slice(r.pos).some((b) => b)) throw new DecodeError("trailing data")
+  return content
+}
+
+function readProgram(r: BitReader): ProgramData {
   const hasName = r.bit()
   const hasWeights = r.bit()
   const hasNotes = r.bit()
   const hasSupersets = r.bit()
-  const hasSchedule = r.bit()
+  const hasChecklists = r.bit()
   const hasSteps = r.bit()
   const name = hasName ? readText(r) : ""
 
@@ -285,9 +344,9 @@ export function decodeProgram(payload: string): ProgramData {
   for (let d = 0; d < dayCount; d++) {
     const dn = r.read(4)
     const dayName = dn === 15 ? readText(r) : DAY_NAMES[dn]
-    const mask = hasSchedule ? r.read(7) : 0
+    const checklist = hasChecklists && r.bit()
     const count = r.varint()
-    if (count > 100) throw new DecodeError("too many items")
+    if (count > MAX_ITEMS) throw new DecodeError("too many items")
     const items: ProgramItem[] = []
     for (let i = 0; i < count; i++) {
       const superset = hasSupersets && i > 0 && r.bit()
@@ -299,10 +358,11 @@ export function decodeProgram(payload: string): ProgramData {
         scheme = { sets: readSets(r), reps: readReps(r), rest: readRest(r) }
       }
       recent.use(scheme)
+      if (scheme.sets < 1 || scheme.sets > 100 || (!checklist && !scheme.reps)) throw new DecodeError("invalid exercise scheme")
       const item: ProgramItem = { ex, ...scheme }
       if (superset) item.superset = true
       const weight = hasWeights ? readWeight(r) : undefined
-      if (weight) item.weight = weight
+      if (weight !== undefined) item.weight = weight
       if (hasSteps && r.bit()) {
         if (r.bit()) {
           lastStep = r.varint()
@@ -318,13 +378,38 @@ export function decodeProgram(payload: string): ProgramData {
       }
       items.push(item)
     }
-    const day: ProgramDay = { name: dayName, items }
-    if (mask) day.weekdays = [0, 1, 2, 3, 4, 5, 6].filter((wd) => mask & (1 << wd))
-    days.push(day)
+    days.push({ name: dayName, items, ...(checklist ? { mode: "checklist" } : {}) })
   }
 
-  const expected = crc6(bits.slice(0, r.pos))
-  if (r.read(6) !== expected) throw new DecodeError("checksum mismatch")
-  if (bits.length - r.pos >= 6 || bits.slice(r.pos).some((b) => b)) throw new DecodeError("trailing data")
   return { name, days }
+}
+
+function writeDefinition(w: BitWriter, exercise: CustomExercise) {
+  if (!validCustomExercise(exercise)) throw new RangeError("invalid custom exercise")
+  writeText(w, exercise.name)
+  w.write(exercise.category ? CATEGORIES.indexOf(exercise.category) + 1 : 0, 3)
+  w.write(exercise.equipment ? EQUIPMENT.indexOf(exercise.equipment) + 1 : 0, 5)
+  const muscles = exercise.muscles ?? []
+  w.bit(muscles.length > 0)
+  if (muscles.length) w.write(muscles.reduce((mask, muscle) => mask | (1 << MUSCLES.indexOf(muscle)), 0), MUSCLES.length)
+  w.bit(!!exercise.instructions)
+  if (exercise.instructions) writeText(w, exercise.instructions)
+}
+
+function readDefinition(r: BitReader, code: number): CustomExercise {
+  const name = readText(r, CUSTOM_NAME_LIMIT)
+  const categoryIndex = r.read(3)
+  const equipmentIndex = r.read(5)
+  if (categoryIndex > CATEGORIES.length || equipmentIndex > EQUIPMENT.length) throw new DecodeError("invalid custom exercise fields")
+  const mask = r.bit() ? r.read(MUSCLES.length) : 0
+  const instructions = r.bit() ? readText(r, CUSTOM_INSTRUCTIONS_LIMIT) : undefined
+  const exercise: CustomExercise = {
+    code, name,
+    ...(categoryIndex ? { category: CATEGORIES[categoryIndex - 1] } : {}),
+    ...(equipmentIndex ? { equipment: EQUIPMENT[equipmentIndex - 1] } : {}),
+    ...(mask ? { muscles: MUSCLES.filter((_, i) => mask & (1 << i)) } : {}),
+    ...(instructions ? { instructions } : {}),
+  }
+  if (!validCustomExercise(exercise)) throw new DecodeError("invalid custom exercise")
+  return exercise
 }

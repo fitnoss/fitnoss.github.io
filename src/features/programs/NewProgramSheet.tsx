@@ -11,6 +11,7 @@ import { useProgramStore } from "@/entities/program/store"
 import { ExerciseTechniqueSheet } from "@/features/catalog/ExerciseTechniqueSheet"
 import { TEMPLATES, templateDuration } from "./templates"
 import { dayName, formatScheme, formatWeekdays } from "./format"
+import { dateValue } from "@/shared/lib/calendar"
 
 const THUMBS = 6
 
@@ -39,7 +40,14 @@ export function NewProgramSheet({ open, onOpenChange, templatesOnly }: Props) {
   }
 
   return (
-    <Sheet open={open} onOpenChange={(o) => { setPreview(null); setExercisePreview(null); onOpenChange(o) }} title={preview ? preview.name[lang] : t(templatesOnly ? "programs.pickTemplate" : "programs.newTitle")} bodyClassName="space-y-5" footer={preview && <div className="flex gap-2"><Button onClick={() => setPreview(null)}>{t("common.back")}</Button><Button variant="primary" className="flex-1" onClick={() => { const tpl = preview; setPreview(null); go(create({ name: tpl.name[lang], days: structuredClone(tpl.days) }).id) }}>{t("programs.useTemplate")}</Button></div>}>
+    <Sheet open={open} onOpenChange={(o) => { setPreview(null); setExercisePreview(null); onOpenChange(o) }} title={preview ? preview.name[lang] : t(templatesOnly ? "programs.pickTemplate" : "programs.newTitle")} bodyClassName="space-y-5" footer={preview && <div className="flex gap-2">
+      <Button onClick={() => setPreview(null)}>{t("common.back")}</Button>
+      <Button variant="primary" className="flex-1" onClick={() => {
+        const date = dateValue(new Date())
+        const rules = preview.days.map(({ weekdays }) => ({ date, weekdays, repeat: "weekly" as const }))
+        go(create({ name: preview.name[lang], days: preview.days }, rules).id)
+      }}>{t("programs.useTemplate")}</Button>
+    </div>}>
       {preview ? <div className="space-y-5">
         <p className="text-muted text-sm">{preview.description[lang]}</p>
         <p className="text-sm">{t("programs.experience")}: {preview.experience[lang]}</p>

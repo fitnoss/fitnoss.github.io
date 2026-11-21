@@ -19,13 +19,17 @@ export type ProgramItem = {
   superset?: true
 }
 
-export type ProgramDay = {
+export type WorkoutMode = "detailed" | "checklist"
+
+export type WorkoutData = {
   /** Empty name means "Day N" in the viewer's language. */
   name: string
   items: ProgramItem[]
-  /** Weekdays this day is scheduled on, sorted, 0 = Monday … 6 = Sunday. */
-  weekdays?: number[]
+  /** Omitted for detailed workouts. */
+  mode?: WorkoutMode
 }
+
+export type ProgramDay = WorkoutData & { id: string }
 
 export type Program = {
   id: string
@@ -36,7 +40,11 @@ export type Program = {
 }
 
 /** What a share link carries: a program without local metadata. */
-export type ProgramData = Pick<Program, "name" | "days">
+export type ProgramData = { name: string; days: WorkoutData[] }
+
+export function remapWorkout<T extends WorkoutData>(workout: T, codes: ReadonlyMap<number, number>): T {
+  return { ...workout, items: workout.items.map((item) => ({ ...item, ex: codes.get(item.ex) ?? item.ex })) }
+}
 
 export const DEFAULT_SCHEME = { sets: 3, reps: "10", rest: 90 } as const
 

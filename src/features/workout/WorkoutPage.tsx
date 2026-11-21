@@ -16,6 +16,7 @@ import { CardsPager, CardsView, useCarousel } from "./CardsView"
 import { ExerciseCard } from "./ExerciseCard"
 import { Sheet } from "@/shared/ui/sheet"
 import { useWakeLock } from "./useWakeLock"
+import { ChecklistWorkout } from "./ChecklistWorkout"
 
 export function WorkoutPage() {
   const active = useSessionStore((s) => s.active)
@@ -24,7 +25,8 @@ export function WorkoutPage() {
     // Redirect a direct visit to an idle workout; finishing has its own destination.
     if (!useSessionStore.getState().active) navigate("/", { replace: true })
   }, [navigate])
-  return active ? <ActiveWorkout session={active} /> : null
+  if (!active) return null
+  return active.mode === "checklist" ? <ChecklistWorkout key={active.id} session={active} /> : <ActiveWorkout key={active.id} session={active} />
 }
 
 function ElapsedTime({ since, pausedMs = 0 }: { since: number; pausedMs?: number }) {

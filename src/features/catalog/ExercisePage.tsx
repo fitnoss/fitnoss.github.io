@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate, useParams } from "react-router"
-import { ChartNoAxesColumn, ListPlus, Star, Timer } from "lucide-react"
+import { ChartNoAxesColumn, ListPlus, Share, Star, Timer } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { Button, buttonClass } from "@/shared/ui/button"
@@ -17,6 +17,7 @@ import { VideoPlayer, YoutubeSearchButton } from "@/features/video/VideoPlayer"
 import { AddToProgramDrawer } from "@/features/programs/AddToProgramDrawer"
 import { ExerciseMuscles } from "./ExerciseMuscles"
 import { TechniqueFeedback } from "./TechniqueFeedback"
+import { ShareDrawer } from "@/features/share/ShareDrawer"
 
 const tile = "h-auto flex-col gap-1.5 py-3.5 text-[13px] leading-tight whitespace-normal"
 
@@ -28,12 +29,13 @@ export function ExercisePage() {
   const fav = useFavorites()
   const [frame, setFrame] = useState<"anim" | "0" | "1">("anim")
   const [addOpen, setAddOpen] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
   const activeWorkout = useSessionStore((s) => !!s.active)
   const addToWorkout = useSessionStore((s) => s.addExercise)
   const ex = bySlug.get(slug)
   const tx = useExerciseText(ex)
 
-  if (!ready) return <PageHeader title="" back />
+  if (!ready && !ex?.custom) return <PageHeader title="" back />
   if (!ex) {
     return (
       <>
@@ -52,14 +54,15 @@ export function ExercisePage() {
         title={tx.name}
         wrapTitle
         back
-        actions={
+        actions={<>
+          {ex.custom && <Button variant="ghost" size="icon" onClick={() => setShareOpen(true)} aria-label={t("share.exercise")} title={t("share.exercise")}><Share /></Button>}
           <Button variant="ghost" size="icon" onClick={() => fav.toggle(ex.c)} aria-label={t("catalog.favorites")} aria-pressed={isFav}>
             <Star className={cn("size-[22px]", isFav && "fill-accent text-accent-ink")} />
           </Button>
-        }
+        </>}
       />
       <div className="space-y-7 px-4 pb-8">
-        <div className="space-y-2.5">
+        {!ex.custom && <div className="space-y-2.5">
           <ExerciseImage
             animate
             priority
@@ -82,7 +85,7 @@ export function ExercisePage() {
               ]}
             />
           )}
-        </div>
+        </div>}
 
         <div className="space-y-3">
           <div>
@@ -93,8 +96,9 @@ export function ExercisePage() {
             {ex.pl.map((p) => (
               <Tag key={p}>{t(`place.${p}`)}</Tag>
             ))}
-            <Tag>{t(`level.${ex.lvl}`)}</Tag>
-            <Tag>{t(`category.${key(ex.cat)}`)}</Tag>
+            <Tag>{t(ex.custom ? "custom.label" : `level.${ex.lvl}`)}</Tag>
+            {ex.cat && <Tag>{t(`category.${key(ex.cat)}`)}</Tag>}
+            {ex.custom && ex.eq && <Tag>{t(`equipment.${ex.eq}`)}</Tag>}
             {ex.mech && <Tag>{t(`mechanic.${ex.mech}`)}</Tag>}
           </div>
         </div>
@@ -123,11 +127,13 @@ export function ExercisePage() {
           </Link>
         </div>
 
-        <Section title={t("exercise.muscles")} hint={`${t("exercise.equipment")}: ${exerciseEquipment(ex).map((item) => t(`equipment.${item}`)).join(", ")}`}>
+        {(!ex.custom || ex.pm.length > 0) && <Section title={t("exercise.muscles")} hint={!ex.custom ? `${t("exercise.equipment")}: ${exerciseEquipment(ex).map((item) => t(`equipment.${item}`)).join(", ")}` : undefined}>
           <ExerciseMuscles exercise={ex} />
-        </Section>
+        </Section>}
 
-        <Section title={t("exercise.technique")}>
+        {ex.custom ? ex.custom.instructions && <Section title={t("exercise.technique")}>
+          <p className="text-[15px] leading-relaxed break-words whitespace-pre-wrap">{ex.custom.instructions}</p>
+        </Section> : <Section title={t("exercise.technique")}>
           {tx.loading && <p role="status" className="text-muted text-sm">{t("common.loading")}</p>}
           <ol className="space-y-3.5">
             {tx.steps.filter((s) => s.trim()).map((s, i) => (
@@ -140,14 +146,15 @@ export function ExercisePage() {
             ))}
           </ol>
           {!tx.loading && <TechniqueFeedback key={ex.s} name={tx.name} slug={ex.s} machine={tx.machine} />}
-        </Section>
+        </Section>}
 
-        <Section title={t(video ? "video.title" : "video.searchTitle")}>
+        {!ex.custom && <Section title={t(video ? "video.title" : "video.searchTitle")}>
           {video ? <VideoPlayer video={video} lang={lang} title={tx.name} /> : null}
           <YoutubeSearchButton query={lang === "ru" ? tx.name : (en[ex.s]?.name ?? tx.name)} />
-        </Section>
+        </Section>}
       </div>
       <AddToProgramDrawer exercise={ex.c} open={addOpen} onOpenChange={setAddOpen} />
+      {shareOpen && ex.custom && <ShareDrawer source={{ kind: "exercise", exercise: ex.custom }} open onOpenChange={setShareOpen} />}
     </>
   )
 }

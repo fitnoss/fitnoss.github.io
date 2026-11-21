@@ -25,6 +25,13 @@ export function formatDuration(t: TFunction, s: number) {
   return r ? t("units.minSec", { m, s: r }) : t("units.min", { n: m })
 }
 
+export function formatChecklistTarget(t: TFunction, reps: Reps) {
+  if (!reps) return ""
+  const kind = parseReps(reps).kind
+  const target = formatRepsLabel(t, reps)
+  return kind === "reps" || kind === "range" ? `${target} ${t("workout.reps")}` : target
+}
+
 export function formatScheme(t: TFunction, it: Pick<ProgramItem, "sets" | "reps" | "rest" | "weight" | "inc">) {
   const parts = [`${it.sets} × ${formatRepsLabel(t, it.reps)}`]
   if (it.weight) parts.push(t("units.kg", { n: it.weight }))
@@ -57,7 +64,7 @@ export function formatWeekdays(weekdays: number[] | undefined) {
 }
 
 export function dayName(t: TFunction, name: string, index: number) {
-  if (name.startsWith("@")) return t(`dayPreset.${name.slice(1)}`)
+  if (name.startsWith("@")) return t(`dayPreset.${name.slice(1)}`, { defaultValue: name })
   return name.trim() || t("programs.dayN", { n: index + 1 })
 }
 
@@ -71,12 +78,11 @@ export function programToText(
   const lines: string[] = []
   lines.push(p.name.trim() || t("programs.untitled"))
   p.days.forEach((d, i) => {
-    const when = formatWeekdays(d.weekdays)
-    lines.push("", `${dayName(t, d.name, i)}${when ? ` (${when})` : ""}:`)
+    lines.push("", `${dayName(t, d.name, i)}:`)
     const labels = itemLabels(d.items)
     d.items.forEach((it, j) => {
-      const scheme = formatScheme(t, { ...it, rest: restAfter(d.items, j) })
-      lines.push(`${labels[j]}. ${exName(it.ex)} — ${scheme}${it.note ? ` (${it.note})` : ""}`)
+      const scheme = d.mode === "checklist" ? formatChecklistTarget(t, it.reps) : formatScheme(t, { ...it, rest: restAfter(d.items, j) })
+      lines.push(`${labels[j]}. ${exName(it.ex)}${scheme ? ` — ${scheme}` : ""}${it.note ? ` (${it.note})` : ""}`)
     })
   })
   if (link) lines.push("", link)

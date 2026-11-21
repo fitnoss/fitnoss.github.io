@@ -2,7 +2,7 @@ import { confirmAction } from "@/shared/ui/confirm"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Link, useNavigate, useParams } from "react-router"
-import { ListPlus, Pencil, Play, Trash2 } from "lucide-react"
+import { Check, ListPlus, Pencil, Play, Trash2 } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
 import { ExerciseNote } from "@/shared/components/ExerciseNote"
@@ -19,6 +19,8 @@ import { isCountedSet } from "@/entities/session/sets"
 import { parseReps } from "@/entities/program/types"
 import { sessionDuration } from "@/entities/session/history"
 import { SessionEditor } from "./SessionEditor"
+import { formatChecklistTarget } from "@/features/programs/format"
+import { calendarDate } from "@/shared/lib/calendar"
 
 export function SessionPage() {
   const { id = "" } = useParams()
@@ -38,6 +40,7 @@ export function SessionPage() {
   const minutes = Math.round(sessionDuration(s) / 60000)
   const sets = sessionSetCount(s)
   const volume = sessionVolume(s)
+  const checklist = s.mode === "checklist"
 
   return (
     <>
@@ -61,7 +64,7 @@ export function SessionPage() {
       />
       <div className="space-y-3 px-4 pb-8">
         <div className="flex flex-wrap gap-2">
-          <Button className="flex-1" onClick={() => setEditing(true)}><Pencil className="size-4" />{t("journal.editSession")}</Button>
+          {!checklist && <Button className="flex-1" onClick={() => setEditing(true)}><Pencil className="size-4" />{t("journal.editSession")}</Button>}
           <Button className="flex-1" disabled={!!active} onClick={async () => {
             if (!await confirmAction(t("journal.confirmResume"))) return
             if (useSessionStore.getState().resume(s.id)) navigate("/workout")
@@ -72,7 +75,10 @@ export function SessionPage() {
         <p className="text-muted px-1 text-sm first-letter:uppercase">
           {new Intl.DateTimeFormat(i18n.language, { dateStyle: "full", timeStyle: "short" }).format(s.startedAt)}
         </p>
-        <Panel className="grid grid-cols-3 divide-x">
+        {s.occurrence && <p className="text-muted px-1 text-sm">{t("schedule.scheduledFor", {
+          date: new Intl.DateTimeFormat(i18n.language, { dateStyle: "long" }).format(calendarDate(s.occurrence.date)),
+        })}</p>}
+        {checklist ? <p className="px-1 text-sm font-semibold">{t("schedule.checklist")} · {t("programs.exercisesCount", { count: s.exercises.length })}</p> : <Panel className="grid grid-cols-3 divide-x">
           {[
             [t("units.min", { n: minutes }), t("journal.duration")],
             [String(sets), t("journal.setsLabel")],
@@ -83,15 +89,21 @@ export function SessionPage() {
               <div className="text-muted text-xs">{l}</div>
             </div>
           ))}
-        </Panel>
+        </Panel>}
         {s.exercises.map((e, i) => {
           const ex = byCode.get(e.ex)
           return (
             <Panel key={i} className="space-y-2.5 p-2.5">
-              <Link to={`/progress/ex/${e.ex}`} className="flex items-center gap-3">
-                {ex && <ExerciseImage ex={ex} alt="" animate={false} className="hairline size-11 shrink-0 rounded-[10px]" />}
-                <div className="text-[15px] font-semibold">{text(ex).name}</div>
-              </Link>
+              {checklist ? <div className="flex items-center gap-3">
+                <Check className="text-success size-5 shrink-0" />
+                <div className="min-w-0">
+                  {ex ? <Link to={`/ex/${ex.s}`} className="text-[15px] font-semibold">{text(ex).name}</Link> : t("exercise.unknown")}
+                  {e.reps && <p className="text-muted text-sm">{formatChecklistTarget(t, e.reps)}</p>}
+                </div>
+              </div> : <Link to={`/progress/ex/${e.ex}`} className="flex items-center gap-3">
+                  {ex && <ExerciseImage ex={ex} alt="" animate={false} className="hairline size-11 shrink-0 rounded-[10px]" />}
+                  <div className="text-[15px] font-semibold">{text(ex).name}</div>
+                </Link>}
               <ExerciseNote note={e.note} />
               {usesBodyweight(ex) && e.sets.some((set) => set.weight !== undefined) && <p className="text-muted text-sm">{t("workout.addedWeightHint")}</p>}
               <div className="flex flex-wrap gap-1.5">
@@ -105,11 +117,12 @@ export function SessionPage() {
         <Button
           className="w-full"
           size="lg"
-          disabled={!s.exercises.some((e) => e.sets.some(isCountedSet))}
+          disabled={!s.exercises.some((e) => checklist ? e.checked : e.sets.some(isCountedSet))}
           onClick={() => {
             const p = createProgram({
               name: s.title,
-              days: [{ name: "", items: s.exercises.filter((e) => e.sets.some(isCountedSet)).map((e) => ({ ex: e.ex, sets: e.sets.filter(isCountedSet).length, reps: e.reps, rest: e.rest, note: e.note })) }],
+              days: [{ name: "", mode: s.mode, items: s.exercises.filter((e) => checklist ? e.checked : e.sets.some(isCountedSet))
+                .map((e) => ({ ex: e.ex, sets: checklist ? 1 : e.sets.filter(isCountedSet).length, reps: e.reps, rest: e.rest, note: e.note })) }],
             })
             toast.success(t("journal.savedAsProgram"))
             navigate(`/programs/${p.id}`)

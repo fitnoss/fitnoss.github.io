@@ -14,11 +14,52 @@ vi.mock("@/shared/storage/settings", () => ({ useSettings: { getState: () => ({ 
 import { lastSets, useSessionStore } from "./store"
 import { sessionDuration } from "./history"
 import { HISTORY_KEY } from "./storage"
+import { sessionVolume, sessionSetCount } from "./stats"
+import { useProgramStore } from "@/entities/program/store"
+import { scheduleOn } from "@/entities/program/schedule"
 
 const store = () => useSessionStore.getState()
 const start = () => store().start({ title: "Test", plan: { name: "", items: [{ ex: 1, sets: 2, reps: "5", rest: 90, weight: 60 }] } })
 beforeEach(() => useSessionStore.setState({ history: [], active: undefined, rest: undefined }))
 afterEach(() => vi.restoreAllMocks())
+
+it("keeps four distinct occurrences and persists checklist completion independently of the edited schedule", async () => {
+  useProgramStore.setState({ programs: [], schedule: [] })
+  const { create, scheduleWorkout } = useProgramStore.getState()
+  const date = "2026-12-31"
+  const item = { ex: 1, sets: 1, reps: "30s", rest: 0 }
+  const program = create({ name: "Home", days: [
+    { name: "Detailed", items: [item] }, { name: "Short", mode: "checklist", items: [item, { ...item, ex: 2, reps: "" }] },
+  ] })
+  const [detailed, checklist] = program.days
+  scheduleWorkout(detailed.id, { date, repeat: "once", time: "18:00" })
+  scheduleWorkout(checklist.id, { date: "2026-12-24", repeat: "weekly", weekdays: [3], time: "07:00" })
+  scheduleWorkout(detailed.id, { date, repeat: "once" })
+  scheduleWorkout(checklist.id, { date, repeat: "weekly", weekdays: [3] })
+  await useProgramStore.persist.rehydrate()
+  const entries = scheduleOn(useProgramStore.getState().schedule, date)
+  expect(entries.map((entry) => entry.time)).toEqual(["07:00", "18:00", undefined, undefined])
+  expect(new Set(entries.map((entry) => entry.id)).size).toBe(4)
+  expect(scheduleOn(useProgramStore.getState().schedule, "2027-01-07").map((entry) => entry.id)).toEqual([entries[0].id, entries[3].id])
+
+  const occurrence = { entryId: entries[0].id, date }
+  store().start({ title: "Short", programId: program.id, workoutId: checklist.id, plan: checklist, occurrence })
+  store().toggleExercise(0)
+  await useSessionStore.persist.rehydrate()
+  expect(store().active?.exercises.map((exercise) => exercise.checked)).toEqual([true, false])
+  const saved = store().finish()!
+  expect(saved.exercises).toEqual([{ ex: 1, sets: [], checked: true, reps: "30s", rest: 0 }])
+  expect(sessionVolume(saved)).toBe(0)
+  expect(sessionSetCount(saved)).toBe(0)
+  expect(lastSets(store().history, 1)).toBeUndefined()
+
+  scheduleWorkout(checklist.id, { date: "2027-01-07", repeat: "weekly", weekdays: [3] }, entries[0].id)
+  expect(scheduleOn(useProgramStore.getState().schedule, date).map((entry) => entry.id)).toEqual(entries.slice(1).map((entry) => entry.id))
+  expect(store().history[0]?.occurrence).toEqual(occurrence)
+  useProgramStore.getState().update(program.id, (program) => ({ ...program, days: [detailed] }))
+  expect(useProgramStore.getState().schedule.map((entry) => entry.workoutId)).toEqual([detailed.id, detailed.id])
+  expect(store().history).toEqual([saved])
+})
 
 describe("set logging lifecycle", () => {
   it("writes only the live snapshot on set entry and combines checking a set with starting rest", async () => {

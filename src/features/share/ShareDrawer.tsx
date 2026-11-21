@@ -4,14 +4,10 @@ import { Check, Copy, FileText, Share } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { Sheet } from "@/shared/ui/sheet"
 import { useExercises } from "@/entities/exercise/store"
-import type { ProgramData } from "@/entities/program/types"
-import { programToText } from "@/features/programs/format"
-import { encodeProgram } from "./codec/fitpack"
+import { useCustomExerciseStore } from "@/entities/exercise/custom"
+import { dayName, programToText } from "@/features/programs/format"
+import { encodeShare, type ShareSource } from "./codec/fitpack"
 import { QrCode } from "./QrCode"
-
-export function shareUrl(p: ProgramData) {
-  return `${location.origin}${import.meta.env.BASE_URL}#${encodeProgram(p)}`
-}
 
 async function copy(text: string) {
   try {
@@ -22,26 +18,40 @@ async function copy(text: string) {
   }
 }
 
-type Props = { program: ProgramData; open: boolean; onOpenChange: (o: boolean) => void }
+type Props = { source: ShareSource; open: boolean; onOpenChange: (o: boolean) => void }
 
-export function ShareDrawer({ program, open, onOpenChange }: Props) {
+export function ShareDrawer({ source, open, onOpenChange }: Props) {
   const { t } = useTranslation()
   const { byCode, text } = useExercises()
   const [manual, setManual] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   useEffect(() => { if (open) { setManual(null); setMessage(null); setCopied(false) } }, [open])
-  const url = useMemo(() => (open ? shareUrl(program) : ""), [open, program])
-  const plain = () => programToText(t, program, (c) => text(byCode.get(c)).name, url)
+  const custom = useCustomExerciseStore((state) => state.exercises)
+  const url = useMemo(() => {
+    if (!open) return ""
+    try {
+      return `${location.origin}${import.meta.env.BASE_URL}#${encodeShare(source, custom)}`
+    } catch {
+      return ""
+    }
+  }, [open, source, custom])
+  const name = source.kind === "program" ? source.program.name : source.kind === "workout" ? dayName(t, source.workout.name, 0) : source.exercise.name
+  const title = t(source.kind === "program" ? "share.title" : source.kind === "workout" ? "share.workout" : "share.exercise")
+  const plain = () => {
+    if (source.kind === "exercise") return [source.exercise.name, source.exercise.instructions, url].filter(Boolean).join("\n\n")
+    const program = source.kind === "program" ? source.program : { name, days: [source.workout] }
+    return programToText(t, program, (c) => text(byCode.get(c)).name, url)
+  }
 
   return (
     <Sheet
       open={open}
       onOpenChange={onOpenChange}
-      title={t("share.title")}
+      title={title}
       bodyClassName="space-y-3"
       footer={
-        <div className="grid grid-cols-2 gap-2">
+        url && <div className="grid grid-cols-2 gap-2">
           <Button
             variant="primary"
             onClick={async () => {
@@ -69,7 +79,7 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
             <Button
               variant="ghost"
               className="col-span-2"
-              onClick={() => navigator.share({ title: program.name || "fitnoss", text: plain() }).catch((error: unknown) => {
+              onClick={() => navigator.share({ title: name || "fitnoss", text: plain() }).catch((error: unknown) => {
                 if (error instanceof DOMException && error.name === "AbortError") return
                 setManual(plain())
                 setMessage(t("share.shareFailed"))
@@ -81,13 +91,13 @@ export function ShareDrawer({ program, open, onOpenChange }: Props) {
         </div>
       }
     >
-      <p className="text-muted text-sm">{t("share.copyHint")}</p>
+      <p className={url ? "text-muted text-sm" : "text-danger text-sm"}>{t(url ? "share.copyHint" : "share.linkFailed")}</p>
       {message && <p role={manual ? "alert" : "status"} className={manual ? "text-danger text-sm" : "text-muted text-sm"}>{message}</p>}
       {manual && <label className="block text-sm">{t("share.manualCopy")}<textarea readOnly value={manual} onFocus={(e) => e.target.select()} className="bg-surface mt-2 min-h-28 w-full rounded-xl p-3 text-base" /></label>}
-      <div className="mx-auto flex size-56 items-center justify-center overflow-hidden rounded-2xl bg-white p-1">
-        {url && <QrCode value={url} className="size-full" />}
-      </div>
-      <div className="bg-surface hairline rounded-control p-3 font-mono text-[12.5px] leading-relaxed font-medium break-all select-all">{url}</div>
+      {url && url.length <= 1600 && <div className="mx-auto flex size-56 items-center justify-center overflow-hidden rounded-2xl bg-white p-1">
+        <QrCode value={url} className="size-full" />
+      </div>}
+      {url && <div className="bg-surface hairline rounded-control p-3 font-mono text-[12.5px] leading-relaxed font-medium break-all select-all">{url}</div>}
     </Sheet>
   )
 }

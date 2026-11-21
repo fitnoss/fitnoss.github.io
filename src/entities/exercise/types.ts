@@ -1,8 +1,10 @@
+import type { CustomExercise } from "./custom"
+
 export type Place = "home" | "bars" | "dumbbell" | "kettlebell" | "bands" | "gym"
 export type Level = "beginner" | "intermediate" | "expert"
 
 export type Exercise = {
-  /** Stable numeric code (index in data/id-map.json). */
+  /** Stable catalog code or local custom exercise code. */
   c: number
   /** URL slug and translation key. */
   s: string
@@ -16,6 +18,7 @@ export type Exercise = {
   sm: string[]
   pl: Place[]
   img: number
+  custom?: CustomExercise
 }
 
 export type ExerciseName = { name: string }
@@ -37,7 +40,7 @@ export const EQUIPMENT = [
 
 /** Required equipment, including secondary items such as a band used on a pull-up bar. */
 export function exerciseEquipment(exercise: Pick<Exercise, "eq" | "eqExtra">) {
-  return [...new Set([exercise.eq, ...(exercise.eqExtra ?? [])])]
+  return [...new Set([exercise.eq, ...(exercise.eqExtra ?? [])].filter(Boolean))]
 }
 
 /** For these movements a logged load means added resistance, never body mass. */

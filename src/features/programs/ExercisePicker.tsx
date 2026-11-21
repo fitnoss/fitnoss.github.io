@@ -10,6 +10,8 @@ import { EMPTY_FILTERS, applyFilters, getSearchIndex, type Filters } from "@/fea
 import type { Exercise } from "@/entities/exercise/types"
 import { ExerciseTechniqueSheet } from "@/features/catalog/ExerciseTechniqueSheet"
 import { EmptySearchResults } from "@/features/catalog/EmptySearchResults"
+import { CustomExerciseSheet } from "@/features/catalog/CustomExerciseSheet"
+import { Plus } from "lucide-react"
 
 type Props = {
   open: boolean
@@ -30,6 +32,7 @@ function OpenExercisePicker({ onOpenChange, onPick }: Omit<Props, "open">) {
   const [selected, setSelected] = useState<number[]>([])
   const [showSelected, setShowSelected] = useState(false)
   const [preview, setPreview] = useState<Exercise | null>(null)
+  const [createOpen, setCreateOpen] = useState(false)
   const toggle = useCallback((code: number) => setSelected((current) => current.includes(code) ? current.filter((item) => item !== code) : [...current, code]), [])
   const select = useCallback((ex: Exercise) => toggle(ex.c), [toggle])
   const index = getSearchIndex(list, en, local)
@@ -52,6 +55,7 @@ function OpenExercisePicker({ onOpenChange, onPick }: Omit<Props, "open">) {
       open
       onOpenChange={(o) => (o ? onOpenChange(true) : close(false))}
       title={t("picker.title")}
+      actions={<Button size="icon" aria-label={t("custom.create")} title={t("custom.create")} onClick={() => setCreateOpen(true)}><Plus /></Button>}
       className="h-[94dvh] sm:h-[85dvh] sm:max-w-xl"
       bodyClassName="flex flex-col px-0 pb-0"
       footer={
@@ -80,6 +84,11 @@ function OpenExercisePicker({ onOpenChange, onPick }: Omit<Props, "open">) {
       </div>
       {preview && <ExerciseTechniqueSheet exercise={preview} onClose={() => setPreview(null)}
         selected={selected.includes(preview.c)} onToggle={() => toggle(preview.c)} />}
+      {createOpen && <CustomExerciseSheet onClose={() => setCreateOpen(false)} onCreate={(exercise) => {
+        onPick([exercise.code])
+        setCreateOpen(false)
+        if (!selected.length) onOpenChange(false)
+      }} />}
     </Sheet>
   )
 }

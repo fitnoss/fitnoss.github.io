@@ -2,7 +2,8 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { uid } from "@/shared/lib/id"
 import { useSettings } from "@/shared/storage/settings"
-import { DEFAULT_SCHEME, moveItem, parseReps, removeItem, restAfter, targetReps, withLink, type ProgramDay, type ProgramItem } from "@/entities/program/types"
+import { DEFAULT_SCHEME, moveItem, parseReps, removeItem, restAfter, targetReps, withLink, type WorkoutData, type WorkoutMode, type ProgramItem } from "@/entities/program/types"
+import type { ScheduledOccurrence } from "@/entities/program/schedule"
 import { progression } from "./progression"
 import { replaceRemaining } from "./replacement"
 import { isMainSet, isWarmup, updateSetLog, type Effort, type SetType } from "./sets"
@@ -26,6 +27,8 @@ export type SessionExercise = {
   reps: string
   rest: number
   sets: SetLog[]
+  /** Checklist completion is independent of set logs. */
+  checked?: boolean
   /** Done back-to-back with the previous exercise, as in ProgramItem. */
   superset?: true
   /** Auto-progression moved the weight for this workout (see progression.ts). */
@@ -36,7 +39,9 @@ export type Session = {
   id: string
   title: string
   programId?: string
-  day?: number
+  workoutId?: string
+  occurrence?: ScheduledOccurrence
+  mode?: WorkoutMode
   startedAt: number
   endedAt?: number
   pausedMs?: number
@@ -51,7 +56,8 @@ type State = {
   active?: Session
   history: Session[]
   rest?: RestTimer
-  start: (opts: { title: string; programId?: string; day?: number; plan?: ProgramDay }) => void
+  start: (opts: { title: string; programId?: string; workoutId?: string; occurrence?: ScheduledOccurrence; plan?: WorkoutData }) => void
+  toggleExercise: (i: number) => void
   addExercise: (ex: number) => void
   removeExercise: (i: number) => void
   replaceExercise: (i: number, ex: number) => void
@@ -119,26 +125,35 @@ export const useSessionStore = create<State>()(
         edit((s) => ({ ...s, exercises: s.exercises.map((e, k) => (k === i ? fn(e) : e)) }))
       return {
         history: [],
-        start: ({ title, programId, day, plan }) => {
+        start: ({ title, programId, workoutId, occurrence, plan }) => {
           const { history } = get()
+          const mode = plan?.mode
           set({
             rest: undefined,
             active: {
               id: uid(),
               title,
               programId,
-              day,
+              workoutId,
+              occurrence,
+              mode,
               startedAt: Date.now(),
-              exercises: (plan?.items ?? []).map((it) => withLink(plannedExercise(history, it), it.superset)),
+              exercises: (plan?.items ?? []).map((it) => mode === "checklist"
+                ? { ex: it.ex, reps: it.reps, note: it.note, rest: 0, sets: [], checked: false }
+                : withLink(plannedExercise(history, it), it.superset)),
             },
           })
+        },
+        toggleExercise: (i) => {
+          if (get().active?.mode === "checklist") editEx(i, (e) => ({ ...e, checked: !e.checked }))
         },
         addExercise: (ex) =>
           edit((s) => ({
             ...s,
             exercises: [
               ...s.exercises,
-              plannedExercise(get().history, { ex, ...DEFAULT_SCHEME, rest: useSettings.getState().defaultRest }),
+              s.mode === "checklist" ? { ex, reps: "", rest: 0, sets: [], checked: false } :
+                plannedExercise(get().history, { ex, ...DEFAULT_SCHEME, rest: useSettings.getState().defaultRest }),
             ],
           })),
         removeExercise: (i) => edit((s) => ({ ...s, exercises: removeItem(s.exercises, i) })),
@@ -189,11 +204,12 @@ export const useSessionStore = create<State>()(
         finish: () => {
           const s = get().active
           if (!s) return
+          const checklist = s.mode === "checklist"
           const done: Session = {
             ...s,
             endedAt: Date.now(),
-            unfinishedPlan: s.exercises.some((e) => e.sets.some((x) => !x.done)) ? s.exercises : undefined,
-            exercises: s.exercises
+            unfinishedPlan: s.exercises.some((e) => checklist ? !e.checked : e.sets.some((x) => !x.done)) ? s.exercises : undefined,
+            exercises: checklist ? s.exercises.filter((e) => e.checked) : s.exercises
               .map((e) => ({ ...e, sets: e.sets.filter((x) => x.done) }))
               .filter((e) => e.sets.length > 0),
           }
@@ -236,8 +252,13 @@ export const useSessionStore = create<State>()(
         importHistory: (sessions) =>
           set((st) => {
             const ids = new Set(st.history.map((s) => s.id))
-            const merged = [...st.history, ...sessions.filter((s) => !ids.has(s.id))]
-            return { history: merged.sort((a, b) => b.startedAt - a.startedAt) }
+            if (st.active) ids.add(st.active.id)
+            const added = sessions.filter((s) => {
+              if (ids.has(s.id)) return false
+              ids.add(s.id)
+              return true
+            })
+            return added.length ? { history: [...st.history, ...added].sort((a, b) => b.startedAt - a.startedAt) } : st
           }),
       }
     },

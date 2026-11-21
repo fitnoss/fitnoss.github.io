@@ -97,7 +97,7 @@ export function getSearchIndex(list: Exercise[], en: Names, local: Names) {
       boostDocument: (id) => 1 + 1 / (1 + Number(id) / 40),
     },
   })
-  index.addAll(list.map((ex) => ({ id: ex.c, name: local[ex.s]?.name || en[ex.s]?.name || ex.s, en: en[ex.s]?.name ?? "" })))
+  index.addAll(list.map((ex) => ({ id: ex.c, name: ex.custom?.name ?? (local[ex.s]?.name || en[ex.s]?.name || ex.s), en: en[ex.s]?.name ?? "" })))
   searchIndexes.set(list, { en, local, index })
   return index
 }

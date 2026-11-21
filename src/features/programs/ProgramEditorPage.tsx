@@ -1,7 +1,7 @@
 import { confirmAction } from "@/shared/ui/confirm"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Link, useNavigate, useParams } from "react-router"
+import { Link, useNavigate, useParams, useSearchParams } from "react-router"
 import { ArrowDown, ArrowUp, CalendarDays, ChevronDown, Copy, Link2, Pencil, Play, Plus, Share, Trash2 } from "lucide-react"
 import { PageHeader } from "@/shared/components/PageHeader"
 import { ExerciseImage } from "@/shared/components/ExerciseImage"
@@ -14,6 +14,8 @@ import { Panel } from "@/shared/ui/panel"
 import { Sheet } from "@/shared/ui/sheet"
 import { toast } from "@/shared/ui/toast"
 import { cn } from "@/shared/lib/utils"
+import { uid } from "@/shared/lib/id"
+import { dateValue } from "@/shared/lib/calendar"
 import { useSettings } from "@/shared/storage/settings"
 import { useExercises } from "@/entities/exercise/store"
 import { useProgramStore } from "@/entities/program/store"
@@ -27,6 +29,7 @@ import {
   type Program,
   type ProgramDay,
   type ProgramItem,
+  type WorkoutMode,
 } from "@/entities/program/types"
 import { DAY_NAMES } from "@/features/share/codec/fitpack"
 import { ShareDrawer } from "@/features/share/ShareDrawer"
@@ -34,28 +37,32 @@ import { ExercisePicker } from "./ExercisePicker"
 import { ItemEditor } from "./ItemEditor"
 import { ProgramVolume } from "./ProgramVolume"
 import { useStartDay } from "@/features/workout/useStartDay"
-import { dayName, formatScheme, formatWeekdays, weekdayName } from "./format"
+import { dayName, formatChecklistTarget, formatScheme } from "./format"
+import { ScheduleSheet, WorkoutModeControl } from "./ScheduleSheet"
 
 const MAX_DAYS = 8
-const editorStates = new Map<string, { day: number; expanded: number | null; editing: boolean }>()
+const editorStates = new Map<string, { workoutId?: string; expanded: number | null; editing: boolean }>()
 
 export function ProgramEditorPage() {
   const { id = "" } = useParams()
-  return <ProgramEditor key={id} id={id} />
+  const [query] = useSearchParams()
+  const workoutId = query.get("workout") ?? undefined
+  return <ProgramEditor key={`${id}/${workoutId ?? ""}`} id={id} initialWorkoutId={workoutId} />
 }
 
-function ProgramEditor({ id }: { id: string }) {
+function ProgramEditor({ id, initialWorkoutId }: { id: string; initialWorkoutId?: string }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const program = useProgramStore((s) => s.programs.find((p) => p.id === id))
   const { update, remove, duplicate } = useProgramStore()
-  const [day, setDay] = useState(editorStates.get(id)?.day ?? 0)
-  const [editing, setEditing] = useState(editorStates.get(id)?.editing ?? !program?.days.some((d) => d.items.length))
+  const [workoutId, setWorkoutId] = useState(initialWorkoutId ?? editorStates.get(id)?.workoutId)
+  const [editing, setEditing] = useState(initialWorkoutId ? false : editorStates.get(id)?.editing ?? !program?.days.some((d) => d.items.length))
   const [pickerOpen, setPickerOpen] = useState(false)
-  const [shareOpen, setShareOpen] = useState(false)
+  const [shareOpen, setShareOpen] = useState<"program" | "workout" | null>(null)
+  const [scheduleOpen, setScheduleOpen] = useState(false)
   const [dayDialog, setDayDialog] = useState(false)
-  const [expanded, setExpanded] = useState<number | null>(editorStates.get(id)?.expanded ?? null)
-  useEffect(() => { editorStates.set(id, { day, expanded, editing }) }, [id, day, expanded, editing])
+  const [expanded, setExpanded] = useState<number | null>(initialWorkoutId ? null : editorStates.get(id)?.expanded ?? null)
+  useEffect(() => { editorStates.set(id, { workoutId, expanded, editing }) }, [id, workoutId, expanded, editing])
   const startDay = useStartDay()
 
   if (!program) {
@@ -67,17 +74,19 @@ function ProgramEditor({ id }: { id: string }) {
     )
   }
 
-  const d = Math.min(day, program.days.length - 1)
+  const d = Math.max(0, program.days.findIndex((day) => day.id === workoutId))
   const current = program.days[d]
+  const checklist = current.mode === "checklist"
   const set = (fn: (p: Program) => Program) => update(program.id, fn)
   const setDayData = (fn: (day: ProgramDay) => ProgramDay) =>
-    set((p) => ({ ...p, days: p.days.map((x, i) => (i === d ? fn(x) : x)) }))
+    set((p) => ({ ...p, days: p.days.map((x) => (x.id === current.id ? fn(x) : x)) }))
   const setItems = (items: ProgramItem[]) => setDayData((x) => ({ ...x, items }))
 
   const addDay = () => {
     if (program.days.length >= MAX_DAYS) return
-    set((p) => ({ ...p, days: [...p.days, { name: "", items: [] }] }))
-    setDay(program.days.length)
+    const id = uid()
+    set((p) => ({ ...p, days: [...p.days, { id, name: "", items: [] }] }))
+    setWorkoutId(id)
     setExpanded(null)
   }
 
@@ -86,27 +95,17 @@ function ProgramEditor({ id }: { id: string }) {
     setExpanded(i + dir)
   }
 
-  /** A weekday belongs to one day of the program: picking it here takes it from the others. */
-  const setWeekdays = (weekdays: number[]) =>
-    set((p) => ({
-      ...p,
-      days: p.days.map((x, i) => {
-        const own = i === d ? weekdays : (x.weekdays ?? []).filter((wd) => !weekdays.includes(wd))
-        const { weekdays: _, ...rest } = x
-        return own.length ? { ...rest, weekdays: [...own].sort() } : rest
-      }),
-    }))
-
   /** Links item k to the one above it as a superset, or unlinks them. */
   const toggleLink = (k: number) => setItems(current.items.map((x, j) => (j === k ? withLink(x, x.superset ? undefined : true) : x)))
 
-  const labels = itemLabels(current.items)
+  const labels = checklist ? current.items.map((_, i) => String(i + 1)) : itemLabels(current.items)
   const card = (i: number) => {
     const it = current.items[i]
     return (
       <ItemCard
         key={`${i}-${it.ex}`}
         item={it}
+        checklist={checklist}
         label={labels[i]}
         inSuperset={!!current.items[i + 1]?.superset}
         open={editing && expanded === i}
@@ -115,14 +114,14 @@ function ProgramEditor({ id }: { id: string }) {
         onMove={current.items.length > 1 ? (dir) => move(i, dir) : undefined}
         canUp={i > 0}
         canDown={i < current.items.length - 1}
-        linkUp={i > 0 ? { linked: !!it.superset, toggle: () => toggleLink(i) } : undefined}
-        linkDown={i < current.items.length - 1 ? { linked: !!current.items[i + 1].superset, toggle: () => toggleLink(i + 1) } : undefined}
+        linkUp={!checklist && i > 0 ? { linked: !!it.superset, toggle: () => toggleLink(i) } : undefined}
+        linkDown={!checklist && i < current.items.length - 1 ? { linked: !!current.items[i + 1].superset, toggle: () => toggleLink(i + 1) } : undefined}
         onRemove={() => {
           const before = current.items
           const after = removeItem(current.items, i)
           setItems(after)
           toast(t("workout.exerciseRemoved"), { action: { label: t("common.undo"), onClick: () => {
-            update(program.id, (p) => ({ ...p, days: p.days.map((x, k) => k === d && x.items === after ? { ...x, items: before } : x) }))
+            update(program.id, (p) => ({ ...p, days: p.days.map((x) => x.id === current.id && x.items === after ? { ...x, items: before } : x) }))
           } } })
           setExpanded(null)
         }}
@@ -140,7 +139,7 @@ function ProgramEditor({ id }: { id: string }) {
             {editing ? <Button variant="primary" size="sm" onClick={() => setEditing(false)}>{t("common.done")}</Button> : <Button
               variant="ghost"
               size="icon"
-              onClick={() => setShareOpen(true)}
+              onClick={() => setShareOpen("program")}
               disabled={!program.days.some((x) => x.items.length)}
               aria-label={t("share.title")}
             >
@@ -183,18 +182,17 @@ function ProgramEditor({ id }: { id: string }) {
         <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-2">
           {program.days.map((x, i) => (
             <Chip
-              key={i}
+              key={x.id}
               active={i === d}
               onClick={() => {
                 if (i === d && editing) setDayDialog(true)
                 else {
-                  setDay(i)
+                  setWorkoutId(x.id)
                   setExpanded(null)
                 }
               }}
             >
               {dayName(t, x.name, i)}
-              {x.weekdays?.length ? <span className="text-[13px] opacity-60">{formatWeekdays(x.weekdays)}</span> : null}
               {i === d && editing && <Pencil className="size-3.5 opacity-70" />}
             </Chip>
           ))}
@@ -204,26 +202,22 @@ function ProgramEditor({ id }: { id: string }) {
             </Chip>
           )}
         </div>
-        {editing && <button
-          type="button"
-          onClick={() => setDayDialog(true)}
-          className={cn(
-            "mx-4 mb-2.5 flex items-center gap-1.5 text-[13px] font-medium transition-colors",
-            "text-muted hover:text-fg",
-          )}
-        >
-          <CalendarDays className="size-4" />
-          {t(current.weekdays?.length ? "programs.editWeekdays" : "programs.setWeekdays")}
-        </button>}
       </div>
 
       <div className="space-y-2 px-4 pt-1 pb-8">
         <div className="flex flex-wrap items-center gap-2 pb-2">
           {!editing && <Button className="flex-1" onClick={() => setEditing(true)}>{t("programs.edit")}</Button>}
           {!editing && current.items.length > 0 && <Button variant="primary" className="flex-1" onClick={() => startDay(program, d)}><Play className="size-4" />{t("home.start")}</Button>}
-          {editing && <p role="status" className="text-muted w-full text-xs">{t("programs.autosaved")}</p>}
+          <Button size="sm" disabled={!current.items.length} onClick={() => setScheduleOpen(true)}><CalendarDays /> {t("schedule.plan")}</Button>
+          <Menu label={t("schedule.workoutMenu")}>
+            <MenuItem onClick={() => setDayDialog(true)}><Pencil /> {t("schedule.workoutSettings")}</MenuItem>
+            <MenuItem disabled={!current.items.length} onClick={() => setShareOpen("workout")}><Share /> {t("share.workout")}</MenuItem>
+          </Menu>
         </div>
-        {groups(current.items).map((g) => (g.length > 1 ? <SupersetGroup key={`g${g[0]}`}>{g.map(card)}</SupersetGroup> : card(g[0])))}
+        {editing && <p role="status" className="text-muted pb-1 text-xs">{t("programs.autosaved")}</p>}
+        <p className="text-muted px-1 pb-1 text-xs">{t(checklist ? "schedule.checklist" : "schedule.detailed")}</p>
+        {checklist ? current.items.map((_, i) => card(i)) :
+          groups(current.items).map((g) => (g.length > 1 ? <SupersetGroup key={`g${g[0]}`}>{g.map(card)}</SupersetGroup> : card(g[0])))}
 
         {editing && <button
           type="button"
@@ -232,7 +226,7 @@ function ProgramEditor({ id }: { id: string }) {
         >
           <Plus className="size-5" /> {t("programs.addExercises")}
         </button>}
-        <ProgramVolume program={program} />
+        {program.days.some((day) => day.mode !== "checklist") && <ProgramVolume program={program} />}
       </div>
 
       <ExercisePicker
@@ -240,7 +234,8 @@ function ProgramEditor({ id }: { id: string }) {
         onOpenChange={setPickerOpen}
         onPick={(codes) => {
           const last = current.items.at(-1)
-          const scheme = last ? { sets: last.sets, reps: last.reps, rest: last.rest } : { ...DEFAULT_SCHEME, rest: useSettings.getState().defaultRest }
+          const scheme = checklist ? { sets: 1, reps: "", rest: 0 } :
+            last ? { sets: last.sets, reps: last.reps, rest: last.rest } : { ...DEFAULT_SCHEME, rest: useSettings.getState().defaultRest }
           setItems([...current.items, ...codes.map((ex) => ({ ex, ...scheme }))])
           toast.success(t("picker.added", { count: codes.length }))
         }}
@@ -251,22 +246,26 @@ function ProgramEditor({ id }: { id: string }) {
         day={current}
         index={d}
         canDelete={program.days.length > 1}
-        takenWeekdays={program.days.flatMap((x, i) => (i === d ? [] : (x.weekdays ?? [])))}
-        onWeekdays={setWeekdays}
+        onMode={(mode) => setDayData((x) => ({ ...x, mode, items: mode === "detailed" ?
+          x.items.map((item) => ({ ...item, reps: item.reps || DEFAULT_SCHEME.reps })) : x.items }))}
         onRename={(name) => setDayData((x) => ({ ...x, name }))}
         onDelete={() => {
           set((p) => ({ ...p, days: p.days.filter((_, i) => i !== d) }))
-          setDay(Math.max(0, d - 1))
+          setWorkoutId(program.days[d - 1]?.id ?? program.days[d + 1]?.id)
           setDayDialog(false)
         }}
       />
-      <ShareDrawer program={program} open={shareOpen} onOpenChange={setShareOpen} />
+      {scheduleOpen && <ScheduleSheet workoutId={current.id} date={dateValue(new Date())} onClose={() => setScheduleOpen(false)} />}
+      {shareOpen && <ShareDrawer source={shareOpen === "program" ? { kind: "program", program } :
+        { kind: "workout", workout: { ...current, name: current.name.trim() || dayName(t, current.name, d) } }}
+        open onOpenChange={(open) => !open && setShareOpen(null)} />}
     </>
   )
 }
 
 function ItemCard({
   item,
+  checklist,
   label,
   inSuperset,
   open,
@@ -280,6 +279,7 @@ function ItemCard({
   onRemove,
 }: {
   item: ProgramItem
+  checklist: boolean
   label: string
   /** The next exercise continues this superset. */
   inSuperset: boolean
@@ -297,6 +297,7 @@ function ItemCard({
   const { t } = useTranslation()
   const { byCode, text } = useExercises()
   const ex = byCode.get(item.ex)
+  const scheme = checklist ? formatChecklistTarget(t, item.reps) : formatScheme(t, inSuperset ? { ...item, rest: 0 } : item)
 
   return (
     <Panel className={cn("overflow-hidden transition-colors", !open && "hover:bg-surface-hover")}>
@@ -314,7 +315,7 @@ function ItemCard({
             <span className="text-muted mr-1.5 tabular-nums">{label}</span>
             {ex ? text(ex).name : t("exercise.unknown")}
           </div>
-          <div className="text-muted mt-0.5 text-[13px]">{formatScheme(t, inSuperset ? { ...item, rest: 0 } : item)}</div>
+          {scheme && <div className="text-muted mt-0.5 text-[13px]">{scheme}</div>}
         </div>
         <ChevronDown className={cn("text-muted size-5 shrink-0 transition-transform", open && "rotate-180")} />
         </button>
@@ -322,7 +323,7 @@ function ItemCard({
       {open && (
         <div className="px-2.5 pb-2.5">
           <div className="bg-page rounded-control p-2.5">
-            <ItemEditor item={item} onChange={onChange} inSuperset={inSuperset} />
+            <ItemEditor item={item} checklist={checklist} onChange={onChange} inSuperset={inSuperset} />
           </div>
           {(linkUp || linkDown) && (
             <div className="flex items-center gap-1.5 pt-3 pl-1">
@@ -383,8 +384,7 @@ function DaySheet({
   day,
   index,
   canDelete,
-  takenWeekdays,
-  onWeekdays,
+  onMode,
   onRename,
   onDelete,
 }: {
@@ -393,9 +393,7 @@ function DaySheet({
   day: ProgramDay
   index: number
   canDelete: boolean
-  /** Weekdays other days of the program are on; picking one moves it here. */
-  takenWeekdays: number[]
-  onWeekdays: (weekdays: number[]) => void
+  onMode: (mode: WorkoutMode) => void
   onRename: (name: string) => void
   onDelete: () => void
 }) {
@@ -422,9 +420,10 @@ function DaySheet({
       }
     >
       <Input
+        aria-label={t("schedule.workoutName")}
         value={custom}
         placeholder={t("programs.dayNamePlaceholder", { n: index + 1 })}
-        maxLength={40}
+        maxLength={60}
         onChange={(e) => onRename(e.target.value)}
         onBlur={(e) => {
           // Typed a preset name? Store the token so links stay short and get translated.
@@ -440,32 +439,7 @@ function DaySheet({
           </Chip>
         ))}
       </div>
-      <div className="space-y-2 pt-2">
-        <div className="text-muted text-xs font-medium">{t("programs.weekdays")}</div>
-        <div className="grid grid-cols-7 gap-1.5">
-          {[0, 1, 2, 3, 4, 5, 6].map((wd) => {
-            const on = !!day.weekdays?.includes(wd)
-            const taken = !on && takenWeekdays.includes(wd)
-            return (
-              <button
-                key={wd}
-                type="button"
-                aria-pressed={on}
-                onClick={() => onWeekdays(on ? day.weekdays!.filter((x) => x !== wd) : [...(day.weekdays ?? []), wd])}
-                className={cn(
-                  "rounded-control relative flex h-11 items-center justify-center text-sm font-semibold transition-colors",
-                  on ? "bg-inverse text-inverse-fg" : "bg-surface hairline hover:bg-surface-hover",
-                  taken && "text-muted",
-                )}
-              >
-                {weekdayName(wd)}
-                {taken && <span className="bg-muted absolute bottom-1.5 size-1 rounded-full" />}
-              </button>
-            )
-          })}
-        </div>
-        <p className="text-muted text-xs leading-relaxed">{t("programs.weekdaysHint")}</p>
-      </div>
+      <WorkoutModeControl value={day.mode ?? "detailed"} onChange={onMode} />
     </Sheet>
   )
 }

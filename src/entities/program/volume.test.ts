@@ -1,22 +1,25 @@
 import { describe, expect, it } from "vitest"
 import type { Exercise } from "@/entities/exercise/types"
 import { programMuscleVolume } from "./volume"
-import type { ProgramData, ProgramItem } from "./types"
+import type { Program, ProgramItem, WorkoutData } from "./types"
+import type { ScheduleEntry } from "./schedule"
 
 const exercises = new Map<number, Exercise>([
   [1, { c: 1, pm: ["chest", "chest"], sm: ["chest", "triceps", "triceps"] } as Exercise],
   [2, { c: 2, pm: ["triceps"], sm: [] } as unknown as Exercise],
 ])
 const item = (ex: number, sets: number): ProgramItem => ({ ex, sets, reps: "8-12", rest: 60 })
-const program = (days: ProgramData["days"]): ProgramData => ({ name: "Test", days })
+const program = (days: WorkoutData[]): Pick<Program, "days"> => ({ days: days.map((day) => ({ ...day, id: day.name })) })
+const repeat = (workoutId: string, weekdays: number[], time?: string): ScheduleEntry =>
+  ({ id: `${workoutId}-${time}`, workoutId, date: "2026-10-31", repeat: "weekly", weekdays, time })
 
 describe("program muscle volume", () => {
   it("counts repeated weekdays, all days and both sides of a superset without duplicating muscles", () => {
     const { volume, weekly } = programMuscleVolume(program([
-      { name: "A", weekdays: [0, 3], items: [item(1, 3), { ...item(2, 2), superset: true }] },
-      { name: "B", weekdays: [5], items: [item(1, 4)] },
+      { name: "A", items: [item(1, 3), { ...item(2, 2), superset: true }] },
+      { name: "B", items: [item(1, 4)] },
       { name: "Empty", items: [] },
-    ]), exercises)
+    ]), exercises, [repeat("A", [0, 3]), repeat("B", [5])])
     expect(weekly).toBe(true)
     expect(volume.chest).toEqual({ primary: 10, secondary: 0 })
     expect(volume.triceps).toEqual({ primary: 4, secondary: 10 })
@@ -24,11 +27,11 @@ describe("program muscle volume", () => {
   })
 
   it("counts one full cycle when scheduling is absent or incomplete", () => {
-    for (const weekdays of [undefined, []]) {
+    for (const schedule of [[], [repeat("A", [0, 2, 4])]]) {
       const { volume, weekly } = programMuscleVolume(program([
-        { name: "A", weekdays: [0, 2, 4], items: [item(1, 3)] },
-        { name: "B", weekdays, items: [item(1, 2)] },
-      ]), exercises)
+        { name: "A", items: [item(1, 3)] },
+        { name: "B", items: [item(1, 2)] },
+      ]), exercises, schedule)
       expect(weekly).toBe(false)
       expect(volume.chest.primary).toBe(5)
     }

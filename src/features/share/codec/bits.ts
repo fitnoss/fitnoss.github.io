@@ -105,13 +105,13 @@ export class Huffman {
   }
 }
 
-/** CRC-6 (poly x^6 + x + 1) over a bit sequence. */
-export function crc6(bits: number[]) {
-  let crc = 0
-  for (const b of bits) {
-    const top = ((crc >> 5) & 1) ^ b
-    crc = (crc << 1) & 63
-    if (top) crc ^= 0b000011
+/** CRC-16/CCITT over the unpadded payload. */
+export function crc16(bits: number[], length = bits.length) {
+  let crc = 0xFFFF
+  for (let i = 0; i < length; i++) {
+    const top = ((crc >> 15) & 1) ^ bits[i]
+    crc = (crc << 1) & 0xFFFF
+    if (top) crc ^= 0x1021
   }
   return crc
 }

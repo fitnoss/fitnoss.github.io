@@ -1,15 +1,17 @@
 import { useTranslation } from "react-i18next"
 import { MUSCLES, key } from "@/entities/exercise/types"
 import { useExercises } from "@/entities/exercise/store"
-import type { ProgramData } from "@/entities/program/types"
+import type { Program } from "@/entities/program/types"
+import { useProgramStore } from "@/entities/program/store"
 import { programMuscleVolume } from "@/entities/program/volume"
 import { MuscleMap, muscleColor } from "@/shared/components/MuscleMap"
 import { Panel } from "@/shared/ui/panel"
 
-export function ProgramVolume({ program }: { program: ProgramData }) {
+export function ProgramVolume({ program }: { program: Pick<Program, "days"> }) {
   const { t } = useTranslation()
   const { byCode } = useExercises()
-  const { volume, weekly, missingExercises } = programMuscleVolume(program, byCode)
+  const schedule = useProgramStore((state) => state.schedule)
+  const { volume, weekly, missingExercises } = programMuscleVolume(program, byCode, schedule)
   const uncovered = MUSCLES.filter((muscle) => !volume[muscle].primary && !volume[muscle].secondary)
   const indirect = MUSCLES.filter((muscle) => !volume[muscle].primary && volume[muscle].secondary > 0)
   const direct = MUSCLES.filter((muscle) => volume[muscle].primary > 0)

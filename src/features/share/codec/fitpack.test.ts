@@ -1,11 +1,18 @@
 import { describe, expect, it } from "vitest"
 import fc from "fast-check"
 import { withLink, type ProgramData } from "@/entities/program/types"
+import { CUSTOM_CODE_START, mergeCustomExercises } from "@/entities/exercise/custom"
 import { BitReader, BitWriter } from "./bits"
-import { DAY_NAMES, DecodeError, decodeProgram, encodeProgram } from "./fitpack"
+import { DAY_NAMES, DecodeError, decodeShare, encodeShare } from "./fitpack"
 import { readText, writeText } from "./text"
 
 const item = (ex: number, sets = 3, reps = "10", rest = 90) => ({ ex, sets, reps, rest })
+const encodeProgram = (program: ProgramData) => encodeShare({ kind: "program", program })
+const decodeProgram = (payload: string) => {
+  const content = decodeShare(payload)
+  if (content.kind !== "program") throw new Error("expected a shared program")
+  return content.program
+}
 
 const split: ProgramData = {
   name: "Мой сплит",
@@ -51,7 +58,7 @@ describe("fitpack", () => {
   it("round-trips a 4-day split in a short link", () => {
     const code = encodeProgram(split)
     expect(decodeProgram(code)).toEqual(split)
-    expect(code.length).toBeLessThanOrEqual(60)
+    expect(code.length).toBeLessThanOrEqual(62)
   })
 
   it("encodes a nameless 3×5 program in ~30 chars", () => {
@@ -61,7 +68,7 @@ describe("fitpack", () => {
     }
     const code = encodeProgram(p)
     expect(decodeProgram(code)).toEqual(p)
-    expect(code.length).toBeLessThanOrEqual(30)
+    expect(code.length).toBeLessThanOrEqual(32)
   })
 
   it("keeps weights, notes, rare exercises and odd schemes", () => {
@@ -121,12 +128,12 @@ describe("fitpack", () => {
     expect(stepped.length).toBeLessThanOrEqual(plain.length + 2)
   })
 
-  it("keeps supersets and weekdays", () => {
+  it("keeps supersets and checklist mode", () => {
     const p: ProgramData = {
       name: "",
       days: [
-        { name: "@upper", weekdays: [0, 3], items: [item(5), { ...item(6), superset: true }, item(11), { ...item(20), superset: true }, { ...item(14), superset: true }] },
-        { name: "@lower", weekdays: [6], items: [item(4)] },
+        { name: "@upper", items: [item(5), { ...item(6), superset: true }, item(11), { ...item(20), superset: true }, { ...item(14), superset: true }] },
+        { name: "@lower", mode: "checklist", items: [item(4, 1, "", 0)] },
         { name: "", items: [item(1)] },
       ],
     }
@@ -158,7 +165,7 @@ describe("fitpack", () => {
         name: fc.oneof(fc.constantFrom(...DAY_NAMES), fc.string({ maxLength: 20 }).map((s) => s.trim())),
         // The first exercise can't continue a superset.
         items: fc.array(itemArb, { maxLength: 10 }).map((items) => items.map((it, i) => (i === 0 ? withLink(it, undefined) : it))),
-        weekdays: fc.uniqueArray(fc.integer({ min: 0, max: 6 }), { minLength: 1, maxLength: 7 }).map((a) => a.sort()),
+        mode: fc.constant("checklist" as const),
       },
       { requiredKeys: ["name", "items"] },
     )
@@ -188,8 +195,28 @@ describe("fitpack", () => {
     expect(() => decodeProgram("not*valid")).toThrow(DecodeError)
   })
 
-  it("keeps v1 links stable", () => {
-    // If this changes, old links break. Bump the version instead (fine to change while unreleased).
+  it("keeps the current program link stable", () => {
     expect(encodeProgram(split)).toMatchSnapshot()
+  })
+
+  it("shares a workout and its exercise definition and reuses that definition on repeated import", () => {
+    const exercise = { code: CUSTOM_CODE_START, name: "Разминка плеч", instructions: "Keep a steady pace.\nМедленно.", equipment: "bands",
+      category: "stretching", muscles: ["shoulders", "triceps"] }
+    const workout = { name: "Mobility", mode: "checklist" as const, items: [item(exercise.code, 1, "30s", 0), { ...item(1), weight: 1.25 }] }
+    const program = { name: "Home", days: [workout] }
+    const url = encodeShare({ kind: "workout", workout }, [exercise])
+    expect(decodeShare(url)).toEqual({ kind: "workout", workout, exercises: [exercise] })
+    expect(decodeShare(encodeShare({ kind: "program", program }, [exercise]))).toEqual({ kind: "program", program, exercises: [exercise] })
+    const single = decodeShare(encodeShare({ kind: "exercise", exercise }))
+    expect(single).toEqual({ kind: "exercise", exercise })
+    expect(() => encodeShare({ kind: "workout", workout })).toThrow()
+    expect(() => decodeShare(url.slice(0, -1))).toThrow(DecodeError)
+
+    const local = [{ code: exercise.code, name: "Different local exercise" }]
+    const first = mergeCustomExercises(local, [exercise])
+    const existing = first.codes.get(exercise.code)
+    expect(existing).not.toBe(exercise.code)
+    expect(first.exercises).toEqual([...local, { ...exercise, code: existing }])
+    expect(mergeCustomExercises(first.exercises, [exercise])).toEqual(first)
   })
 })

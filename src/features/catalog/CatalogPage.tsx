@@ -1,4 +1,5 @@
-import { useCallback, useDeferredValue, useMemo } from "react"
+import { useCallback, useDeferredValue, useMemo, useState } from "react"
+import { Plus } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import { PageHeader } from "@/shared/components/PageHeader"
@@ -8,10 +9,14 @@ import { ExerciseList } from "./ExerciseList"
 import { FilterBar } from "./FilterBar"
 import { applyFilters, getSearchIndex, useUrlFilters } from "./filters"
 import { EmptySearchResults } from "./EmptySearchResults"
+import { Button } from "@/shared/ui/button"
+import { customCatalogExercise } from "@/entities/exercise/custom"
+import { CustomExerciseSheet } from "./CustomExerciseSheet"
 
 export function CatalogPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [createOpen, setCreateOpen] = useState(false)
   const select = useCallback((ex: Exercise) => navigate(`/ex/${ex.s}`), [navigate])
   const { list, ready, text, en, local } = useExercises()
   const favorites = useFavorites((s) => s.codes)
@@ -24,11 +29,11 @@ export function CatalogPage() {
     <>
       <PageHeader
         title={t("nav.exercises")}
-        actions={<span className="text-muted pr-2 text-sm tabular-nums">{t("catalog.count", { count: items.length })}</span>}
+        actions={<Button size="icon" aria-label={t("custom.create")} title={t("custom.create")} onClick={() => setCreateOpen(true)}><Plus /></Button>}
       >
         <FilterBar filters={filters} onChange={setFilters} total={items.length} />
       </PageHeader>
-      {!ready ? (
+      {!ready && items.length === 0 ? (
         <div className="space-y-1 px-2 pt-1">
           {Array.from({ length: 8 }, (_, i) => (
             <div key={i} className="flex h-[76px] items-center gap-3 px-2">
@@ -45,6 +50,10 @@ export function CatalogPage() {
       ) : (
         <ExerciseList items={items} text={text} onSelect={select} />
       )}
+      {createOpen && <CustomExerciseSheet onClose={() => setCreateOpen(false)} onCreate={(exercise) => {
+        setCreateOpen(false)
+        select(customCatalogExercise(exercise))
+      }} />}
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { parseReps, restAfter, type ProgramDay, type ProgramItem } from "@/entities/program/types"
+import { parseReps, restAfter, type WorkoutData, type ProgramItem } from "@/entities/program/types"
 
 // Exercise codes come from data/id-map.json (they never change).
 const it = (ex: number, sets: number, reps: string, rest: number): ProgramItem => ({ ex, sets, reps, rest })
@@ -14,7 +14,7 @@ type Template = {
   experience: { ru: string; en: string }
   /** Supports needed by the selected variations, beyond their main equipment. */
   extraEquipment?: string[]
-  days: ProgramDay[]
+  days: (WorkoutData & { weekdays: number[] })[]
 }
 
 export const TEMPLATES: Template[] = [
@@ -70,7 +70,7 @@ export const TEMPLATES: Template[] = [
 ]
 
 /** A planning range, not a measured duration: 3–5 s/rep, 20–45 s for open-ended sets. */
-export function templateDuration(days: ProgramDay[]) {
+export function templateDuration(days: WorkoutData[]) {
   if (!days.length) return { min: 0, max: 0 }
   const ranges = days.map((day) => {
     let min = 0, max = 0

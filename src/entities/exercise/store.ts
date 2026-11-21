@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { fetchLocale } from "@/shared/i18n"
 import type { Exercise, ExerciseName, ExerciseText, Video } from "./types"
+import { customCatalogExercise, useCustomExerciseStore } from "./custom"
 
 type Names = Record<string, ExerciseName>
 type Texts = Record<string, ExerciseText>
@@ -94,19 +95,30 @@ export function useExercises() {
   const { i18n } = useTranslation()
   const lang = i18n.resolvedLanguage ?? "en"
   const state = useExerciseStore()
+  const custom = useCustomExerciseStore((s) => s.exercises)
   const load = state.load
   useEffect(() => {
     void load(lang).catch(() => {})
   }, [lang, load])
-  const { en, local } = state
+  const { en, local, list, byCode, bySlug } = state
+  const catalog = useMemo(() => {
+    if (!custom.length) return { list, byCode, bySlug }
+    const entries = custom.map(customCatalogExercise)
+    return {
+      list: [...entries, ...list],
+      byCode: new Map([...byCode, ...entries.map((ex) => [ex.c, ex] as const)]),
+      bySlug: new Map([...bySlug, ...entries.map((ex) => [ex.s, ex] as const)]),
+    }
+  }, [custom, list, byCode, bySlug])
   const text = useCallback((ex: Exercise | undefined): ExerciseName => ({
-    name: ex ? local[ex.s]?.name || en[ex.s]?.name || ex.s : "?",
+    name: ex ? ex.custom?.name ?? (local[ex.s]?.name || en[ex.s]?.name || ex.s) : "?",
   }), [en, local])
-  return { ...state, ready: state.ready && state.lang === lang, text }
+  return { ...state, ...catalog, ready: state.ready && state.lang === lang, text }
 }
 
 export function exerciseText(state: { en: Texts; local: Texts }, ex: Exercise | undefined): ExerciseText {
   if (!ex) return { name: "?", steps: [] }
+  if (ex.custom) return { name: ex.custom.name, steps: ex.custom.instructions?.split(/\r?\n/).filter((line) => line.trim()) ?? [] }
   const en = state.en[ex.s] ?? { name: ex.s, steps: [] }
   const local = state.local[ex.s]
   return {
@@ -121,7 +133,7 @@ export function useExerciseText(ex: Exercise | undefined): ExerciseText & { load
   const lang = i18n.resolvedLanguage ?? "en"
   const name = useExerciseStore((s) => ex ? s.local[ex.s]?.name || s.en[ex.s]?.name || ex.s : "?")
   const [texts, setTexts] = useState<{ lang: string; en: Texts; local: Texts }>()
-  const hasExercise = !!ex
+  const hasExercise = !!ex && !ex.custom
   useEffect(() => {
     if (!hasExercise) return
     let current = true
@@ -131,6 +143,7 @@ export function useExerciseText(ex: Exercise | undefined): ExerciseText & { load
       })
     return () => { current = false }
   }, [lang, hasExercise])
+  if (ex?.custom) return { ...exerciseText({ en: {}, local: {} }, ex), loading: false }
   if (!texts || texts.lang !== lang) return { name, steps: [], loading: hasExercise }
   return { ...exerciseText(texts, ex), loading: false }
 }

@@ -42,9 +42,9 @@ export const ExerciseRow = memo(function ExerciseRow({ ex, name, selected, onSel
       </div>
       <div className="min-w-0 flex-1">
         <div className="line-clamp-2 text-[15px] leading-snug font-medium">{name}</div>
-        <div className="text-muted mt-0.5 truncate text-[13px]">
-          {ex.pm.map((m) => t(`muscle.${key(m)}`)).join(", ")} · {t(`equipment.${ex.eq}`)}
-        </div>
+          {(ex.pm.length > 0 || ex.eq || ex.custom) && <div className="text-muted mt-0.5 truncate text-[13px]">
+            {[...ex.pm.map((m) => t(`muscle.${key(m)}`)), ex.eq && t(`equipment.${ex.eq}`), ex.custom && t("custom.label")].filter(Boolean).join(" · ")}
+          </div>}
       </div>
       {trailing}
     </button>

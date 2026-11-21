@@ -174,7 +174,7 @@ function SessionRow({ s, date }: { s: Session; date: string }) {
       <div className="min-w-0 flex-1">
         <div className="truncate text-[15px] font-medium">{s.title}</div>
         <div className="text-muted text-[13px] tabular-nums">
-          {date} · {t("units.min", { n: minutes })} · {t("journal.sets", { count: sets })}
+          {date} · {t("units.min", { n: minutes })} · {s.mode === "checklist" ? t("programs.exercisesCount", { count: s.exercises.length }) : t("journal.sets", { count: sets })}
           {volume > 0 && ` · ${t("units.kg", { n: Math.round(volume) })}`}
         </div>
       </div>

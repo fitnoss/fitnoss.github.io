@@ -6,8 +6,11 @@ import { createInstance } from "i18next"
 import { I18nextProvider } from "react-i18next"
 import ru from "../../../locales/ru/ui.json"
 import type { Exercise } from "@/entities/exercise/types"
-import type { ProgramData } from "@/entities/program/types"
+import type { Program } from "@/entities/program/types"
+import { useProgramStore } from "@/entities/program/store"
 import { ProgramVolume } from "./ProgramVolume"
+
+vi.hoisted(() => vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeItem: () => {} }))
 
 vi.mock("@/entities/exercise/store", () => ({
   useExercises: () => ({ byCode: new Map([
@@ -22,7 +25,8 @@ it("shows a muscle map and updates uncovered and indirect-only lists after progr
   await i18n.init({ lng: "ru", resources: { ru: { translation: ru } }, interpolation: { escapeValue: false } })
   const container = document.createElement("div")
   const root = createRoot(container)
-  const plan: ProgramData = { name: "Test", days: [{ name: "A", weekdays: [0, 3], items: [{ ex: 1, sets: 3, reps: "10", rest: 60 }] }] }
+  const plan: Pick<Program, "days"> = { days: [{ id: "a", name: "A", items: [{ ex: 1, sets: 3, reps: "10", rest: 60 }] }] }
+  useProgramStore.setState({ schedule: [{ id: "weekly", workoutId: "a", date: "2026-10-31", repeat: "weekly", weekdays: [0, 3] }] })
   const render = () => act(() => root.render(<I18nextProvider i18n={i18n}><ProgramVolume program={plan} /></I18nextProvider>))
   try {
     render()
@@ -37,7 +41,7 @@ it("shows a muscle map and updates uncovered and indirect-only lists after progr
     expect(list(ru.programVolume.uncovered)).toContain(ru.muscle.calves)
     expect(list(ru.programVolume.uncovered)).not.toContain(ru.muscle.chest)
     expect(list(ru.programVolume.uncovered)).not.toContain(ru.muscle.triceps)
-    plan.days[0].weekdays = undefined
+    act(() => useProgramStore.setState({ schedule: [] }))
     plan.days[0].items.push({ ex: 2, sets: 2, reps: "10", rest: 60 })
     render()
     expect(container.querySelector("h2")?.textContent).toBe("Карта мышц · цикл")

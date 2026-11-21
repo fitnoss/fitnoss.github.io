@@ -24,20 +24,20 @@ export function ExerciseTechniqueSheet({ exercise, onClose, selected, onToggle }
           </Button>}
         </div>
       }>
-      <ExerciseImage ex={exercise} alt="" size="l" animate priority className="aspect-video w-full rounded-xl object-contain" />
+      {!exercise.custom && <ExerciseImage ex={exercise} alt="" size="l" animate priority className="aspect-video w-full rounded-xl object-contain" />}
       <div className="flex flex-wrap gap-1.5">
         {exerciseEquipment(exercise).map((item) => <Tag key={item}>{t(`equipment.${item}`)}</Tag>)}
       </div>
-      <section className="space-y-3">
+      {(!exercise.custom || exercise.pm.length > 0) && <section className="space-y-3">
         <h3 className="font-semibold">{t("exercise.muscles")}</h3>
         <ExerciseMuscles exercise={exercise} />
-      </section>
-      <h3 className="font-semibold">{t("exercise.technique")}</h3>
+      </section>}
+      {(!exercise.custom || exercise.custom.instructions) && <h3 className="font-semibold">{t("exercise.technique")}</h3>}
       {description.loading && <p role="status" className="text-muted text-sm">{t("common.loading")}</p>}
-      <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed">
+      {exercise.custom ? exercise.custom.instructions && <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">{exercise.custom.instructions}</p> : <ol className="list-decimal space-y-3 pl-5 text-sm leading-relaxed">
         {description.steps.filter((step) => step.trim()).map((step, i) => <li key={i}>{step}</li>)}
-      </ol>
-      {!description.loading && <TechniqueFeedback key={exercise.s} name={description.name} slug={exercise.s} machine={description.machine} />}
+      </ol>}
+      {!exercise.custom && !description.loading && <TechniqueFeedback key={exercise.s} name={description.name} slug={exercise.s} machine={description.machine} />}
     </Sheet>
   )
 }
